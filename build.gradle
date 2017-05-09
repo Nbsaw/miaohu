@@ -1,0 +1,59 @@
+buildscript {
+    repositories {
+        mavenCentral()
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.2.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+jar {
+    baseName = 'miaohu'
+    version =  '0.0.1-SNAPSHOT'
+}
+
+repositories {
+    jcenter()
+    maven { url "http://repo.spring.io/snapshot" }
+    maven { url "http://repo.spring.io/milestone" }
+}
+
+dependencies {
+    // spring boot 启动容器
+    compile (group: 'org.springframework.boot', name: 'spring-boot-starter-web')
+    // spring boot devtools
+    compile ("org.springframework.boot:spring-boot-devtools")
+    // spring boot jpa 支持
+    compile (group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa')
+    // spring boot redis 支持
+    compile ("org.springframework.boot:spring-boot-starter-data-redis")
+    // json object
+    compile group: 'org.json', name: 'json', version: '20160810'
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+
+    // spring security
+//    compile group: 'org.springframework.security', name: 'spring-security-config', version: '4.2.2.RELEASE'
+//    compile group: 'org.springframework.security', name: 'spring-security-web', version: '4.2.2.RELEASE'
+
+    // mysql 连接驱动
+    compile (group: 'mysql', name: 'mysql-connector-java')
+    // kaptcha 验证码库
+    compile (group: 'com.github.axet', name: 'kaptcha', version: '0.0.9')
+
+//    compile ("com.fasterxml.jackson.core:jackson-databind")
+    // 单元测试
+    compile (group: 'junit', name: 'junit', version: '4.11')
+    // 添加本地jar包
+    compile fileTree(dir:'libs',include:['*.jar'])
+
+}
