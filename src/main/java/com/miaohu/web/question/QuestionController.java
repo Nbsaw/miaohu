@@ -40,18 +40,37 @@ public class QuestionController {
     }
 
     /**
-     * 查找是否存在该问题
+     * 验证标题是否合法
+     * @param title
+     * @return
      */
-    @PostMapping(value = "/isExists", produces="application/json;charset=UTF-8")
-    public String isExists(@RequestParam("content") String content){
-        boolean isExists =  questionRepository.existsQuestion(content);
+    @PostMapping(value = "/valid", produces="application/json;charset=UTF-8")
+    public String validTitle(@RequestParam("title") String title){
         String result = null;
-        if (isExists)
-            result = JsonUtil.formatResult(400,"已经存在的问题");
-        else
-            result = JsonUtil.formatResult(200,"");
+        title = title.trim();
+        String last = title.substring(title.length()-1); // 最后一个字符
+        // 判断标题是否为空
+        if (title.equals("")){
+            result = JsonUtil.formatResult(400,"标题不能为空");
+        }
+        // 51个字的标题限制
+        else if(title.length() > 51){
+            result = JsonUtil.formatResult(400,"标题太长");
+        }
+        // 末尾问号判断
+        else if (!last.equals("?") && !last.equals("？")){
+            result = JsonUtil.formatResult(400,"你还没有给问题添加问号");
+        }
+        else {
+            boolean isExists = questionRepository.existsQuestion(title);
+            if (isExists)
+                result = JsonUtil.formatResult(400,"已经存在的问题");
+            else
+                result = JsonUtil.formatResult(200,"可以创建的问题");
+        }
         return result;
     }
+
     /**
      * 获取用户发表的所有的问题
      * @param session
@@ -96,6 +115,7 @@ public class QuestionController {
      * @param content 问题的内容
      * @param session
      * @return 返回状态,修改成功或者失败
+     * TODO 加个修改理由表
      */
     @PostMapping(value = "/modify", produces="application/json;charset=UTF-8")
     public String modify(@RequestParam(value = "id") Long id,
@@ -129,22 +149,30 @@ public class QuestionController {
                        @RequestParam(value = "tags") Long[] tags,
                        HttpSession session) {
         QuestionEntity questionEntity = new QuestionEntity();
-        // TODO 重复标题
         boolean isExists =  questionRepository.existsQuestion(content);
+        title = title.trim();
+        String last = title.substring(title.length()-1); // 最后一个字符
         String result = null;
-        if (isExists){
-            result = JsonUtil.formatResult(400,"已经存在的问题");
+        // 判断标题是否为空
+        if (title.equals("")){
+            result = JsonUtil.formatResult(400,"标题不能为空");
         }
+        // 51个字的标题限制
+        else if(title.length() > 51){
+            result = JsonUtil.formatResult(400,"标题太长");
+        }
+        // 末尾问号判断
+        else if (!last.equals("?") && !last.equals("？")){
+            result = JsonUtil.formatResult(400,"你还没有给问题添加问号");
+        }
+        // 尝试创建
         else {
+            // 判断传过来的标签是否合法
             String uid = ((UserInfoVO) session.getAttribute("data")).getId();
             for (long s : tags)
                 if (!tagRepository.exists(s))
                     return JsonUtil.formatResult(400, "无效的标签");
-            // --------------------------------
-            questionEntity.setUid(uid);
-            questionEntity.setTitle(title);
-            questionEntity.setContent(content);
-            questionRepository.save(questionEntity);
+            // 标签都合法保存下来
             for (long s : tags) {
                 TagMapEntity tagMapEntity = new TagMapEntity();
                 tagMapEntity.setCorrelation(questionEntity.getId());
@@ -152,6 +180,11 @@ public class QuestionController {
                 tagMapEntity.setType("question");
                 tagMapRepository.save(tagMapEntity);
             }
+            // 保存问题
+            questionEntity.setUid(uid);
+            questionEntity.setTitle(title);
+            questionEntity.setContent(content);
+            questionRepository.save(questionEntity);
             result = JsonUtil.formatResult(200, "问题发布成功");
         }
         return result;
@@ -163,4 +196,5 @@ public class QuestionController {
         List<CommentEntity> list = commentRepository.findAllByCorrelationAndType(id,"question");
         return JsonUtil.formatResult(200,"",list);
     }
+
 }
