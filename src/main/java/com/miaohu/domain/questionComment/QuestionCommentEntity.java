@@ -1,4 +1,4 @@
-package com.miaohu.domain.comment;
+package com.miaohu.domain.questionComment;
 
 import javax.persistence.*;
 
@@ -6,26 +6,29 @@ import javax.persistence.*;
  * Created by Nbsaw on 17-5-3.
  */
 @Entity
-@Table(name = "comment")
-public class CommentEntity {
+@Table(name = "question_comment")
+public class QuestionCommentEntity {
     @Id
     @GeneratedValue
     private long id;
 
-    // 关联id
+    // 问题的Id
     @Column(nullable = false)
-    private Long correlation;
+    private Long questionId;
 
+    // 用户id
+    @Column(nullable = false)
     private String uid;
 
-    // 类型
-    private String type;
-
     @Lob
-    @Column(length = 1000000)
+    @Column(length = 1000000,nullable = false)
     private String  content;
 
-    private long vote;
+    @Column(nullable = false)
+    private long vote = 0L;
+
+    @Column(nullable = false)
+    private boolean deleted;
 
     public long getId() {
         return id;
@@ -35,12 +38,12 @@ public class CommentEntity {
         this.id = id;
     }
 
-    public Long getCorrelation() {
-        return correlation;
+    public Long getQuestionId() {
+        return questionId;
     }
 
-    public void setCorrelation(Long correlation) {
-        this.correlation = correlation;
+    public void setQuestionId(Long questionId) {
+        this.questionId = questionId;
     }
 
     public String getUid() {
@@ -67,11 +70,11 @@ public class CommentEntity {
         this.vote = vote;
     }
 
-    public String getType() {
-        return type;
+    public boolean isDeleted() {
+        return deleted;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 /**
  * Created by fz on 17-4-12.
  */
-public class ValidUtil {
+public class RegisterValidUtil {
     /**
      * 判断手机号码是否有效
      * 首先检查手机号码是否合法

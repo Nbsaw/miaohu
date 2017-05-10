@@ -5,7 +5,7 @@ import javax.persistence.*;
  * Created by fz on 17-3-31.
  */
 @Entity
-@Table(name = "question" ) // , indexes = {@Index(name = "tags_index",columnList = "tag",unique = true)}
+@Table(name = "question")
 public class QuestionEntity {
     @Id
     @GeneratedValue
@@ -20,6 +20,8 @@ public class QuestionEntity {
     @Lob
     @Column(length = 1000000)
     private String  content;
+
+    private Long vote = 0L;
 
     public String getTitle() {
         return title;
@@ -53,4 +55,11 @@ public class QuestionEntity {
         this.content = content;
     }
 
+    public Long getVote() {
+        return vote;
+    }
+
+    public void setVote(Long vote) {
+        this.vote = vote;
+    }
 }

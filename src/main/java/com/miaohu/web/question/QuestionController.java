@@ -1,7 +1,7 @@
 package com.miaohu.web.question;
 
-import com.miaohu.domain.comment.CommentEntity;
-import com.miaohu.domain.comment.CommentRepository;
+import com.miaohu.domain.questionComment.QuestionCommentEntity;
+import com.miaohu.domain.questionComment.QuestionCommentRepository;
 import com.miaohu.domain.quesstion.QuestionEntity;
 import com.miaohu.domain.quesstion.QuestionRepository;
 import com.miaohu.domain.tag.TagRepository;
@@ -27,13 +27,14 @@ public class QuestionController {
     // 标签映射
     @Autowired private TagMapRepository tagMapRepository;
     // 评论
-    @Autowired private CommentRepository commentRepository;
+    @Autowired private QuestionCommentRepository questionCommentRepository;
 
     /**
      * 根据传过来的id获取某个问题
      * @param id 文章的id
      * @return id对应的问题
      */
+    // TODO 要检查是否回复过了。
     @GetMapping(value = "/{id}", produces="application/json;charset=UTF-8")
     public QuestionEntity getId(@PathVariable("id") Long id) {
         return questionRepository.findById(id);
@@ -191,10 +192,48 @@ public class QuestionController {
     }
 
     // 查找问题的评论
+    // TODO 要做分页哦
     @GetMapping(value = "/comment/{id}", produces="application/json;charset=UTF-8")
     public String selectById(@PathVariable("id") Long id){
-        List<CommentEntity> list = commentRepository.findAllByCorrelationAndType(id,"question");
+        List<QuestionCommentEntity> list = questionCommentRepository.findAllByQuestionId(id,"question");
         return JsonUtil.formatResult(200,"",list);
     }
 
+    /**
+     * 评论问题
+     * @param correlation
+     * @param content
+     * @param session
+     * @return
+     */
+    @PostMapping(value = "/comment/add", produces="application/json;charset=UTF-8")
+    public String comment(@RequestParam(value = "qid") Long correlation,
+                          @RequestParam(value = "content") String content,
+                          HttpSession session){
+        String result = null;
+        // 检测是不是已经回答过的问题
+        if (questionCommentRepository.isReply(content)){
+            result = JsonUtil.formatResult(403,"不可以重复回答问题:(");
+        }
+        // 检验回复是否为空
+        else if (content.trim().length() == 0){
+            result = JsonUtil.formatResult(400,"评论不能为空");
+        }
+        // 验证通过提交
+        else{
+            String userId = ((UserInfoVO)session.getAttribute("data")).getId();
+            QuestionCommentEntity questionCommentEntity = new QuestionCommentEntity();
+            questionCommentEntity.setUid(userId);
+            questionCommentEntity.setQuestionId(correlation);
+            questionCommentEntity.setContent(content);
+            questionCommentRepository.save(questionCommentEntity);
+            result = JsonUtil.formatResult(200,"评论成功");
+        }
+        return result;
+    }
+
+    // TODO 回答删除接口
+
+
+    // TODO 回答修改接口
 }

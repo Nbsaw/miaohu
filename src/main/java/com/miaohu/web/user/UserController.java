@@ -41,7 +41,7 @@ public class UserController {
      * @param password
      * @return
      */
-    // TODO 加密解密
+    // TODO 加密解密,反之中间人攻击
     @GetMapping(value = "/login",produces="application/json;charset=UTF-8")
     public Map login(HttpSession session, @RequestParam("phone") String phone , @RequestParam("password") String password){
         Map result = new LinkedHashMap();
