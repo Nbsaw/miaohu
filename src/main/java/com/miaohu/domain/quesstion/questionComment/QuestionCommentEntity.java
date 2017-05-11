@@ -1,4 +1,4 @@
-package com.miaohu.domain.questionComment;
+package com.miaohu.domain.quesstion.questionComment;
 
 import javax.persistence.*;
 
@@ -28,7 +28,7 @@ public class QuestionCommentEntity {
     private long vote = 0L;
 
     @Column(nullable = false)
-    private boolean deleted;
+    private boolean deleted = false;
 
     public long getId() {
         return id;

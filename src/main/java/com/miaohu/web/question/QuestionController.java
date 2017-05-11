@@ -1,7 +1,7 @@
 package com.miaohu.web.question;
 
-import com.miaohu.domain.questionComment.QuestionCommentEntity;
-import com.miaohu.domain.questionComment.QuestionCommentRepository;
+import com.miaohu.domain.quesstion.questionComment.QuestionCommentEntity;
+import com.miaohu.domain.quesstion.questionComment.QuestionCommentRepository;
 import com.miaohu.domain.quesstion.QuestionEntity;
 import com.miaohu.domain.quesstion.QuestionRepository;
 import com.miaohu.domain.tag.TagRepository;
@@ -42,6 +42,8 @@ public class QuestionController {
 
     /**
      * 验证标题是否合法
+     * 有坑,问号不同算不同问题，知乎也是这样子
+     * 所以我懒得改，当作是feature !!
      * @param title
      * @return
      */
@@ -116,7 +118,7 @@ public class QuestionController {
      * @param content 问题的内容
      * @param session
      * @return 返回状态,修改成功或者失败
-     * TODO 加个修改理由表
+     * TODO 加个问题修改理由表
      */
     @PostMapping(value = "/modify", produces="application/json;charset=UTF-8")
     public String modify(@RequestParam(value = "id") Long id,
@@ -232,8 +234,36 @@ public class QuestionController {
         return result;
     }
 
-    // TODO 回答删除接口
+    // 回答删除接口
+    @GetMapping(value = "/comment/delete", produces="application/json;charset=UTF-8")
+    public String deleteComment(
+            @RequestParam("id") Long id
+            ,HttpSession session){
+        String uid = ((UserInfoVO)session.getAttribute("data")).getId();
+        Boolean status = questionCommentRepository.setDeletedTrue(id,uid) == 1;
+        String result = null;
+        if (status)
+            result = JsonUtil.formatResult(200,"回答已删除");
+        else
+            result = JsonUtil.formatResult(400,"无法删除回答");
+        return result;
+    }
 
+    // 撤销删除
+    @GetMapping(value = "/comment/revoke", produces="application/json;charset=UTF-8")
+    public String revokeComment(
+            @RequestParam("id") Long id,
+            HttpSession session){
+        String uid = ((UserInfoVO)session.getAttribute("data")).getId();
+        Boolean status = questionCommentRepository.setDeletedTrue(id,uid) == 1;
+        String result = null;
+        if (status)
+            result = JsonUtil.formatResult(400,"无法删除回答");
+        else
+            result = JsonUtil.formatResult(200,"回答已删除");
+        return result;
+    }
 
     // TODO 回答修改接口
+    
 }
