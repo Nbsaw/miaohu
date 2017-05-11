@@ -42,21 +42,21 @@ public class RegisterController {
         String phone = registerForm.getPhone();
 
         // 校验用户名
-        ValidUtil.usernameValid(username, errors);
+        RegisterValidUtil.usernameValid(username, errors);
 
         // 校验密码
-        ValidUtil.passwordValid(password, errors);
+        RegisterValidUtil.passwordValid(password, errors);
 
         // 校验手机号码
-        ValidUtil.phoneValid(phone, errors,userRepository);
+        RegisterValidUtil.phoneValid(phone, errors,userRepository);
 
         // 校验图片验证码
-        ValidUtil.imageCaptchaValid(imageCaptcha, errors, redisCaptcha);
+        RegisterValidUtil.imageCaptchaValid(imageCaptcha, errors, redisCaptcha);
 
         // 校验手机验证码
         if (is == true){
             String redisPhoneCaptcha = (String) redisConfig.getTemplate().opsForHash().get(session.getId()+phone+ RedisConstant.PHONE,"value");
-            ValidUtil.phoneCaptchaValid(registerForm.getPhoneCaptcha(),errors,redisPhoneCaptcha);
+            RegisterValidUtil.phoneCaptchaValid(registerForm.getPhoneCaptcha(),errors,redisPhoneCaptcha);
         }
 
         // 判断是否有错误信息

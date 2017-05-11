@@ -5,7 +5,7 @@ import com.miaohu.config.redis.RedisConfig;
 import com.miaohu.util.constant.RedisConstant;
 import com.miaohu.domain.user.UserRepository;
 import com.miaohu.service.phoneMessage.PhoneMessageService;
-import com.miaohu.web.register.ValidUtil;
+import com.miaohu.web.register.RegisterValidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
-
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
@@ -89,7 +88,7 @@ public class CaptchaController {
       Map result = new LinkedHashMap();
       Map errors = new LinkedHashMap();
       // 校验手机号码是否合法
-      ValidUtil.phoneValid(phone, errors,userRepository);
+      RegisterValidUtil.phoneValid(phone, errors,userRepository);
       if (!errors.isEmpty()) {
          result.put("code", 400);
          result.put("errors", errors);
