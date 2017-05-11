@@ -5,10 +5,8 @@ import com.miaohu.domain.user.UserRepository;
 import com.miaohu.service.getUserInfo.UserInfoService;
 import com.miaohu.service.getUserInfo.UserInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -42,7 +40,7 @@ public class UserController {
      * @return
      */
     // TODO 加密解密,反之中间人攻击
-    @GetMapping(value = "/login",produces="application/json;charset=UTF-8")
+    @PostMapping(value = "/login",produces="application/json;charset=UTF-8")
     public Map login(HttpSession session, @RequestParam("phone") String phone , @RequestParam("password") String password){
         Map result = new LinkedHashMap();
         try {
