@@ -300,7 +300,7 @@ public class QuestionController {
     // TODO 同时还要设置回答为匿名
     @PostMapping(value = "/anonymous",produces = "application/json;charset=UTF-8")
     public String setAnonymous(
-            @RequestParam(value = "questionID") Long questionId,
+            @RequestParam(value = "questionId") Long questionId,
             HttpSession session){
         String result = null;
         String uid = ((UserInfoVO) session.getAttribute("data")).getId();
@@ -308,14 +308,14 @@ public class QuestionController {
         if (isExists) {
             boolean isAnonymous = questionRepository.isAnonymous(questionId);
             if (isAnonymous) {
-                questionCommentRepository.setDeletedTrue(questionId, uid);
+                questionRepository.setAnonymousTrue(questionId, uid);
                 result = JsonUtil.formatResult(200, "已经设为匿名!");
             } else {
-                questionCommentRepository.setDeletedFalse(questionId, uid);
-                result = JsonUtil.formatResult(400, "已经取消匿名!");
+                questionRepository.setDeletedFalse(questionId, uid);
+                result = JsonUtil.formatResult(200, "已经取消匿名!");
             }
         }else{
-            result = JsonUtil.formatResult(400, "问题不存在");
+            result = JsonUtil.formatResult(400, "问题不存在或者没有权限修改");
         }
         return result;
     }
