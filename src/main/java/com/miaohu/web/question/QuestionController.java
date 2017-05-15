@@ -128,11 +128,13 @@ public class QuestionController {
      * @param session
      * @return 返回状态, 修改成功或者失败
      * TODO 加个问题修改理由表
+     * TODO 加上是否匿名的字段
      */
     @PostMapping(value = "/modify", produces = "application/json;charset=UTF-8")
     public String modify(@RequestParam(value = "id") Long id,
                          @RequestParam(value = "title") String title,
                          @RequestParam(value = "content", defaultValue = "") String content,
+                         @RequestParam(value = "anonymous",defaultValue = "false") boolean anonymous,
                          HttpSession session) {
         String uid = ((UserInfoVO) session.getAttribute("data")).getId();
         String result = null;
@@ -250,7 +252,7 @@ public class QuestionController {
     }
 
     // 回答删除接口
-    @PostMapping(value = "/comment/delete", produces = "application/json;charset=UTF-8")
+    @DeleteMapping(value = "/comment/delete", produces = "application/json;charset=UTF-8")
     public String deleteComment(
             @RequestParam(value = "questionId") Long questionId
             , HttpSession session) {
@@ -294,6 +296,31 @@ public class QuestionController {
         return result;
     }
 
+    // 设置问题为匿名 / 取消匿名
+    // TODO 同时还要设置回答为匿名
+    @PostMapping(value = "/anonymous",produces = "application/json;charset=UTF-8")
+    public String setAnonymous(
+            @RequestParam(value = "questionID") Long questionId,
+            HttpSession session){
+        String result = null;
+        String uid = ((UserInfoVO) session.getAttribute("data")).getId();
+        boolean isExists = questionRepository.isExists(questionId);
+        if (isExists) {
+            boolean isAnonymous = questionRepository.isAnonymous(questionId);
+            if (isAnonymous) {
+                questionCommentRepository.setDeletedTrue(questionId, uid);
+                result = JsonUtil.formatResult(200, "已经设为匿名!");
+            } else {
+                questionCommentRepository.setDeletedFalse(questionId, uid);
+                result = JsonUtil.formatResult(400, "已经取消匿名!");
+            }
+        }else{
+            result = JsonUtil.formatResult(400, "问题不存在");
+        }
+        return result;
+    }
+
     // TODO 回答修改接口
+
 
 }

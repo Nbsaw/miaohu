@@ -23,6 +23,9 @@ public class QuestionEntity {
 
     private Long vote = 0L;
 
+    // 匿名
+    private boolean anonymous;
+
     public String getTitle() {
         return title;
     }
@@ -61,5 +64,13 @@ public class QuestionEntity {
 
     public void setVote(Long vote) {
         this.vote = vote;
+    }
+
+    public boolean isAnonymous() {
+        return anonymous;
+    }
+
+    public void setAnonymous(boolean anonymous) {
+        this.anonymous = anonymous;
     }
 }

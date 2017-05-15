@@ -30,7 +30,6 @@ public class UserEntity implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate = new Date(); //创建日期
 
-
     /**
      * 以下为用户信息
      */

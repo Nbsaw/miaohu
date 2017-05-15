@@ -14,7 +14,6 @@ import java.net.URL;
 public class ImageToBase64 {
     public static void main(String[] args) {
         String imgURL = "http://www.g3zj.net:8082/util.action?method=appauthimg&d_=99";
-
         byte[] data = null;
         try {
             // 创建URL
