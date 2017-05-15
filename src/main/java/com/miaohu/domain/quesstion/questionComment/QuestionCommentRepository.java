@@ -14,12 +14,13 @@ import java.util.List;
 public interface QuestionCommentRepository extends Repository<QuestionCommentEntity,Long> {
     // 保存
     void save(QuestionCommentEntity questionCommentEntity);
+
     // 查找评论
     List<QuestionCommentEntity> findAllByQuestionId(Long questionId, String type);
 
     // 检测是否回答过问题
     @Query("select count(qc) > 0 from QuestionCommentEntity qc where qc.questionId = :questionId and qc.uid = :uid")
-    boolean isReply(@Param("questionId") Long questionId , @Param("uid") String uid);
+    boolean isExists(@Param("questionId") Long questionId , @Param("uid") String uid);
 
     // 修改回答
     @Transactional
@@ -42,4 +43,20 @@ public interface QuestionCommentRepository extends Repository<QuestionCommentEnt
     @Modifying
     @Query("update QuestionCommentEntity qc set qc.deleted = false where qc.questionId = :questionId and qc.uid = :uid")
     Integer setDeletedFalse(@Param("questionId") Long questionId,@Param("uid") String uid);
+
+    // 判断问题是否为匿名
+    @Query("select qc.anonymous from QuestionCommentEntity qc where qc.questionId = :questionId and qc.uid = :uid")
+    boolean isAnonymous(@Param("questionId") Long questionId,@Param("uid") String uid);
+
+    // 设置回答为匿名
+    @Transactional
+    @Modifying
+    @Query("update QuestionCommentEntity qc set qc.anonymous = true where qc.questionId = :questionId and qc.uid = :uid")
+    Integer setAnonymousTrue(@Param("questionId") Long questionId, @Param("uid") String uid);
+
+    // 设置回答为实名
+    @Transactional
+    @Modifying
+    @Query("update QuestionCommentEntity qc set qc.anonymous = false where qc.questionId = :questionId and qc.uid = :uid")
+    Integer setAnonymousFalse(@Param("questionId") Long questionId, @Param("uid") String uid);
 }

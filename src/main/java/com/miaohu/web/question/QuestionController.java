@@ -11,7 +11,6 @@ import com.miaohu.util.JsonUtil;
 import com.miaohu.service.getUserInfo.UserInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpSession;
 import java.util.List;
 
@@ -231,7 +230,7 @@ public class QuestionController {
             result = JsonUtil.formatResult(403, "帖子id不应该为空");
         }
         // 检测是不是已经回答过的问题
-        else if (questionCommentRepository.isReply(questionId, uid)) {
+        else if (questionCommentRepository.isExists(questionId, uid)) {
             result = JsonUtil.formatResult(403, "不可以重复回答问题:(");
         }
         // 检验回复是否为空
@@ -258,7 +257,7 @@ public class QuestionController {
             , HttpSession session) {
         String result = null;
         String uid = ((UserInfoVO) session.getAttribute("data")).getId();
-        boolean isReply = questionCommentRepository.isReply(questionId, uid);
+        boolean isReply = questionCommentRepository.isExists(questionId, uid);
        if (isReply){
            boolean isDeleted = questionCommentRepository.isDeleted(questionId, uid);
            if (isDeleted) {
@@ -281,7 +280,7 @@ public class QuestionController {
             HttpSession session) {
         String result = null;
         String uid = ((UserInfoVO) session.getAttribute("data")).getId();
-        boolean isReply = questionCommentRepository.isReply(questionId, uid);
+        boolean isReply = questionCommentRepository.isExists(questionId, uid);
         if (isReply) {
             boolean isDeleted = questionCommentRepository.isDeleted(questionId, uid);
             if (isDeleted) {
@@ -297,26 +296,49 @@ public class QuestionController {
     }
 
     // 设置问题为匿名 / 取消匿名
-    // TODO 同时还要设置回答为匿名
+    // 同时还要设置回答为匿名
     @PostMapping(value = "/anonymous",produces = "application/json;charset=UTF-8")
     public String setAnonymous(
             @RequestParam(value = "questionId") Long questionId,
             HttpSession session){
         String result = null;
         String uid = ((UserInfoVO) session.getAttribute("data")).getId();
+        boolean status = false;
+        // 首先判断一下问题存不存在
         boolean isExists = questionRepository.isExists(questionId);
         if (isExists) {
+            // 判断问题是否是匿名状态
             boolean isAnonymous = questionRepository.isAnonymous(questionId);
             if (isAnonymous) {
                 questionRepository.setAnonymousFalse(questionId, uid);
-                result = JsonUtil.formatResult(200, "已经取消匿名!");
+                status = true;
             } else {
                 questionRepository.setAnonymousTrue(questionId, uid);
                 result = JsonUtil.formatResult(200, "已经设为匿名!");
+                status = false;
             }
         }else{
             result = JsonUtil.formatResult(400, "问题不存在或者没有权限修改");
         }
+
+        // 判断用户是否回答过问题
+        boolean isCommentExists = questionCommentRepository.isExists(questionId,uid);
+        // 判断问题是否为匿名
+        if (isCommentExists){
+            boolean isCommentAnonymous = questionCommentRepository.isAnonymous(questionId,uid);
+            if (isCommentAnonymous){
+                    questionCommentRepository.setAnonymousFalse(questionId,uid);
+                    status = true;
+            }else {
+                questionCommentRepository.setAnonymousTrue(questionId,uid);
+                status = false;
+            }
+        }
+        // 判断状态返回结果
+        if (status)
+            result = JsonUtil.formatResult(200, "已经取消匿名!");
+        else
+            result = JsonUtil.formatResult(200, "已经设置为匿名!");
         return result;
     }
 

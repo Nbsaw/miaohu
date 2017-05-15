@@ -20,15 +20,21 @@ public class QuestionCommentEntity {
     @Column(nullable = false)
     private String uid;
 
+    // 问题内容
     @Lob
     @Column(length = 1000000,nullable = false)
     private String  content;
 
+    // 点赞次数
     @Column(nullable = false)
     private long vote = 0L;
 
+    // 删除状态
     @Column(nullable = false)
     private boolean deleted = false;
+
+    // 匿名状态
+    private boolean anonymous = false;
 
     public long getId() {
         return id;
@@ -76,5 +82,13 @@ public class QuestionCommentEntity {
 
     public void setDeleted(boolean deleted) {
         this.deleted = deleted;
+    }
+
+    public boolean isAnonymous() {
+        return anonymous;
+    }
+
+    public void setAnonymous(boolean anonymous) {
+        this.anonymous = anonymous;
     }
 }

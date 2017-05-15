@@ -47,13 +47,13 @@ public interface QuestionRepository extends Repository<QuestionEntity,Long> {
     @Query("select qc.anonymous from QuestionEntity qc where qc.id = :id")
     boolean isAnonymous(@Param("id") Long id);
 
-    // TODO 把问题设置为匿名
+    // 把问题设置为匿名
     @Transactional
     @Modifying
     @Query("update QuestionEntity q set q.anonymous = true where q.id = :id and q.uid = :uid")
     Integer setAnonymousTrue(@Param("id") Long id, @Param("uid") String uid);
 
-    // TODO 把问题设置为实名
+    // 把问题设置为实名
     @Transactional
     @Modifying
     @Query("update QuestionEntity q set q.anonymous = false where q.id = :id and q.uid = :uid")
