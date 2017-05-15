@@ -1,17 +1,23 @@
 package com.miaohu.web.user;
 
+import com.miaohu.domain.quesstion.QuestionEntity;
+import com.miaohu.domain.quesstion.QuestionRepository;
+import com.miaohu.domain.tag.TagRepository;
+import com.miaohu.domain.tag.tagMap.TagMapEntity;
+import com.miaohu.domain.tag.tagMap.TagMapRepository;
 import com.miaohu.domain.user.UserEntity;
 import com.miaohu.domain.user.UserRepository;
 import com.miaohu.service.getUserInfo.UserInfoService;
 import com.miaohu.service.getUserInfo.UserInfoVO;
+import com.miaohu.util.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
+
 import static com.miaohu.domain.user.UserType.LOCAL;
 
 
@@ -25,12 +31,21 @@ import static com.miaohu.domain.user.UserType.LOCAL;
 @RequestMapping(value = "/user")
 
 public class UserController {
-
+    // 用户信息
     @Autowired
     private UserInfoService userInfoService;
-
+    // 用户
     @Autowired
     private UserRepository userRepository;
+    // 问题
+    @Autowired
+    private QuestionRepository questionRepository;
+    // 标签
+    @Autowired
+    private TagRepository tagRepository;
+    // 标签映射
+    @Autowired
+    private TagMapRepository tagMapRepository;
 
     /**
      * 登录接口,判断手机和密码,把信息存在session里面
@@ -74,6 +89,37 @@ public class UserController {
             result.put("errors","没登录拿个猫的信息");
         }
         return result;
+    }
+
+    /**
+     * 获取用户发表的所有的问题
+     * @param session
+     * @return 获取用户发表的所有的问题
+     */
+    @GetMapping(value = "/question", produces="application/json;charset=UTF-8")
+    public String question(HttpSession session){
+        String userId = ((UserInfoVO)session.getAttribute("data")).getId();
+        List result = new ArrayList();
+        // 查找用户发表的问题
+        List<QuestionEntity> questionEntities =  questionRepository.findAllByUid(userId);
+        // 查找问题所属的标签
+        questionEntities.stream().forEach(q ->{
+            // 创建一个映射
+            Map map = new LinkedHashMap();
+            List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByTagIdAndType(q.getId(),"question");
+            // 搜索标签
+            List tagList = new LinkedList();
+            tagMapEntities.stream().forEach(m -> {
+                tagList.add(tagRepository.findById(m.getCorrelation()));
+            });
+            // 把问题加入映射
+            map.put("question",q);
+            // 添加问题映射
+            map.put("tag",tagList);
+            // 把映射加到列表
+            result.add(map);
+        });
+        return JsonUtil.formatResult(200,"",result);
     }
 
     // 账号注销,注销后跳转到首页
