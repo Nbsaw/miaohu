@@ -308,11 +308,11 @@ public class QuestionController {
         if (isExists) {
             boolean isAnonymous = questionRepository.isAnonymous(questionId);
             if (isAnonymous) {
+                questionRepository.setAnonymousFalse(questionId, uid);
+                result = JsonUtil.formatResult(200, "已经取消匿名!");
+            } else {
                 questionRepository.setAnonymousTrue(questionId, uid);
                 result = JsonUtil.formatResult(200, "已经设为匿名!");
-            } else {
-                questionRepository.setDeletedFalse(questionId, uid);
-                result = JsonUtil.formatResult(200, "已经取消匿名!");
             }
         }else{
             result = JsonUtil.formatResult(400, "问题不存在或者没有权限修改");
