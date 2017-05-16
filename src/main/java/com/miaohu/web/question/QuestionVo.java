@@ -1,8 +1,11 @@
 package com.miaohu.web.question;
 
+import com.miaohu.domain.tag.TagEntity;
 import com.miaohu.service.getUserInfo.UserInfoVO;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by nbsaw on 2017/5/16.
@@ -16,7 +19,7 @@ public class QuestionVo {
 
     private Date date;
 
-    private UserInfoVO userInfoVO;
+    private List<TagEntity> tag;
 
     public Long getId() {
         return id;
@@ -48,5 +51,13 @@ public class QuestionVo {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public List<TagEntity> getTag() {
+        return tag;
+    }
+
+    public void setTag(List<TagEntity> tag) {
+        this.tag = tag;
     }
 }

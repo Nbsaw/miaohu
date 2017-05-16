@@ -43,13 +43,6 @@ public class QuestionController {
     public String all(@RequestParam(value = "page",defaultValue = "0") int page,HttpSession session) {
         String uid = (String) session.getAttribute("id");
         // TODO 查看问题是否匿名
-        // TODO 查找问题所属的标签
-//        List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByTagIdAndType(id,"question");
-//        List list = new LinkedList();
-//        tagMapEntities.stream().forEach(map -> {
-//            System.out.println(map);
-//            list.add(tagRepository.findById(map.getTagId()).getName());
-//        });
         List<QuestionEntity> list = questionRepository.findAll(new PageRequest(page,10));
         List<QuestionVo> result = new ArrayList<QuestionVo>();
         // 重新封装数据
@@ -59,6 +52,13 @@ public class QuestionController {
             vo.setTitle(s.getTitle());
             vo.setTitle(s.getContent());
             vo.setDate(s.getDate());
+            List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByTagIdAndType(vo.getId(),"question");
+            List tagList = new ArrayList();
+            // 查找问题所属的标签
+            tagMapEntities.stream().forEach(map -> {
+                tagList.add(tagRepository.findById(map.getCorrelation()));
+            });
+            vo.setTag(tagList);
             result.add(vo);
         });
         return JsonUtil.formatResult(200,"",result);
@@ -70,9 +70,10 @@ public class QuestionController {
      * @param id 文章的id
      * @return id对应的问题
      */
-    // TODO 要检查是否回复过了。
+    // TODO 要返回是否回复过了。
     @GetMapping(value = "/{id}", produces = "application/json;charset=UTF-8")
     public QuestionEntity getId(@PathVariable("id") Long id) {
+
         return questionRepository.findById(id);
     }
 
@@ -139,6 +140,7 @@ public class QuestionController {
      * @return 返回状态, 修改成功或者失败
      * TODO 加个问题修改理由表
      * TODO 加上是否匿名的字段
+     * TODO 加上标签字段
      */
     @PostMapping(value = "/modify", produces = "application/json;charset=UTF-8")
     public String modify(@RequestParam(value = "id") Long id,
@@ -352,7 +354,7 @@ public class QuestionController {
         return result;
     }
 
-    // TODO 回答修改接口
+    // TODO 回答内容修改接口
 
 
 }
