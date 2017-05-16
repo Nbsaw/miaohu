@@ -6,12 +6,16 @@ package com.miaohu.service.getUserInfo;
  */
 
 public class UserInfoVO {
-    private String id;
+    // 用户名
     private String username;
+    // 用户头像
     private String avatar;
-    private String email;
+    // 用户位置
     private String location;
+    // 用户性别
     private String sex;
+    // 用户简历
+    private String bio;
 
     public String getUsername() {
         return username;
@@ -29,22 +33,6 @@ public class UserInfoVO {
         this.avatar = avatar;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public String getLocation() {
         return location;
     }
@@ -59,5 +47,12 @@ public class UserInfoVO {
     public void setSex(String sex) {
         this.sex = sex;
     }
-    
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
+    }
 }

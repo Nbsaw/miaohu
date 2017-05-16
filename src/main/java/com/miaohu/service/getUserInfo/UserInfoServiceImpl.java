@@ -48,7 +48,6 @@ public class UserInfoServiceImpl implements UserInfoService, GetUserInfoService 
         UserInfoVO userInfoVO = new UserInfoVO();
         userInfoVO.setUsername((String) auth_result.get("login"));
         userInfoVO.setAvatar((String) auth_result.get("avatar_url"));
-        userInfoVO.setEmail((String) auth_result.get("email"));
         userInfoVO.setLocation((String) auth_result.get("location"));
         session.setAttribute("userInfo", userInfoVO);
         return userInfoVO;

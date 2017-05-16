@@ -8,11 +8,11 @@ import com.miaohu.domain.tag.TagRepository;
 import com.miaohu.domain.tag.tagMap.TagMapEntity;
 import com.miaohu.domain.tag.tagMap.TagMapRepository;
 import com.miaohu.util.JsonUtil;
-import com.miaohu.service.getUserInfo.UserInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -40,17 +40,28 @@ public class QuestionController {
      * @return 查询近期的问题
      */
     @GetMapping(produces = "application/json;charset=UTF-8")
-    public String all(@RequestParam("page") int page,HttpSession session) {
-        String userId = ((UserInfoVO) session.getAttribute("data")).getId();
+    public String all(@RequestParam(value = "page",defaultValue = "0") int page,HttpSession session) {
+        String uid = (String) session.getAttribute("id");
         // TODO 查看问题是否匿名
         // TODO 查找问题所属的标签
-        //        List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByTagIdAndType(id,"question");
+//        List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByTagIdAndType(id,"question");
 //        List list = new LinkedList();
 //        tagMapEntities.stream().forEach(map -> {
 //            System.out.println(map);
 //            list.add(tagRepository.findById(map.getTagId()).getName());
 //        });
-        return JsonUtil.formatResult(200,"",questionRepository.findAll(new PageRequest(page,10)));
+        List<QuestionEntity> list = questionRepository.findAll(new PageRequest(page,10));
+        List<QuestionVo> result = new ArrayList<QuestionVo>();
+        // 重新封装数据
+        list.stream().forEach(s -> {
+            QuestionVo vo = new QuestionVo();
+            vo.setId(s.getId());
+            vo.setTitle(s.getTitle());
+            vo.setTitle(s.getContent());
+            vo.setDate(s.getDate());
+            result.add(vo);
+        });
+        return JsonUtil.formatResult(200,"",result);
     }
 
     /**
@@ -108,7 +119,7 @@ public class QuestionController {
      */
     @DeleteMapping(value = "/delete/{id}", produces = "application/json;charset=UTF-8")
     public String delete(@PathVariable(value = "id") Long id, HttpSession session) {
-        String userId = ((UserInfoVO) session.getAttribute("data")).getId();
+        String uid = (String) session.getAttribute("id");
         String result = null;
         if (questionRepository.deleteById(id) == 1)
             result = JsonUtil.formatResult(200, "删除问题成功");
@@ -135,7 +146,7 @@ public class QuestionController {
                          @RequestParam(value = "content", defaultValue = "") String content,
                          @RequestParam(value = "anonymous",defaultValue = "false") boolean anonymous,
                          HttpSession session) {
-        String uid = ((UserInfoVO) session.getAttribute("data")).getId();
+        String uid = (String) session.getAttribute("id");
         String result = null;
         if (questionRepository.updateContentByIdAndUid(id, uid, title, content) == 1)
             result = JsonUtil.formatResult(200, "问题修改成功");
@@ -182,7 +193,7 @@ public class QuestionController {
         // 尝试创建
         else {
             // 判断传过来的标签是否合法
-            String uid = ((UserInfoVO) session.getAttribute("data")).getId();
+            String uid = (String) session.getAttribute("id");
             for (long s : tags)
                 if (!tagRepository.exists(s))
                     return JsonUtil.formatResult(400, "无效的标签");
@@ -216,7 +227,7 @@ public class QuestionController {
      * 回答问题
      *
      * @param questionId
-     * @param content    //     * @param session
+     * @param content
      * @return
      */
     @PostMapping(value = "/comment/add", produces = "application/json;charset=UTF-8")
@@ -224,7 +235,7 @@ public class QuestionController {
                           @RequestParam(value = "content") String content,
                           HttpSession session) {
         String result = null;
-        String uid = ((UserInfoVO) session.getAttribute("data")).getId();
+        String uid = (String) session.getAttribute("id");
         // 检测id是否为空
         if (questionId == null) {
             result = JsonUtil.formatResult(403, "帖子id不应该为空");
@@ -239,11 +250,10 @@ public class QuestionController {
         }
         // 验证通过提交
         else {
-            String userId = ((UserInfoVO) session.getAttribute("data")).getId();
             QuestionCommentEntity questionCommentEntity = new QuestionCommentEntity();
             questionCommentEntity.setQuestionId(questionId);
             questionCommentEntity.setContent(content);
-            questionCommentEntity.setUid(userId);
+            questionCommentEntity.setUid(uid);
             questionCommentRepository.save(questionCommentEntity);
             result = JsonUtil.formatResult(200, "评论成功");
         }
@@ -256,7 +266,7 @@ public class QuestionController {
             @RequestParam(value = "questionId") Long questionId
             , HttpSession session) {
         String result = null;
-        String uid = ((UserInfoVO) session.getAttribute("data")).getId();
+        String uid = (String) session.getAttribute("id");
         boolean isReply = questionCommentRepository.isExists(questionId, uid);
        if (isReply){
            boolean isDeleted = questionCommentRepository.isDeleted(questionId, uid);
@@ -279,7 +289,7 @@ public class QuestionController {
             @RequestParam(value = "questionId") Long questionId,
             HttpSession session) {
         String result = null;
-        String uid = ((UserInfoVO) session.getAttribute("data")).getId();
+        String uid = (String) session.getAttribute("id");
         boolean isReply = questionCommentRepository.isExists(questionId, uid);
         if (isReply) {
             boolean isDeleted = questionCommentRepository.isDeleted(questionId, uid);
@@ -302,7 +312,7 @@ public class QuestionController {
             @RequestParam(value = "questionId") Long questionId,
             HttpSession session){
         String result = null;
-        String uid = ((UserInfoVO) session.getAttribute("data")).getId();
+        String uid = (String) session.getAttribute("id");
         boolean status = false;
         // 首先判断一下问题存不存在
         boolean isExists = questionRepository.isExists(questionId);

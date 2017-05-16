@@ -61,11 +61,10 @@ public class UserController {
         try {
             UserEntity userEntity = userRepository.login(phone,password);
             UserInfoVO userInfoVO = new UserInfoVO();
-            userInfoVO.setId(userEntity.getId());
             userInfoVO.setUsername(userEntity.getUsername());
             userInfoVO.setAvatar(userEntity.getAvatar());
             userInfoVO.setSex(userEntity.getSex());
-            session.setAttribute("data",userInfoVO);
+            session.setAttribute("id",userEntity.getId());
             session.setAttribute("oauth_type",LOCAL);
             result.put("code",200);
             result.put("data",userInfoVO);
@@ -99,10 +98,10 @@ public class UserController {
     // TODO 分页
     @GetMapping(value = "/question", produces="application/json;charset=UTF-8")
     public String question(HttpSession session){
-        String userId = ((UserInfoVO)session.getAttribute("data")).getId();
+        String uid = (String) session.getAttribute("id");
         List result = new ArrayList();
         // 查找用户发表的问题
-        List<QuestionEntity> questionEntities =  questionRepository.findAllByUid(userId);
+        List<QuestionEntity> questionEntities =  questionRepository.findAllByUid(uid);
         // 查找问题所属的标签
         questionEntities.stream().forEach(q ->{
             // 创建一个映射

@@ -23,7 +23,7 @@ public class MyWebAppConfigurer  extends WebMvcConfigurerAdapter {
             @Override
             public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
                 HttpSession session = request.getSession();
-                if (session.getAttribute("data") == null){
+                if (session.getAttribute("id") == null){
                     response.setHeader("Content-Type","application/json;charset=UTF-8");
                     PrintWriter pw = new PrintWriter(response.getOutputStream());
                     String result = JsonUtil.formatResult(401,"请登录后再操作");
