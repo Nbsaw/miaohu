@@ -1,5 +1,7 @@
 package com.miaohu.domain.quesstion;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
@@ -14,6 +16,10 @@ public interface QuestionRepository extends Repository<QuestionEntity,Long> {
     // 保存到数据库
     void save(QuestionEntity questionEntity);
 
+    // 逆序时间查找问题
+    @Query("select q from QuestionEntity q order by q.date desc")
+    List<QuestionEntity> findAll(Pageable pageable);
+
     // 通过Uid查找问题列表
     List<QuestionEntity> findAllByUid(String userId);
 
@@ -21,7 +27,7 @@ public interface QuestionRepository extends Repository<QuestionEntity,Long> {
     QuestionEntity findById(Long id);
 
     // 通过id判断问题是否存在
-    @Query("select count(qc) > 0 from QuestionEntity qc where qc.id = :id")
+    @Query("select count(q) > 0 from QuestionEntity q where q.id = :id")
     boolean isExists(@Param("id") Long id);
 
     // 删除问题

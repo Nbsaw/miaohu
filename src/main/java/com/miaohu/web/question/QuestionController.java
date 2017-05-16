@@ -10,6 +10,7 @@ import com.miaohu.domain.tag.tagMap.TagMapRepository;
 import com.miaohu.util.JsonUtil;
 import com.miaohu.service.getUserInfo.UserInfoVO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -32,6 +33,25 @@ public class QuestionController {
     // 评论
     @Autowired
     private QuestionCommentRepository questionCommentRepository;
+
+    /**
+     * 查询近期的问题
+     * @param session
+     * @return 查询近期的问题
+     */
+    @GetMapping(produces = "application/json;charset=UTF-8")
+    public String all(@RequestParam("page") int page,HttpSession session) {
+        String userId = ((UserInfoVO) session.getAttribute("data")).getId();
+        // TODO 查看问题是否匿名
+        // TODO 查找问题所属的标签
+        //        List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByTagIdAndType(id,"question");
+//        List list = new LinkedList();
+//        tagMapEntities.stream().forEach(map -> {
+//            System.out.println(map);
+//            list.add(tagRepository.findById(map.getTagId()).getName());
+//        });
+        return JsonUtil.formatResult(200,"",questionRepository.findAll(new PageRequest(page,10)));
+    }
 
     /**
      * 根据传过来的id获取某个问题
@@ -77,26 +97,6 @@ public class QuestionController {
                 result = JsonUtil.formatResult(200, "可以创建的问题");
         }
         return result;
-    }
-
-    /**
-     * 获取用户发表的所有的问题
-     *
-     * @param session
-     * @return 获取用户发表的所有的问题
-     */
-    @GetMapping(value = "/select", produces = "application/json;charset=UTF-8")
-    public List<QuestionEntity> all(HttpSession session) {
-        String userId = ((UserInfoVO) session.getAttribute("data")).getId();
-        // TODO 查找问题所属的标签
-        //        List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByTagIdAndType(id,"question");
-//        List list = new LinkedList();
-//        tagMapEntities.stream().forEach(map -> {
-//            System.out.println(map);
-//            list.add(tagRepository.findById(map.getTagId()).getName());
-//        });
-
-        return questionRepository.findAllByUid(userId);
     }
 
     /**
