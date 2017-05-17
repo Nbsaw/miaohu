@@ -53,6 +53,7 @@ public class UserInfoServiceImpl implements UserInfoService, GetUserInfoService 
         return userInfoVO;
     }
 
+    // TODO 修正
     @Override
     public UserInfoVO getLocalUser(HttpSession session) {
         //获取用户session

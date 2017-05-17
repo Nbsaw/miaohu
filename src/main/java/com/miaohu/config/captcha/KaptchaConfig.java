@@ -15,6 +15,7 @@ import java.util.Properties;
 @Configuration
 @EnableAutoConfiguration
 public class KaptchaConfig {
+    // TODO 丑的一比 改
     // 图形验证码生成配置
     @Bean(name="captchaProducer")
     @Scope(value = "prototype")
@@ -24,16 +25,17 @@ public class KaptchaConfig {
         properties.setProperty("kaptcha.border", "no");
 //        properties.setProperty("kaptcha.border.color", "black");
         properties.setProperty("kaptcha.textproducer.font.color", "black");
-        properties.setProperty("kaptcha.image.width", "200");
-        properties.setProperty("kaptcha.image.height", "50");
-        properties.setProperty("kaptcha.session.key", "code");
+        properties.setProperty("kaptcha.image.width", "100");
+        properties.setProperty("kaptcha.image.height", "38");
+//        properties.setProperty("kaptcha.session.key", "code");
         properties.setProperty("kaptcha.obscurificator.impl","com.miaohu.config.captcha.CustomCaptcha");
 //        properties.setProperty("kaptcha.noise.impl","com.google.code.kaptcha.impl.NoNoise");
+        properties.setProperty("kaptcha.textproducer.font.size","26");
+        properties.setProperty("kaptcha.textproducer.char.space","3");
         properties.setProperty("kaptcha.textproducer.char.length", "4");
-        properties.setProperty("kaptcha.textproducer.font.names", "微软雅黑");
+//        properties.setProperty("kaptcha.textproducer.font.names", "微软雅黑");
         properties.setProperty("kaptcha.textproducer.char.string","0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
-        properties.setProperty("kaptcha.textproducer.font.size","40");
-        properties.setProperty("kaptcha.textproducer.char.space","8");
+
         properties.setProperty("kaptcha.background.clear.from","white");
         properties.setProperty("kaptcha.background.clear.to","white");
         Config config=new Config(properties);

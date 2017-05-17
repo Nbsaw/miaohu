@@ -13,7 +13,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by fz on 17-3-31.
@@ -72,9 +74,23 @@ public class QuestionController {
      */
     // TODO 要返回是否回复过了。
     @GetMapping(value = "/{id}", produces = "application/json;charset=UTF-8")
-    public QuestionEntity getId(@PathVariable("id") Long id) {
-
-        return questionRepository.findById(id);
+    public String getId(@PathVariable("id") Long id) {
+        QuestionEntity s = questionRepository.findById(id);
+        QuestionVo vo = new QuestionVo();
+        vo.setId(s.getId());
+        vo.setTitle(s.getTitle());
+        vo.setTitle(s.getContent());
+        vo.setDate(s.getDate());
+        List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByTagIdAndType(vo.getId(),"question");
+        List tagList = new ArrayList();
+        // 查找问题所属的标签
+        tagMapEntities.stream().forEach(map -> {
+            tagList.add(tagRepository.findById(map.getCorrelation()));
+        });
+        Map result = new LinkedHashMap();
+        result.put("question",vo);
+        result.put("tag",tagList);
+        return JsonUtil.formatResult(200,"",result);
     }
 
     /**
@@ -194,11 +210,19 @@ public class QuestionController {
         }
         // 尝试创建
         else {
-            // 判断传过来的标签是否合法
+            // 获取用户id
             String uid = (String) session.getAttribute("id");
+            // 判断传过来的标签是否合法
             for (long s : tags)
                 if (!tagRepository.exists(s))
                     return JsonUtil.formatResult(400, "无效的标签");
+            // 保存问题
+            // NOTE 关于这个问题什么放在前面,
+            // 因为如果不放在前面getId会获取不到值 ...
+            questionEntity.setUid(uid);
+            questionEntity.setTitle(title);
+            questionEntity.setContent(content);
+            questionRepository.save(questionEntity);
             // 标签都合法保存下来
             for (long s : tags) {
                 TagMapEntity tagMapEntity = new TagMapEntity();
@@ -207,11 +231,6 @@ public class QuestionController {
                 tagMapEntity.setType("question");
                 tagMapRepository.save(tagMapEntity);
             }
-            // 保存问题
-            questionEntity.setUid(uid);
-            questionEntity.setTitle(title);
-            questionEntity.setContent(content);
-            questionRepository.save(questionEntity);
             result = JsonUtil.formatResult(200, "问题发布成功");
         }
         return result;
