@@ -208,6 +208,10 @@ public class QuestionController {
         else if (!last.equals("?") && !last.equals("？")) {
             result = JsonUtil.formatResult(400, "你还没有给问题添加问号");
         }
+        // 判断问题是否已存在
+        else if(isExists){
+            result = JsonUtil.formatResult(400, "已经存在的问题");
+        }
         // 尝试创建
         else {
             // 获取用户id
