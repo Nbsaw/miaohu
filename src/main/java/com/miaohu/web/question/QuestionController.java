@@ -246,7 +246,7 @@ public class QuestionController {
     // 查找问题的评论
     @GetMapping(value = "/answer/{id}", produces = "application/json;charset=UTF-8")
     public String selectAnswerById(@PathVariable("id") Long id) {
-        List<AnswerEntity> list = answerRepository.findAllByQuestionId(id,new PageRequest(1,1));
+        List<AnswerEntity> list = answerRepository.findAllByQuestionId(id,new PageRequest(0,5));
         return JsonUtil.formatResult(200, "", list);
     }
 
