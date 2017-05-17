@@ -72,16 +72,15 @@ public class QuestionController {
      * @param id 文章的id
      * @return id对应的问题
      */
-    // TODO 要返回是否回复过了。
     @GetMapping(value = "/{id}", produces = "application/json;charset=UTF-8")
-    public String getId(@PathVariable("id") Long id) {
+    public String getId(@PathVariable("id") Long id,HttpSession session) {
         QuestionEntity s = questionRepository.findById(id);
         QuestionVo vo = new QuestionVo();
         vo.setId(s.getId());
         vo.setTitle(s.getTitle());
         vo.setTitle(s.getContent());
         vo.setDate(s.getDate());
-        List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByTagIdAndType(vo.getId(),"question");
+        List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByTagIdAndType(id,"question");
         List tagList = new ArrayList();
         // 查找问题所属的标签
         tagMapEntities.stream().forEach(map -> {
@@ -91,7 +90,8 @@ public class QuestionController {
         result.put("question",vo);
         result.put("tag",tagList);
         // 判断是否回复过问题
-
+        String uid = (String) session.getAttribute("id");
+        result.put("answer",answerRepository.isExists(id,uid));
         return JsonUtil.formatResult(200,"",result);
     }
 
