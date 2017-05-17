@@ -56,6 +56,7 @@ public class UserController {
      */
     // TODO 加密解密,反之中间人攻击
     // TODO 返回账号是否存在
+    // TODO 第三方登录
     @PostMapping(value = "/login",produces="application/json;charset=UTF-8")
     public Map login(HttpSession session, @RequestParam("phone") String phone , @RequestParam("password") String password){
         Map result = new LinkedHashMap();

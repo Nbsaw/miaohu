@@ -1,6 +1,9 @@
 package com.miaohu.service.getUserInfo;
 
+import com.miaohu.domain.user.UserEntity;
+import com.miaohu.domain.user.UserRepository;
 import com.miaohu.domain.user.UserType;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -8,12 +11,17 @@ import org.springframework.web.util.UriComponentsBuilder;
 import javax.servlet.http.HttpSession;
 import java.net.URI;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Created by fz on 17-3-27.
  */
 @Component
 public class UserInfoServiceImpl implements UserInfoService, GetUserInfoService {
+    // 用户
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public UserInfoVO getUserInfo(HttpSession session) {
         UserInfoVO userInfoVO = (UserInfoVO) session.getAttribute("userInfo");
@@ -58,7 +66,14 @@ public class UserInfoServiceImpl implements UserInfoService, GetUserInfoService 
     public UserInfoVO getLocalUser(HttpSession session) {
         //获取用户session
         String access_token = (String) session.getAttribute("access_token");
-        UserInfoVO userInfoVO = (UserInfoVO) session.getAttribute("data");
+        String uid = (String) session.getAttribute("id");
+        UserEntity userEntity = userRepository.findOne(uid);
+        UserInfoVO userInfoVO = new UserInfoVO();
+        // TODO 本地位置
+        userInfoVO.setUsername(userEntity.getUsername());
+        userInfoVO.setSex(userInfoVO.getSex());
+        userInfoVO.setBio(userEntity.getBio());
+        userInfoVO.setAvatar(userEntity.getAvatar());
         return userInfoVO;
     }
 }

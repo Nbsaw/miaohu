@@ -5,11 +5,13 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.UUID;
+
 /**
  * Created by fz on 17-3-29.
  */
 @Repository
-public interface UserRepository extends CrudRepository<UserEntity,Long> {
+public interface UserRepository extends CrudRepository<UserEntity,String> {
 
     @Query(value = "select count(u) > 0 from UserEntity u where u.phone = :phone")
     boolean isUserExists(@Param("phone") String phone);
