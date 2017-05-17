@@ -98,13 +98,17 @@ public class RegisterValidUtil {
 
     // 判断用户名是否合法
     public static void usernameValid(String username, Map errors) {
+        // 判断是否为中文
+        Pattern p = Pattern.compile("^[\\u4E00-\\u9FA5\\uf900-\\ufa2d\\w]{1,50}$");
+        Matcher m = p.matcher(username);
+        int length = m.matches() ? 2 : 3;
         if (username == null || username.length() == 0) {
             errors.put("username", "请填写用户名");
         } else if (username.indexOf(" ") != -1) {
             errors.put("username", "用户名不应该包含空格");
         } else if (!isValidName(username)) {
             errors.put("username", "用户名不应该包含特殊字符");
-        } else if (username.length() < 3) {
+        } else if (username.length() < length) {
             errors.put("username", "姓名最短为2个中文或者3个英文");
         } else if (username.length() > 16) {
             errors.put("username", "用户名不应该超过8个中文或16个英文");
