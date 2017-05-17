@@ -1,7 +1,7 @@
 package com.miaohu.web.question;
 
-import com.miaohu.domain.quesstion.questionComment.QuestionCommentEntity;
-import com.miaohu.domain.quesstion.questionComment.QuestionCommentRepository;
+import com.miaohu.domain.quesstion.answer.AnswerEntity;
+import com.miaohu.domain.quesstion.answer.AnswerRepository;
 import com.miaohu.domain.quesstion.QuestionEntity;
 import com.miaohu.domain.quesstion.QuestionRepository;
 import com.miaohu.domain.tag.TagRepository;
@@ -34,7 +34,7 @@ public class QuestionController {
     private TagMapRepository tagMapRepository;
     // 评论
     @Autowired
-    private QuestionCommentRepository questionCommentRepository;
+    private AnswerRepository answerRepository;
 
     /**
      * 查询近期的问题
@@ -90,6 +90,8 @@ public class QuestionController {
         Map result = new LinkedHashMap();
         result.put("question",vo);
         result.put("tag",tagList);
+        // 判断是否回复过问题
+
         return JsonUtil.formatResult(200,"",result);
     }
 
@@ -242,9 +244,9 @@ public class QuestionController {
 
     // 查找问题的评论
     // TODO 要做分页哦
-    @GetMapping(value = "/comment/{id}", produces = "application/json;charset=UTF-8")
-    public String selectById(@PathVariable("id") Long id) {
-        List<QuestionCommentEntity> list = questionCommentRepository.findAllByQuestionId(id, "question");
+    @GetMapping(value = "/answer/{id}", produces = "application/json;charset=UTF-8")
+    public String selectAnswerById(@PathVariable("id") Long id) {
+        List<AnswerEntity> list = answerRepository.findAllByQuestionId(id);
         return JsonUtil.formatResult(200, "", list);
     }
 
@@ -255,8 +257,8 @@ public class QuestionController {
      * @param content
      * @return
      */
-    @PostMapping(value = "/comment/add", produces = "application/json;charset=UTF-8")
-    public String comment(@RequestParam(value = "questionId") Long questionId,
+    @PostMapping(value = "/answer/add", produces = "application/json;charset=UTF-8")
+    public String answer(@RequestParam(value = "questionId") Long questionId,
                           @RequestParam(value = "content") String content,
                           HttpSession session) {
         String result = null;
@@ -266,7 +268,7 @@ public class QuestionController {
             result = JsonUtil.formatResult(403, "帖子id不应该为空");
         }
         // 检测是不是已经回答过的问题
-        else if (questionCommentRepository.isExists(questionId, uid)) {
+        else if (answerRepository.isExists(questionId, uid)) {
             result = JsonUtil.formatResult(403, "不可以重复回答问题:(");
         }
         // 检验回复是否为空
@@ -275,30 +277,30 @@ public class QuestionController {
         }
         // 验证通过提交
         else {
-            QuestionCommentEntity questionCommentEntity = new QuestionCommentEntity();
-            questionCommentEntity.setQuestionId(questionId);
-            questionCommentEntity.setContent(content);
-            questionCommentEntity.setUid(uid);
-            questionCommentRepository.save(questionCommentEntity);
+            AnswerEntity answerEntity = new AnswerEntity();
+            answerEntity.setQuestionId(questionId);
+            answerEntity.setContent(content);
+            answerEntity.setUid(uid);
+            answerRepository.save(answerEntity);
             result = JsonUtil.formatResult(200, "评论成功");
         }
         return result;
     }
 
     // 回答删除接口
-    @DeleteMapping(value = "/comment/delete", produces = "application/json;charset=UTF-8")
-    public String deleteComment(
+    @DeleteMapping(value = "/answer/delete", produces = "application/json;charset=UTF-8")
+    public String deleteAnswer(
             @RequestParam(value = "questionId") Long questionId
             , HttpSession session) {
         String result = null;
         String uid = (String) session.getAttribute("id");
-        boolean isReply = questionCommentRepository.isExists(questionId, uid);
+        boolean isReply = answerRepository.isExists(questionId, uid);
        if (isReply){
-           boolean isDeleted = questionCommentRepository.isDeleted(questionId, uid);
+           boolean isDeleted = answerRepository.isDeleted(questionId, uid);
            if (isDeleted) {
                result = JsonUtil.formatResult(400, "已经是删除状态了！");
            } else {
-               questionCommentRepository.setDeletedTrue(questionId, uid);
+               answerRepository.setDeletedTrue(questionId, uid);
                result = JsonUtil.formatResult(200, "回答已删除");
            }
        }
@@ -309,17 +311,17 @@ public class QuestionController {
     }
 
     // 撤销删除
-    @PostMapping(value = "/comment/revoke", produces = "application/json;charset=UTF-8")
-    public String revokeComment(
+    @PostMapping(value = "/answer/revoke", produces = "application/json;charset=UTF-8")
+    public String revokeAnswer(
             @RequestParam(value = "questionId") Long questionId,
             HttpSession session) {
         String result = null;
         String uid = (String) session.getAttribute("id");
-        boolean isReply = questionCommentRepository.isExists(questionId, uid);
+        boolean isReply = answerRepository.isExists(questionId, uid);
         if (isReply) {
-            boolean isDeleted = questionCommentRepository.isDeleted(questionId, uid);
+            boolean isDeleted = answerRepository.isDeleted(questionId, uid);
             if (isDeleted) {
-                questionCommentRepository.setDeletedFalse(questionId, uid);
+                answerRepository.setDeletedFalse(questionId, uid);
                 result = JsonUtil.formatResult(200, "撤销成功");
             } else {
                 result = JsonUtil.formatResult(400, "已经是撤销状态了!");
@@ -357,15 +359,15 @@ public class QuestionController {
         }
 
         // 判断用户是否回答过问题
-        boolean isCommentExists = questionCommentRepository.isExists(questionId,uid);
+        boolean isAnswerExists = answerRepository.isExists(questionId,uid);
         // 判断问题是否为匿名
-        if (isCommentExists){
-            boolean isCommentAnonymous = questionCommentRepository.isAnonymous(questionId,uid);
-            if (isCommentAnonymous){
-                    questionCommentRepository.setAnonymousFalse(questionId,uid);
+        if (isAnswerExists){
+            boolean isnswerAnonymous = answerRepository.isAnonymous(questionId,uid);
+            if (isnswerAnonymous){
+                    answerRepository.setAnonymousFalse(questionId,uid);
                     status = true;
             }else {
-                questionCommentRepository.setAnonymousTrue(questionId,uid);
+                answerRepository.setAnonymousTrue(questionId,uid);
                 status = false;
             }
         }

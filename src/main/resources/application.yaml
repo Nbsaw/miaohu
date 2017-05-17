@@ -19,7 +19,7 @@ spring.resources.chain.gzipped: true
 server.display-name: nbsaw
 
 #session
-#server.session.cookie.questionComment= # Comment for the session cookie.
+#server.session.cookie.answer= # Comment for the session cookie.
 #server.session.cookie.pojo= # Domain for the session cookie.
 server.session.cookie.http-only: true # "HttpOnly" flag for the session cookie.
 server.session.cookie.max-age: 604800 # Maximum age of the session cookie in seconds.

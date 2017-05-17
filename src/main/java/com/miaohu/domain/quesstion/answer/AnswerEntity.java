@@ -1,4 +1,4 @@
-package com.miaohu.domain.quesstion.questionComment;
+package com.miaohu.domain.quesstion.answer;
 
 import javax.persistence.*;
 
@@ -6,8 +6,8 @@ import javax.persistence.*;
  * Created by Nbsaw on 17-5-3.
  */
 @Entity
-@Table(name = "question_comment")
-public class QuestionCommentEntity {
+@Table(name = "answer")
+public class AnswerEntity {
     @Id
     @GeneratedValue
     private long id;
