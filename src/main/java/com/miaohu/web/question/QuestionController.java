@@ -192,7 +192,7 @@ public class QuestionController {
                        @RequestParam(value = "tags") Long[] tags,
                        HttpSession session) {
         QuestionEntity questionEntity = new QuestionEntity();
-        boolean isExists = questionRepository.existsQuestion(content);
+        boolean isExists = questionRepository.existsQuestion(title);
         title = title.trim();
         String last = title.substring(title.length() - 1); // 最后一个字符
         String result = null;
