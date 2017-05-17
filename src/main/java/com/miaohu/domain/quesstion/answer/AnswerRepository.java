@@ -1,5 +1,6 @@
 package com.miaohu.domain.quesstion.answer;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
@@ -16,7 +17,7 @@ public interface AnswerRepository extends Repository<AnswerEntity,Long> {
     void save(AnswerEntity answerEntity);
 
     // 查找评论
-    List<AnswerEntity> findAllByQuestionId(Long questionId);
+    List<AnswerEntity> findAllByQuestionId(Long questionId,Pageable pageable);
 
     // 检测是否回答过问题
     @Query("select count(qc) > 0 from AnswerEntity qc where qc.questionId = :questionId and qc.uid = :uid")

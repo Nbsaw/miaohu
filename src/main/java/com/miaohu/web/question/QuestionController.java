@@ -150,6 +150,7 @@ public class QuestionController {
     /**
      * 根据id以及传过来的标题,内容修改
      * 对应的问题
+     * 回答内容修改接口
      *
      * @param id      问题的id
      * @param title   问题的标题
@@ -243,10 +244,9 @@ public class QuestionController {
     }
 
     // 查找问题的评论
-    // TODO 要做分页哦
     @GetMapping(value = "/answer/{id}", produces = "application/json;charset=UTF-8")
     public String selectAnswerById(@PathVariable("id") Long id) {
-        List<AnswerEntity> list = answerRepository.findAllByQuestionId(id);
+        List<AnswerEntity> list = answerRepository.findAllByQuestionId(id,new PageRequest(1,1));
         return JsonUtil.formatResult(200, "", list);
     }
 
@@ -378,8 +378,5 @@ public class QuestionController {
             result = JsonUtil.formatResult(200, "已经设置为匿名!");
         return result;
     }
-
-    // TODO 回答内容修改接口
-
 
 }
