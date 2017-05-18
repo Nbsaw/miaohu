@@ -43,11 +43,6 @@ public interface QuestionRepository extends Repository<QuestionEntity,Long> {
     @Query("select count(q) > 0 from QuestionEntity q where q.title = :title")
     boolean existsQuestion(@Param("title") String title);
 
-    // TODO 点赞 +1
-
-    // TODO 取消 -1
-
-
     // 查询问题是否为匿名
     @Query("select qc.anonymous from QuestionEntity qc where qc.id = :id")
     boolean isAnonymous(@Param("id") Long id);

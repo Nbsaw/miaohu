@@ -27,9 +27,6 @@ public class QuestionEntity {
     @Column(length = 1000000)
     private String  content;
 
-    // 问题点赞次数
-    private Long vote = 0L;
-
     // 发表时间
     @Column
     @Temporal(TemporalType.TIMESTAMP)
@@ -68,14 +65,6 @@ public class QuestionEntity {
 
     public void setContent(String content) {
         this.content = content;
-    }
-
-    public Long getVote() {
-        return vote;
-    }
-
-    public void setVote(Long vote) {
-        this.vote = vote;
     }
 
     public boolean isAnonymous() {
