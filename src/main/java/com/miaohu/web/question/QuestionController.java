@@ -1,9 +1,12 @@
 package com.miaohu.web.question;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.miaohu.domain.quesstion.answer.AnswerEntity;
 import com.miaohu.domain.quesstion.answer.AnswerRepository;
 import com.miaohu.domain.quesstion.QuestionEntity;
 import com.miaohu.domain.quesstion.QuestionRepository;
+import com.miaohu.domain.quesstion.answerVoteMap.AnswerVoteMapEntity;
+import com.miaohu.domain.quesstion.answerVoteMap.AnswerVoteMapRepository;
 import com.miaohu.domain.tag.TagRepository;
 import com.miaohu.domain.tag.tagMap.TagMapEntity;
 import com.miaohu.domain.tag.tagMap.TagMapRepository;
@@ -12,10 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by fz on 17-3-31.
@@ -35,6 +35,9 @@ public class QuestionController {
     // 评论
     @Autowired
     private AnswerRepository answerRepository;
+    // 回答点赞
+    @Autowired
+    private AnswerVoteMapRepository answerVoteMapRepository;
 
     /**
      * 查询近期的问题
@@ -379,8 +382,42 @@ public class QuestionController {
         return result;
     }
 
-    // TODO 回答点赞
-
+    // 回答点赞
+    @PostMapping(value = "/vote",produces = "application/json;charset=UTF-8")
+    public String vote(@RequestParam(value = "answerId") Long answerId,HttpSession session){
+        String result = null;
+        String uid = (String) session.getAttribute("id");
+        Map map = new HashMap();
+        // 通过回答的id找到问题的id
+        Long questionId = answerVoteMapRepository.findQuestionId(answerId);
+        // 在通过问题的id和用户id确认问题是不是点赞者自己的回答
+        boolean isSelf = answerRepository.isSelf(questionId,uid);
+        // 如果是自己的回答
+        if (isSelf){
+            result = JsonUtil.formatResult(404,"不能给自己点赞 XD");
+        }
+        else{
+            // 判断是否点赞过了
+            boolean isVote = answerVoteMapRepository.isVote(answerId,uid);
+            if (!isVote){
+                AnswerVoteMapEntity answerVoteMapEntity = new AnswerVoteMapEntity();
+                answerVoteMapEntity.setUid(uid);
+                answerVoteMapEntity.setAnswerId(answerId);
+                answerVoteMapEntity.setQuestionId(questionId);
+                answerVoteMapRepository.save(answerVoteMapEntity);
+                map.put("vote",1);
+            }
+            else{
+                answerVoteMapRepository.deleteByAnswerIdAndUid(answerId,uid);
+                map.put("vote",0);
+            }
+            // 获取总数
+            Long count = answerVoteMapRepository.countAllByQuestionId(questionId);
+            map.put("count",count);
+            result = JsonUtil.formatResult(200,"",map);
+        }
+        return result;
+    }
 
     // TODO 推送表
 

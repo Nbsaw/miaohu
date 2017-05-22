@@ -19,6 +19,10 @@ public interface AnswerRepository extends Repository<AnswerEntity,Long> {
     // 查找评论
     List<AnswerEntity> findAllByQuestionId(Long questionId,Pageable pageable);
 
+    // 根据用户id和问题id查看是否为提问者
+    @Query("select count(a) > 0 from AnswerEntity a where a.questionId = :questionId and a.uid = :uid")
+    boolean isSelf(@Param("questionId") Long questionId,@Param("uid") String uid);
+
     // 检测是否回答过问题
     @Query("select count(qc) > 0 from AnswerEntity qc where qc.questionId = :questionId and qc.uid = :uid")
     boolean isExists(@Param("questionId") Long questionId , @Param("uid") String uid);

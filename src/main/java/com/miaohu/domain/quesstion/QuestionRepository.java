@@ -20,9 +20,9 @@ public interface QuestionRepository extends Repository<QuestionEntity,Long> {
     List<QuestionEntity> findAll(Pageable pageable);
 
     // 通过Uid查找问题列表
-    List<QuestionEntity> findAllByUid(String userId);
+    List<QuestionEntity> findAllByUid(String uid);
 
-    // 通过id查找某个问题
+    // 通过问题id查找某个问题
     QuestionEntity findById(Long id);
 
     // 通过id判断问题是否存在

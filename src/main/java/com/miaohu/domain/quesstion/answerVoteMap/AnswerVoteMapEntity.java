@@ -12,6 +12,9 @@ public class AnswerVoteMapEntity {
     @GeneratedValue
     private Long id;
 
+    // 回答的id
+    private Long answerId;
+
     // 问题的id
     private Long questionId;
 
@@ -26,12 +29,12 @@ public class AnswerVoteMapEntity {
         this.id = id;
     }
 
-    public Long getQuestionId() {
-        return questionId;
+    public Long getAnswerId() {
+        return answerId;
     }
 
-    public void setQuestionId(Long questionId) {
-        this.questionId = questionId;
+    public void setAnswerId(Long answerId) {
+        this.answerId = answerId;
     }
 
     public String getUid() {
@@ -40,5 +43,13 @@ public class AnswerVoteMapEntity {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public Long getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(Long questionId) {
+        this.questionId = questionId;
     }
 }
