@@ -5,6 +5,9 @@
 #server.ssl.key-password: secret
 #management.port: 8080
 #management.ssl.enabled: false
+project:
+      name : miaohu
+      version : 0.0.3
 server:
        address: 0.0.0.0
        port: 8080
@@ -29,6 +32,7 @@ server.session.cookie.path: / # Path of the session cookie.
 
 #terminal color setting
 spring.output.ansi.enabled: always
+
 #banner
 #banner.image.width: 60 # Width of the banner image in chars (default 76)
 #banner.image.height: 20 # Height of the banner image in chars (default based on image height)
