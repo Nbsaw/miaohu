@@ -10,6 +10,5 @@ public class RSAtest {
         rsAsecurity.priENpubDE();
         System.out.println("公钥加密私钥解密例：");
         rsAsecurity.pubENpriDE();
-
     }
 }

@@ -7,10 +7,21 @@
 #management.ssl.enabled: false
 project:
       name : miaohu
-      version : 0.0.3
+      version : 0.0.4
+
+#server:
+#       address: 0.0.0.0
+#       port: 8080
+
+# https support
 server:
-       address: 0.0.0.0
-       port: 8080
+      port: 443
+      address: 0.0.0.0
+      ssl:
+          key-store: keystore.p12
+          key-store-password: 25802580
+          keyStoreType: PKCS12
+          keyAlias: tomcat
 
 debug: true
 
