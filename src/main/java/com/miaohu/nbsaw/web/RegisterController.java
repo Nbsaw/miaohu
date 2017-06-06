@@ -53,6 +53,8 @@ public class RegisterController {
         RegisterValidUtil.phoneValid(phone, errors,userRepository);
 
         // 校验图片验证码
+        System.out.println("imageCaptcha : " + imageCaptcha);
+        System.out.println("redisCaptcha : " + redisCaptcha);
         RegisterValidUtil.imageCaptchaValid(imageCaptcha, errors, redisCaptcha);
 
         // 校验手机验证码

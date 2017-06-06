@@ -70,6 +70,7 @@ public class CaptchaController {
       ValueOperations obj =  template.opsForValue();
       obj.set(key,capText.toLowerCase());
       template.expire(key,RedisConstant.IMAGETIMEOUT, TimeUnit.MINUTES);
+
       return null;
    }
 
