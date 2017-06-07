@@ -18,7 +18,7 @@ targetCompatibility = 1.8
 
 jar {
     baseName = 'miaohu'
-    version =  '0.0.3'
+    version =  '0.0.4'
 }
 
 repositories {
@@ -40,6 +40,8 @@ dependencies {
     compile group: 'org.json', name: 'json', version: '20160810'
     // https://mvnrepository.com/artifact/org.apache.commons/commons-lang3
     compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.5'
+    // https://mvnrepository.com/artifact/io.jsonwebtoken/jjwt
+    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.7.0'
 
     // spring security
 //    compile group: 'org.springframework.security', name: 'spring-security-config', version: '4.2.2.RELEASE'

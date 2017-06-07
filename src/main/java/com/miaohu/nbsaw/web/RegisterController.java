@@ -9,6 +9,7 @@ import com.miaohu.nbsaw.util.RegisterValidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -27,15 +28,19 @@ public class RegisterController {
 
     // 第一步检测
     @PostMapping(value = "/valid",produces="application/json;charset=UTF-8")
-    public Map valid(RegisterForm registerForm, HttpSession session) {
-        return validate(registerForm, session,false);
+    public Map valid(@ModelAttribute RegisterForm registerForm, HttpSession session,HttpServletRequest requet) {
+        return validate(registerForm, session,false,requet);
     }
 
     // 检测参数是否合法
-    public Map validate(RegisterForm registerForm, HttpSession session,boolean is) {
+    public Map validate(RegisterForm registerForm, HttpSession session,boolean is,HttpServletRequest requet) {
         Map result = new LinkedHashMap();
         Map errors = new LinkedHashMap();
 
+        System.out.println(session.getId());
+        // session 设置
+        System.out.println(requet);
+        session.setAttribute("domain","");
         // 需要被检测的信息
         String username = registerForm.getUsername();
         String password = registerForm.getPassword();
@@ -77,10 +82,10 @@ public class RegisterController {
 
     // 正式注册
     @PostMapping(produces="application/json;charset=UTF-8")
-    public Map register(RegisterForm registerForm, HttpSession session) {
+    public Map register(RegisterForm registerForm, HttpSession session,HttpServletRequest requet) {
 
         // 校对用户信息
-        Map result = validate(registerForm, session,true);
+        Map result = validate(registerForm, session,true,requet);
 
         // 验证不通过的情况
         if ((int) result.get("code") == 200){
