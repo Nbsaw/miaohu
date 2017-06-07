@@ -32,25 +32,10 @@ spring.resources.chain.gzipped: true
 #spring.resources.static-locations: file:E:\WorkSpace\webpack\public\ # 坑壁window一定要以\结尾
 server.display-name: nbsaw
 
-#session
-#server.session.cookie.answer= # Comment for the session cookie.
-#server.session.cookie.pojo= # Domain for the session cookie.
-server.session.cookie.http-only: true # "HttpOnly" flag for the session cookie.
-server.session.cookie.max-age: 604800 # Maximum age of the session cookie in seconds.
-server.session.timeout: 604800
-server.session.cookie.name: miaohu # Session cookie name.
-server.session.cookie.path: / # Path of the session cookie.
 
 #terminal color setting
 spring.output.ansi.enabled: always
 
-#banner
-#banner.image.width: 60 # Width of the banner image in chars (default 76)
-#banner.image.height: 20 # Height of the banner image in chars (default based on image height)
-#banner.image.margin: 0
-#banner.charset: UTF-8
-#banner.image.location: classpath:temp.png
-#spring.main.banner-mode: off
 
 #environment
 #spring.profiles.active: development

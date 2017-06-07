@@ -53,6 +53,6 @@ public class JwtTest {
         }
         // 正常的token
         System.out.println(Jwts.parser().setSigningKey(key).parseClaimsJws(compactJws3));
-        System.out.println(Jwts.parser().setSigningKey(key).parseClaimsJws(compactJws4)); 
+        System.out.println(Jwts.parser().setSigningKey(key).parseClaimsJws(compactJws4));
     }
 }
