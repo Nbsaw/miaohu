@@ -13,33 +13,12 @@ import javax.persistence.Table;
 public class tagCorrelationEntity {
     @Id
     @GeneratedValue
+    // 标签关联表id
     private Long id;
 
+    // 标签名
     private String tagName;
 
+    // 关联id
     private String correlation;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTagName() {
-        return tagName;
-    }
-
-    public void setTagName(String tagName) {
-        this.tagName = tagName;
-    }
-
-    public String getCorrelation() {
-        return correlation;
-    }
-
-    public void setCorrelation(String correlation) {
-        this.correlation = correlation;
-    }
 }

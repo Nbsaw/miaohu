@@ -1,5 +1,6 @@
 package com.miaohu.nbsaw.domain;
 
+import lombok.Data;
 import javax.persistence.*;
 
 /**
@@ -7,10 +8,13 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "tag_map")
+@Data
 public class TagMapEntity {
     @Id
     @GeneratedValue
+    // 标签引射id
     private Long id;
+
     // 关联id
     @Column(nullable = false)
     private Long correlation;
@@ -21,36 +25,4 @@ public class TagMapEntity {
 
     // 类型
     private String type;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getCorrelation() {
-        return correlation;
-    }
-
-    public void setCorrelation(Long correlation) {
-        this.correlation = correlation;
-    }
-
-    public Long getTagId() {
-        return tagId;
-    }
-
-    public void setTagId(Long tagId) {
-        this.tagId = tagId;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
 }

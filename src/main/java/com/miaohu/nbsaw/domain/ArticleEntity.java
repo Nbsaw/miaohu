@@ -1,5 +1,7 @@
 package com.miaohu.nbsaw.domain;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.UUID;
 
@@ -8,44 +10,20 @@ import java.util.UUID;
  */
 @Entity
 @Table(name = "article")
+@Data
 public class ArticleEntity {
     @Id
     @GeneratedValue
-    private long id;    // 文章id,自增
-    private UUID uid;    // 用户id
+    // 文章id
+    private long id;
+
+    // 用户id
+    private UUID uid;
+
     @Column(length = 51,nullable = false)
-    private String title;    // 知乎51个字限制,标题不能为空
-    private boolean anonymous; //是否为匿名
+    // 标题
+    private String title;
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public UUID getUid() {
-        return uid;
-    }
-
-    public void setUid(UUID uid) {
-        this.uid = uid;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public boolean isAnonymous() {
-        return anonymous;
-    }
-
-    public void setAnonymous(boolean anonymous) {
-        this.anonymous = anonymous;
-    }
+    // 匿名
+    private boolean anonymous;
 }

@@ -1,5 +1,7 @@
 package com.miaohu.nbsaw.domain;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 /**
@@ -7,6 +9,8 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "answer_vote_map")
+@Data
+
 public class AnswerVoteMapEntity {
     @Id
     @GeneratedValue
@@ -20,36 +24,4 @@ public class AnswerVoteMapEntity {
 
     // 用户的id
     private String uid;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getAnswerId() {
-        return answerId;
-    }
-
-    public void setAnswerId(Long answerId) {
-        this.answerId = answerId;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    public Long getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(Long questionId) {
-        this.questionId = questionId;
-    }
 }

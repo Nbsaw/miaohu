@@ -1,5 +1,7 @@
 package com.miaohu.nbsaw.domain;
 
+import lombok.Data;
+
 import javax.persistence.*;
 
 /**
@@ -7,6 +9,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "question_modify_reason")
+@Data
 public class QuestionModifyReasonEntity {
     @Id
     @GeneratedValue
@@ -19,28 +22,4 @@ public class QuestionModifyReasonEntity {
     // 修改理由
     @Column(nullable = false)
     private String reason;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getQuestionId() {
-        return questionId;
-    }
-
-    public void setQuestionId(Long questionId) {
-        this.questionId = questionId;
-    }
-
-    public String getReason() {
-        return reason;
-    }
-
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
 }
