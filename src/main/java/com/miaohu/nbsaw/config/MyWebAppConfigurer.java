@@ -26,7 +26,7 @@ public class MyWebAppConfigurer  extends WebMvcConfigurerAdapter {
                 if (session.getAttribute("id") == null){
                     response.setHeader("Content-Type","application/json;charset=UTF-8");
                     PrintWriter pw = new PrintWriter(response.getOutputStream());
-                    String result = JsonUtil.formatResult(401,"请登录后再操作");
+                    String result = JsonUtil.formatResult(401,"not authorized");
                     pw.print(result);
                     pw.flush();
                     pw.close();
@@ -44,7 +44,7 @@ public class MyWebAppConfigurer  extends WebMvcConfigurerAdapter {
             public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex) throws Exception {
 
             }
-        }).excludePathPatterns("/","/user/login","/oauth/**","/captcha/**","/register/**");
+        }).excludePathPatterns("/","/user/login","/oauth/**","/captcha/**","/register/**","/asd");
         super.addInterceptors(registry);
     }
 }

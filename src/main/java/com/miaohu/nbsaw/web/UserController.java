@@ -57,7 +57,7 @@ public class UserController {
     // TODO 加密解密,反之中间人攻击
     // TODO 返回账号是否存在
     // TODO 第三方登录
-    @PostMapping(value = "/login",produces="application/json;charset=UTF-8")
+    @GetMapping(value = "/login")
     public Map login(HttpSession session, @RequestParam("phone") String phone , @RequestParam("password") String password){
         Map result = new LinkedHashMap();
         try {
@@ -78,7 +78,7 @@ public class UserController {
     }
 
     // 获取用户信息
-    @GetMapping(value = "/info",produces="application/json;charset=UTF-8")
+    @GetMapping(value = "/info")
     public Map information(HttpSession session){
         Map result = new LinkedHashMap();
         // 从Session获取已经存在的用户access_token,用户类型
@@ -98,7 +98,7 @@ public class UserController {
      * @return 获取用户发表的所有的问题
      */
     // TODO 分页
-    @GetMapping(value = "/question", produces="application/json;charset=UTF-8")
+    @GetMapping(value = "/question")
     public String question(HttpSession session){
         String uid = (String) session.getAttribute("id");
         List result = new ArrayList();

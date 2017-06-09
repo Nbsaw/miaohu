@@ -44,7 +44,7 @@ public class QuestionController {
      * @param session
      * @return 查询近期的问题
      */
-    @GetMapping(produces = "application/json;charset=UTF-8")
+    @GetMapping
     public String all(@RequestParam(value = "page",defaultValue = "0") int page,HttpSession session) {
         String uid = (String) session.getAttribute("id");
         // TODO 查看问题是否匿名
@@ -75,7 +75,7 @@ public class QuestionController {
      * @param id 文章的id
      * @return id对应的问题
      */
-    @GetMapping(value = "/{id}", produces = "application/json;charset=UTF-8")
+    @GetMapping(value = "/{id}")
     public String getId(@PathVariable("id") Long id,HttpSession session) {
         QuestionEntity s = questionRepository.findById(id);
         QuestionVo vo = new QuestionVo();
@@ -106,7 +106,7 @@ public class QuestionController {
      * @param title
      * @return
      */
-    @PostMapping(value = "/valid", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "/valid")
     public String validTitle(@RequestParam("title") String title) {
         String result = null;
         title = title.trim();
@@ -139,7 +139,7 @@ public class QuestionController {
      * @param session
      * @return 返回状态, 问题删除成功或者失败
      */
-    @DeleteMapping(value = "/delete/{id}", produces = "application/json;charset=UTF-8")
+    @DeleteMapping(value = "/delete/{id}")
     public String delete(@PathVariable(value = "id") Long id, HttpSession session) {
         String uid = (String) session.getAttribute("id");
         String result = null;
@@ -165,7 +165,7 @@ public class QuestionController {
      * TODO 加上标签字段
      * TODO 问题修改历史
      */
-    @PostMapping(value = "/modify", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "/modify")
     public String modify(@RequestParam(value = "id") Long id,
                          @RequestParam(value = "title") String title,
                          @RequestParam(value = "content", defaultValue = "") String content,
@@ -193,7 +193,7 @@ public class QuestionController {
      * 数据库里面了如果存在返回失败,不存
      * 在则发布
      */
-    @PostMapping(value = "/post", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "/post")
     public String post(@RequestParam(value = "title") String title,
                        @RequestParam(value = "content") String content,
                        @RequestParam(value = "tags") Long[] tags,
@@ -248,7 +248,7 @@ public class QuestionController {
     }
 
     // 查找问题的评论
-    @GetMapping(value = "/answer/{id}", produces = "application/json;charset=UTF-8")
+    @GetMapping(value = "/answer/{id}")
     public String selectAnswerById(@PathVariable("id") Long id) {
         List<AnswerEntity> list = answerRepository.findAllByQuestionId(id,new PageRequest(0,5));
         return JsonUtil.formatResult(200, "", list);
@@ -261,7 +261,7 @@ public class QuestionController {
      * @param content
      * @return
      */
-    @PostMapping(value = "/answer/add", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "/answer/add")
     public String answer(@RequestParam(value = "questionId") Long questionId,
                           @RequestParam(value = "content") String content,
                           HttpSession session) {
@@ -292,7 +292,7 @@ public class QuestionController {
     }
 
     // 回答删除接口
-    @DeleteMapping(value = "/answer/delete", produces = "application/json;charset=UTF-8")
+    @DeleteMapping(value = "/answer/delete")
     public String deleteAnswer(
             @RequestParam(value = "questionId") Long questionId
             , HttpSession session) {
@@ -315,7 +315,7 @@ public class QuestionController {
     }
 
     // 撤销删除
-    @PostMapping(value = "/answer/revoke", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "/answer/revoke")
     public String revokeAnswer(
             @RequestParam(value = "questionId") Long questionId,
             HttpSession session) {
@@ -338,7 +338,7 @@ public class QuestionController {
 
     // 设置问题为匿名 / 取消匿名
     // 同时还要设置回答为匿名
-    @PostMapping(value = "/anonymous",produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "/anonymous")
     public String setAnonymous(
             @RequestParam(value = "questionId") Long questionId,
             HttpSession session){
@@ -385,7 +385,7 @@ public class QuestionController {
 
     // 回答点赞
     // TODO 推送点赞
-    @PostMapping(value = "/vote",produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "/vote")
     public String vote(@RequestParam(value = "answerId") Long answerId,HttpSession session){
         String result = null;
         String uid = (String) session.getAttribute("id");

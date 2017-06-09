@@ -25,13 +25,13 @@ public class TagController {
     private QuestionRepository questionRepository;
 
     // 查找所有的标签
-    @GetMapping(produces = "application/json;charset=UTF-8")
+    @GetMapping
     public String findAll(){
         return JsonUtil.formatResult(200,"",tagRepository.findAll());
     }
 
     // 增加新的标签
-    @PostMapping(value = "/add",produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "/add")
     public String add(@RequestParam(name = "tagName") String tagName,
                       @RequestParam(name = "bio",defaultValue = "") String bio,
                       @RequestParam(name = "avatar",defaultValue = "http://7xqvgr.com1.z0.glb.clouddn.com/defaultTag.png") String avatar){
@@ -50,7 +50,7 @@ public class TagController {
     }
 
     // 根据id查找
-    @GetMapping(value = "/{id}",produces = "application/json;charset=UTF-8")
+    @GetMapping(value = "/{id}")
     public String findById(@PathVariable("id") Long id){
         List<TagMapEntity> tagMapEntities =  tagMapRepository.findAllByTagId(id);
         List result = new LinkedList();
@@ -62,7 +62,7 @@ public class TagController {
     }
 
     // 根据名字查找
-    @GetMapping(value = "/search/{name}",produces = "application/json;charset=UTF-8")
+    @GetMapping(value = "/search/{name}")
     public String findByNameLike(@PathVariable("name") String name){
         return JsonUtil.formatResult(200,"",tagRepository.findAllByNameLike(name));
     }

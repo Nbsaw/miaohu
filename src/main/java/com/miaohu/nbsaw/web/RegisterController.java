@@ -27,7 +27,7 @@ public class RegisterController {
     private UserRepository userRepository;
 
     // 第一步检测
-    @PostMapping(value = "/valid",produces="application/json;charset=UTF-8")
+    @PostMapping(value = "/valid")
     public Map valid(@ModelAttribute RegisterForm registerForm, HttpSession session,HttpServletRequest requet) {
         return validate(registerForm, session,false,requet);
     }
@@ -81,7 +81,7 @@ public class RegisterController {
     }
 
     // 正式注册
-    @PostMapping(produces="application/json;charset=UTF-8")
+    @PostMapping
     public Map register(RegisterForm registerForm, HttpSession session,HttpServletRequest requet) {
 
         // 校对用户信息
