@@ -7,7 +7,7 @@
 #management.ssl.enabled: false
 project:
       name : miaohu
-      version : 0.0.6
+      version : 0.0.7
 
 #server:
 #       address: 0.0.0.0
@@ -24,6 +24,10 @@ server:
           keyAlias: tomcat
 
 debug: true
+
+# jwt
+jwt.timeout: 15000
+jwt.key: miaohu233333
 
 #resources
 spring.resources.chain.enabled: true
