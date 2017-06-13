@@ -1,19 +1,9 @@
-#default
-#server.port: 8443
-#server.ssl.enabled: true
-#server.ssl.key-store: classpath:store.jks
-#server.ssl.key-password: secret
-#management.port: 8080
-#management.ssl.enabled: false
+# 默认配置
 project:
       name : miaohu
       version : 0.0.7
 
-#server:
-#       address: 0.0.0.0
-#       port: 8080
-
-# https support
+# 默认的服务器配置
 server:
       port: 443
       address: 0.0.0.0
@@ -23,34 +13,22 @@ server:
           keyStoreType: PKCS12
           keyAlias: tomcat
 
-debug: true
+# 环境设置
+spring.profiles.active: dev
 
-# jwt
+# jwt设置
 jwt.timeout: 15000
 jwt.key: miaohu233333
 
-#resources
-spring.resources.chain.enabled: true
-spring.resources.chain.cache: true
-spring.resources.chain.gzipped: true
-spring.resources.static-locations: file:E:\javascript\webpack\public\ # 坑壁window一定要以\结尾
-server.display-name: nbsaw
-
-
-#terminal color setting
+# 终端颜色设置
 spring.output.ansi.enabled: always
 
-
-#environment
-#spring.profiles.active: development
-
-#HTTP encoding
+# http的编码设置
 spring.http.encoding.charset: UTF-8 # Charset of HTTP requests and responses. Added to the "Content-Type" header if not set explicitly.
 spring.http.encoding.enabled: true # Enable http encoding support.
 
 
-# DATASOURCE (DataSourceAutoConfiguration & DataSourceProperties)
-
+# 数据库设置
 spring.datasource.url: jdbc:mysql://127.0.0.1:3306/project?characterEncoding=UTF-8
 spring.datasource.username: root
 spring.datasource.password: 25802580
@@ -60,18 +38,7 @@ spring.jpa.show-sql: true
 spring.jpa.database: MYSQL
 spring.data.jpa.repositories.enabled: true
 
-# log info setting
-#server.tomcat.accesslog.directory: /home/fz/TempTest
-#server.tomcat.accesslog.pattern: common
-#server.tomcat.accesslog.request-attributes-enabled: false
-#server.tomcat.accesslog.enabled: true
-#server.tomcat.accesslog.suffix: .log
-
-#spring-boot
-#logging.file: my.log
-#logging.level.org.springframework: ERROR
-
-# REDIS (RedisProperties)
+# REDIS的相关配置
 spring.redis.database: 2 # Database index used by the connection factory.
 spring.redis.host: 127.0.0.1 # Redis server host.
 spring.redis.password:
@@ -82,3 +49,21 @@ spring.redis.pool.max-wait: -1 # Maximum amount of time (in milliseconds) a conn
 spring.redis.pool.min-idle: 0 # Target for the minimum number of idle connections to maintain in the pool. This setting only has an effect if it is positive.
 spring.redis.port: 6379 # Redis server port.s
 spring.redis.timeout: 2000 # Connection timeout in milliseconds.
+
+---
+# 开发环境
+spring.profiles: dev
+
+# 资源设置
+spring.resources.chain.enabled: true
+spring.resources.chain.cache: true
+spring.resources.chain.gzipped: true
+spring.resources.static-locations: file:E:\javascript\webpack\public\ # 坑壁window一定要以\结尾
+server.display-name: nbsaw
+
+# debug信息开启
+debug: true
+---
+
+# 生产环境
+spring.profiles: pro

@@ -28,6 +28,7 @@ public class CaptchaConfig {
         properties.setProperty("kaptcha.image.height", "38");
 //        properties.setProperty("kaptcha.session.key", "code");
         properties.setProperty("kaptcha.obscurificator.impl","com.nbsaw.miaohu.captcha.CustomCaptcha");
+
 //        properties.setProperty("kaptcha.noise.impl","com.google.code.kaptcha.impl.NoNoise");
         properties.setProperty("kaptcha.textproducer.font.size","26");
         properties.setProperty("kaptcha.textproducer.char.space","3");

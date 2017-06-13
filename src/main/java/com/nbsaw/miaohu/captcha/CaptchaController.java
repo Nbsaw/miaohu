@@ -10,6 +10,7 @@ import com.nbsaw.miaohu.util.RegisterValidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -45,8 +46,8 @@ public class CaptchaController {
     * @return 返回一张验证码图片。格式为image/jpeg
     * @throws IOException
     */
-   @RequestMapping
-   public ModelAndView getCaptcha(HttpServletRequest request,HttpServletResponse response) throws IOException {
+   @GetMapping
+   public ModelAndView getCaptcha(HttpServletResponse response) throws IOException {
       // 设置响应
       response.setDateHeader("Expires", 0);
       response.setHeader("Cache-Control",
