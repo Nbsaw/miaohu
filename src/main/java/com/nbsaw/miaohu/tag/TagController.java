@@ -1,4 +1,4 @@
-package com.nbsaw.miaohu.web;
+package com.nbsaw.miaohu.tag;
 
 import com.nbsaw.miaohu.question.QuestionRepository;
 import com.nbsaw.miaohu.tag.TagEntity;

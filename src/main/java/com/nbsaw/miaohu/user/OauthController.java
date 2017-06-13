@@ -1,4 +1,4 @@
-package com.nbsaw.miaohu.web;
+package com.nbsaw.miaohu.user;
 
 import com.nbsaw.miaohu.pojo.GithubOauth;
 import com.nbsaw.miaohu.user.UserType;
