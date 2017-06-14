@@ -27,6 +27,10 @@ spring.output.ansi.enabled: always
 spring.http.encoding.charset: UTF-8 # Charset of HTTP requests and responses. Added to the "Content-Type" header if not set explicitly.
 spring.http.encoding.enabled: true # Enable http encoding support.
 
+# 404 错误处理,不设置的话默认是404 page,对restful server不太友好
+spring.mvc.throw-exception-if-no-handler-found: true
+spring.resources.add-mappings: false
+
 
 # 数据库设置
 spring.datasource.url: jdbc:mysql://127.0.0.1:3306/project?characterEncoding=UTF-8
@@ -55,11 +59,10 @@ spring.redis.timeout: 2000 # Connection timeout in milliseconds.
 spring.profiles: dev
 
 # 资源设置
-spring.resources.chain.enabled: true
-spring.resources.chain.cache: true
-spring.resources.chain.gzipped: true
-spring.resources.static-locations: file:E:\javascript\webpack\public\ # 坑壁window一定要以\结尾
-server.display-name: nbsaw
+#spring.resources.chain.enabled: true
+#spring.resources.chain.cache: true
+#spring.resources.chain.gzipped: true
+#spring.resources.static-locations: file:E:\javascript\webpack\public\ # 坑壁window一定要以\结尾
 
 # debug信息开启
 debug: true
