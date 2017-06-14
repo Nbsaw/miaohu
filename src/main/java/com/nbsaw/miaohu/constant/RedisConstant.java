@@ -2,6 +2,7 @@ package com.nbsaw.miaohu.constant;
 
 /**
  * Created by fz on 17-4-9.
+ * 记录在Redis的一些常量
  */
 public class RedisConstant {
     public static final String PHONE = ":PHONE"; // 手机验证码在redis的后缀

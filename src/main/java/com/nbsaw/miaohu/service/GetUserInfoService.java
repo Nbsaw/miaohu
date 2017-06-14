@@ -1,6 +1,6 @@
 package com.nbsaw.miaohu.service;
 
-import com.nbsaw.miaohu.user.UserInfoVo;
+import com.nbsaw.miaohu.vo.UserInfoVo;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;

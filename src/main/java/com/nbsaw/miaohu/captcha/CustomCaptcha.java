@@ -15,12 +15,6 @@ public class CustomCaptcha extends Configurable implements GimpyEngine
 {
     public BufferedImage getDistortedImage(BufferedImage baseImage)
     {
-        // 干扰线
-//        NoiseProducer noiseProducer = getConfig().getNoiseImpl();
-//        rippleFilter.setWaveType(RippleFilter.SINE);
-//        rippleFilter.setEdgeAction(TransformFilter.BILINEAR);
-//        noiseProducer.makeNoise(distortedImage, .1f, .07f, .3f, .9f);
-
         BufferedImage distortedImage = new BufferedImage(baseImage.getWidth(),
                 baseImage.getHeight(), BufferedImage.TYPE_INT_ARGB);
         Graphics2D graph = (Graphics2D) distortedImage.getGraphics();

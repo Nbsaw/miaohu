@@ -2,6 +2,7 @@ package com.nbsaw.miaohu.config;
 
 /**
  * Created by fz on 17-4-12.
+ * 跨域设置
  */
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

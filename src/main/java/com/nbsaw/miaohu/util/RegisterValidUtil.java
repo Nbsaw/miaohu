@@ -1,6 +1,6 @@
 package com.nbsaw.miaohu.util;
 
-import com.nbsaw.miaohu.user.UserRepository;
+import com.nbsaw.miaohu.repository.UserRepository;
 
 import java.util.Map;
 import java.util.regex.Matcher;
