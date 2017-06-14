@@ -1,9 +1,9 @@
 package com.nbsaw.miaohu.controller;
 
-import com.nbsaw.miaohu.constant.RedisConstant;
 import com.nbsaw.miaohu.form.RegisterForm;
 import com.nbsaw.miaohu.entity.UserEntity;
 import com.nbsaw.miaohu.repository.UserRepository;
+import com.nbsaw.miaohu.util.RedisUtil;
 import com.nbsaw.miaohu.util.RegisterValidUtil;
 import com.nbsaw.miaohu.config.RedisConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,27 +25,30 @@ public class RegisterController {
     private RedisConfig redisConfig;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private RedisUtil redisUtil;
 
     // 第一步检测
     @PostMapping(value = "/valid")
-    public Map valid(@ModelAttribute RegisterForm registerForm, HttpSession session, HttpServletRequest requet) {
-        return validate(registerForm, session,false,requet);
+    public Map valid(@ModelAttribute RegisterForm registerForm, HttpSession session, HttpServletRequest request) {
+        return validate(registerForm, session,false,request);
     }
 
     // 检测参数是否合法
-    public Map validate(RegisterForm registerForm, HttpSession session,boolean is,HttpServletRequest requet) {
+    public Map validate(RegisterForm registerForm, HttpSession session,boolean is,HttpServletRequest request) {
         Map result = new LinkedHashMap();
         Map errors = new LinkedHashMap();
 
-        System.out.println(session.getId());
         // session 设置
-        System.out.println(requet);
         session.setAttribute("domain","");
+
         // 需要被检测的信息
         String username = registerForm.getUsername();
         String password = registerForm.getPassword();
         String imageCaptcha = registerForm.getImageCaptcha();
-        String redisCaptcha = redisConfig.getTemplate().opsForValue().get(session.getId() + RedisConstant.IMAGE);
+        String imageCaptchaFormat = redisUtil.imageCaptchaFormat(session.getId());
+        String phoneCaptcha = registerForm.getPhoneCaptcha();
+        String redisCaptcha = redisConfig.getTemplate().opsForValue().get(imageCaptchaFormat);
         String phone = registerForm.getPhone();
 
         // 校验用户名
@@ -64,8 +67,9 @@ public class RegisterController {
 
         // 校验手机验证码
         if (is == true){
-            String redisPhoneCaptcha = (String) redisConfig.getTemplate().opsForHash().get(session.getId()+phone+ RedisConstant.PHONE,"value");
-            RegisterValidUtil.phoneCaptchaValid(registerForm.getPhoneCaptcha(),errors,redisPhoneCaptcha);
+            String phoneCaptchaFormat = redisUtil.phoneCaptchaFormat(session.getId(),phone);
+            String redisPhoneCaptcha = (String) redisConfig.getTemplate().opsForHash().get(phoneCaptchaFormat,"value");
+            RegisterValidUtil.phoneCaptchaValid(phoneCaptcha,errors,redisPhoneCaptcha);
         }
 
         // 判断是否有错误信息
@@ -82,10 +86,10 @@ public class RegisterController {
 
     // 正式注册
     @PostMapping
-    public Map register(RegisterForm registerForm, HttpSession session,HttpServletRequest requet) {
+    public Map register(RegisterForm registerForm, HttpSession session,HttpServletRequest request) {
 
         // 校对用户信息
-        Map result = validate(registerForm, session,true,requet);
+        Map result = validate(registerForm, session,true,request);
 
         // 验证不通过的情况
         if ((int) result.get("code") == 200){

@@ -3,6 +3,7 @@ package com.nbsaw.miaohu.util;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -15,8 +16,8 @@ import java.util.UUID;
 
 @Component
 public class JwtUtil {
-    private final int timeout;
-    private final String key;
+    private int timeout;
+    private String key;
 
     @Autowired
     private JwtUtil(@Value("${jwt.timeout}") int timeout,@Value("${jwt.key}") String key) {

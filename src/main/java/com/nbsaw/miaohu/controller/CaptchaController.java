@@ -2,10 +2,10 @@ package com.nbsaw.miaohu.controller;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.nbsaw.miaohu.config.RedisConfig;
-import com.nbsaw.miaohu.constant.RedisConstant;
 import com.nbsaw.miaohu.service.PhoneMessageService;
 import com.nbsaw.miaohu.repository.UserRepository;
 import com.nbsaw.miaohu.util.JwtUtil;
+import com.nbsaw.miaohu.util.RedisUtil;
 import com.nbsaw.miaohu.util.RegisterValidUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
@@ -36,6 +36,7 @@ public class CaptchaController {
    @Autowired private UserRepository userRepository;
    @Autowired private PhoneMessageService phoneMessageService;
    @Autowired private JwtUtil jwtUtil;
+   @Autowired private RedisUtil redisUtil;
    /**
     * 返回一张验证码图片前端。格式为image/jpeg
     * 设置验证码的时效
@@ -99,16 +100,17 @@ public class CaptchaController {
          StringRedisTemplate template = redisConfig.getTemplate();
          HashOperations<String, String, String> obj = template.opsForHash();
          String sessionId = session.getId();
-         String key = sessionId + phone + RedisConstant.PHONE;
+         String phoneCaptchaFormat =  redisUtil.phoneCaptchaFormat(sessionId,phone);
+         int phoneTimeOut = redisUtil.getPhoneTimeOut();
          // 如果不存在就发送一条验证码到手机,并保存下来
          // 超过60秒限制可以重新发验证码
-         if (obj.get(key, "value") == null || new Date().getTime() - Long.valueOf(obj.get(key, "time")) > 60000) {
+         if (obj.get(phoneCaptchaFormat, "value") == null || new Date().getTime() - Long.valueOf(obj.get(phoneCaptchaFormat, "time")) > 60000) {
             // 手机验证码
             String code = phoneMessageService.sendRegisterCode(phone);
             // 设置手机验证码的值以及超时时间
-            obj.put(key, "value", code);
-            obj.put(key, "time", String.valueOf(new Date().getTime()));
-            template.expire(sessionId, RedisConstant.PHONETIMEOUT, TimeUnit.MINUTES);
+            obj.put(phoneCaptchaFormat, "value", code);
+            obj.put(phoneCaptchaFormat, "time", String.valueOf(new Date().getTime()));
+            template.expire(sessionId, phoneTimeOut, TimeUnit.MINUTES);
             result.put("code", 200);
             result.put("msg", "验证码发送成功!");
          } else {

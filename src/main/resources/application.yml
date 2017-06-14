@@ -14,7 +14,7 @@ server:
           keyAlias: tomcat
 
 # 环境设置
-spring.profiles.active: dev
+spring.profiles.active: pro
 
 # jwt设置
 jwt.timeout: 15000
@@ -54,6 +54,16 @@ spring.redis.pool.min-idle: 0 # Target for the minimum number of idle connection
 spring.redis.port: 6379 # Redis server port.s
 spring.redis.timeout: 2000 # Connection timeout in milliseconds.
 
+# Redis 常量
+# 图片验证码
+redis.constant.image: ":IMAGE" # 图片验证码在redis的后缀
+redis.constant.imageTimeOut: 5 # 图片验证码超时时间
+
+# 手机验证码
+redis.constant.phone: ":phone" # 手机验证码在redis的后缀
+redis.constant.phoneTimeOut: 3 # 手机验证码超时时间
+
+
 ---
 # 开发环境
 spring.profiles: dev
@@ -67,6 +77,5 @@ spring.profiles: dev
 # debug信息开启
 debug: true
 ---
-
 # 生产环境
 spring.profiles: pro
