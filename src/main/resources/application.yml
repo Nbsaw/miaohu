@@ -1,12 +1,10 @@
 # 默认配置
 project:
       name : miaohu
-      version : 0.0.9
+      version : 0.1.0
 
 # 默认的服务器配置
 server:
-      port: 443
-      address: 0.0.0.0
       ssl:
           key-store: keystore.p12
           key-store-password: 25802580
@@ -14,7 +12,7 @@ server:
           keyAlias: tomcat
 
 # 环境设置
-spring.profiles.active: pro
+spring.profiles.active: dev
 
 # jwt设置
 jwt.timeout: 15000
@@ -67,6 +65,9 @@ redis.constant.phoneTimeOut: 3 # 手机验证码超时时间
 ---
 # 开发环境
 spring.profiles: dev
+server:
+      port: 8443
+      address: 0.0.0.0
 
 # 资源设置
 #spring.resources.chain.enabled: true
@@ -78,4 +79,7 @@ spring.profiles: dev
 debug: true
 ---
 # 生产环境
+server:
+      port: 443
+      address: 0.0.0.0
 spring.profiles: pro

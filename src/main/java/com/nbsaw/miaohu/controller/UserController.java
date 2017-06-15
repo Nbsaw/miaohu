@@ -28,7 +28,6 @@ import java.util.*;
 
 @RestController
 @RequestMapping(value = "/user")
-
 public class UserController {
     // 用户信息
     @Autowired
@@ -121,10 +120,4 @@ public class UserController {
         return JsonUtil.formatResult(200,"",result);
     }
 
-    // 账号注销,注销后跳转到首页
-    @GetMapping("/logout")
-    public void  logout(HttpServletResponse response) throws IOException {
-        response.setHeader("Set-Cookie","miaohu=ass;httpOnly=true;path=/;Max-age=-1");
-        response.sendRedirect("/");
-    }
 }

@@ -5,7 +5,7 @@ import lombok.Data;
  * Created by nbsaw on 2017/6/13.
  */
 @Data
-public class ErrorInfoVo {
+public class ErrorInfoVo{
     // 状态码
     private Integer code;
 
