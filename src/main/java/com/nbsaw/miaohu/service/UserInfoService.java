@@ -1,6 +1,6 @@
 package com.nbsaw.miaohu.service;
 
-import com.nbsaw.miaohu.vo.UserInfoVo;
+import com.nbsaw.miaohu.model.UserInfoModel;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpSession;
@@ -10,5 +10,5 @@ import javax.servlet.http.HttpSession;
  */
 @Service
 public interface UserInfoService {
-    UserInfoVo getUserInfo(HttpSession session);
+    UserInfoModel getUserInfo(HttpSession session);
 }

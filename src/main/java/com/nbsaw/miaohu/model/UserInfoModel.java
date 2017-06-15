@@ -1,4 +1,4 @@
-package com.nbsaw.miaohu.vo;
+package com.nbsaw.miaohu.model;
 
 import lombok.Data;
 
@@ -9,7 +9,7 @@ import java.io.Serializable;
  * 可以暴露出去的用户信息
  */
 @Data
-public class UserInfoVo implements Serializable {
+public class UserInfoModel implements Serializable {
     // 用户名
     private String username;
 

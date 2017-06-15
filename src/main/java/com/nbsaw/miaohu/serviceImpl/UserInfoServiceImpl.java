@@ -3,7 +3,7 @@ package com.nbsaw.miaohu.serviceImpl;
 import com.nbsaw.miaohu.service.GetUserInfoService;
 import com.nbsaw.miaohu.service.UserInfoService;
 import com.nbsaw.miaohu.repository.UserRepository;
-import com.nbsaw.miaohu.vo.UserInfoVo;
+import com.nbsaw.miaohu.model.UserInfoModel;
 import com.nbsaw.miaohu.entity.UserEntity;
 import com.nbsaw.miaohu.type.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,24 +25,24 @@ public class UserInfoServiceImpl implements UserInfoService, GetUserInfoService 
     private UserRepository userRepository;
 
     @Override
-    public UserInfoVo getUserInfo(HttpSession session) {
-        UserInfoVo userInfoVo = (UserInfoVo) session.getAttribute("userInfo");
-        if (userInfoVo == null) {
+    public UserInfoModel getUserInfo(HttpSession session) {
+        UserInfoModel userInfoModel = (UserInfoModel) session.getAttribute("userInfo");
+        if (userInfoModel == null) {
             UserType userType = (UserType) session.getAttribute("oauth_type");
             switch (userType) {
                 case LOCAL:
-                    userInfoVo = getLocalUser(session);
+                    userInfoModel = getLocalUser(session);
                     break;
                 case GITHUB:
-                    userInfoVo = getGithubUser(session);
+                    userInfoModel = getGithubUser(session);
                     break;
             }
         }
-        return userInfoVo;
+        return userInfoModel;
     }
 
     @Override
-    public UserInfoVo getGithubUser(HttpSession session) {
+    public UserInfoModel getGithubUser(HttpSession session) {
         // 获取用户access_token
         String access_token = (String) session.getAttribute("access_token");
         URI targetUrl = UriComponentsBuilder.fromUriString("https://api.github.com")
@@ -55,27 +55,27 @@ public class UserInfoServiceImpl implements UserInfoService, GetUserInfoService 
         // 通过access_token从github获取用户信息
         Map auth_result = template.getForObject(targetUrl, Map.class);
         // 封装了用户的必要信息,获取相关字段从github
-        UserInfoVo userInfoVo = new UserInfoVo();
-        userInfoVo.setUsername((String) auth_result.get("login"));
-        userInfoVo.setAvatar((String) auth_result.get("avatar_url"));
-        userInfoVo.setLocation((String) auth_result.get("location"));
-        session.setAttribute("userInfo", userInfoVo);
-        return userInfoVo;
+        UserInfoModel userInfoModel = new UserInfoModel();
+        userInfoModel.setUsername((String) auth_result.get("login"));
+        userInfoModel.setAvatar((String) auth_result.get("avatar_url"));
+        userInfoModel.setLocation((String) auth_result.get("location"));
+        session.setAttribute("userInfo", userInfoModel);
+        return userInfoModel;
     }
 
     // TODO 修正
     @Override
-    public UserInfoVo getLocalUser(HttpSession session) {
+    public UserInfoModel getLocalUser(HttpSession session) {
         //获取用户session
         String access_token = (String) session.getAttribute("access_token");
         String uid = (String) session.getAttribute("id");
         UserEntity userEntity = userRepository.findOne(uid);
-        UserInfoVo userInfoVo = new UserInfoVo();
+        UserInfoModel userInfoModel = new UserInfoModel();
         // TODO 本地位置
-        userInfoVo.setUsername(userEntity.getUsername());
-        userInfoVo.setSex(userInfoVo.getSex());
-        userInfoVo.setBio(userEntity.getBio());
-        userInfoVo.setAvatar(userEntity.getAvatar());
-        return userInfoVo;
+        userInfoModel.setUsername(userEntity.getUsername());
+        userInfoModel.setSex(userInfoModel.getSex());
+        userInfoModel.setBio(userEntity.getBio());
+        userInfoModel.setAvatar(userEntity.getAvatar());
+        return userInfoModel;
     }
 }

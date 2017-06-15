@@ -1,13 +1,12 @@
 package com.nbsaw.miaohu.vo;
 
 import lombok.Data;
-
 /**
  * Created by nbsaw on 2017/6/15.
- * 检测问题是否合法的vo
+ * 返回信息的vo
  */
 @Data
-public class CommonVo {
-    private int code;
+public class MessageVo extends GenericVo {
+    // 消息
     private String message;
 }

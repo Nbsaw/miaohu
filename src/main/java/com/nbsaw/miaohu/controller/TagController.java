@@ -6,6 +6,9 @@ import com.nbsaw.miaohu.entity.TagMapEntity;
 import com.nbsaw.miaohu.repository.TagRepository;
 import com.nbsaw.miaohu.util.JsonUtil;
 import com.nbsaw.miaohu.repository.TagMapRepository;
+import com.nbsaw.miaohu.vo.GenericVo;
+import com.nbsaw.miaohu.vo.MessageVo;
+import com.nbsaw.miaohu.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.util.LinkedList;
@@ -26,44 +29,56 @@ public class TagController {
 
     // 查找所有的标签
     @GetMapping
-    public String findAll(){
-        return JsonUtil.formatResult(200,"",tagRepository.findAll());
+    public ResultVo findAll(){
+        ResultVo resultVo = new ResultVo();
+        resultVo.setCode(200);
+        resultVo.setResult(tagRepository.findAll());
+        return resultVo;
     }
 
     // 增加新的标签
     @PostMapping(value = "/add")
-    public String add(@RequestParam(name = "tagName") String tagName,
-                      @RequestParam(name = "bio",defaultValue = "") String bio,
-                      @RequestParam(name = "avatar",defaultValue = "http://7xqvgr.com1.z0.glb.clouddn.com/defaultTag.png") String avatar){
-        String result = null;
+    public MessageVo add(@RequestParam(name = "tagName") String tagName,
+                         @RequestParam(name = "bio",defaultValue = "") String bio,
+                         @RequestParam(name = "avatar",defaultValue = "http://7xqvgr.com1.z0.glb.clouddn.com/defaultTag.png") String avatar){
+        MessageVo result = new MessageVo();
         if (tagRepository.existsName(tagName)){
-            result = JsonUtil.formatResult(400,"标签已存在!");
+            result.setCode(400);
+            result.setMessage("标签已存在!");
         }else{
             TagEntity tagEntity = new TagEntity();
             tagEntity.setName(tagName);
             tagEntity.setAvatar(avatar);
             tagEntity.setBio(bio);
             tagRepository.save(tagEntity);
-            result = JsonUtil.formatResult(200,"创建标签成功!");
+            result.setCode(200);
+            result.setMessage("创建标签成功!");
         }
         return result;
     }
 
     // 根据id查找
+    // TODO 对应Id标签不存在的处理
     @GetMapping(value = "/{id}")
-    public String findById(@PathVariable("id") Long id){
+    public GenericVo findById(@PathVariable("id") Long id){
         List<TagMapEntity> tagMapEntities =  tagMapRepository.findAllByTagId(id);
         List result = new LinkedList();
         tagMapEntities.stream().forEach(map->{
             if (map.getType().equals("question"))
             result.add(questionRepository.findById(map.getCorrelation()));
         });
-        return JsonUtil.formatResult(200,"",result);
+        ResultVo resultVo = new ResultVo();
+        resultVo.setCode(200);
+        resultVo.setResult(result);
+        return resultVo;
     }
 
-    // 根据名字查找
+    // 根据名字查找标签
     @GetMapping(value = "/search/{name}")
-    public String findByNameLike(@PathVariable("name") String name){
-        return JsonUtil.formatResult(200,"",tagRepository.findAllByNameLike(name));
+    public ResultVo findByNameLike(@PathVariable("name") String name){
+        ResultVo resultVo = new ResultVo();
+        resultVo.setCode(200);
+        resultVo.setResult(tagRepository.findAllByNameLike(name));
+        return resultVo;
     }
 }

@@ -5,7 +5,7 @@ import com.nbsaw.miaohu.config.RedisConfig;
 import com.nbsaw.miaohu.service.PhoneMessageService;
 import com.nbsaw.miaohu.repository.UserRepository;
 import com.nbsaw.miaohu.util.*;
-import com.nbsaw.miaohu.vo.SidVo;
+import com.nbsaw.miaohu.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -15,7 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import javax.xml.transform.Result;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Date;
@@ -39,8 +39,8 @@ public class CaptchaController {
 
    // 获取一个会话id
    @GetMapping(value = "/sid")
-   public SidVo getSid(){
-      SidVo sidVo = new SidVo();
+   public ResultVo getSid(){
+      ResultVo sidVo = new ResultVo();
       sidVo.setCode(200);
       sidVo.setResult(UUID.randomUUID().toString());
       return sidVo;

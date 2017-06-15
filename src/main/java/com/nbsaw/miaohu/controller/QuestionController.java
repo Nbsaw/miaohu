@@ -5,14 +5,15 @@ import com.nbsaw.miaohu.repository.QuestionRepository;
 import com.nbsaw.miaohu.entity.TagMapEntity;
 import com.nbsaw.miaohu.repository.TagRepository;
 import com.nbsaw.miaohu.util.JsonUtil;
-import com.nbsaw.miaohu.vo.QuestionsVo;
-import com.nbsaw.miaohu.vo.QuestionVo;
+import com.nbsaw.miaohu.model.QuestionModel;
 import com.nbsaw.miaohu.entity.AnswerEntity;
 import com.nbsaw.miaohu.repository.AnswerRepository;
 import com.nbsaw.miaohu.entity.AnswerVoteMapEntity;
 import com.nbsaw.miaohu.repository.AnswerVoteMapRepository;
 import com.nbsaw.miaohu.repository.TagMapRepository;
-import com.nbsaw.miaohu.vo.CommonVo;
+import com.nbsaw.miaohu.vo.GenericVo;
+import com.nbsaw.miaohu.vo.MessageVo;
+import com.nbsaw.miaohu.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
@@ -47,14 +48,14 @@ public class QuestionController {
      * @return 查询近期的问题
      */
     @GetMapping
-    public QuestionsVo all(@RequestParam(value = "page",defaultValue = "0") int page, HttpSession session) {
+    public ResultVo all(@RequestParam(value = "page",defaultValue = "0") int page, HttpSession session) {
         String uid = (String) session.getAttribute("id");
         // TODO 查看问题是否匿名
         List<QuestionEntity> list = questionRepository.findAll(new PageRequest(page,10));
-        List<QuestionVo> result = new ArrayList<QuestionVo>();
+        List<QuestionModel> result = new ArrayList<QuestionModel>();
         // 重新封装数据
         list.stream().forEach(s -> {
-            QuestionVo vo = new QuestionVo();
+            QuestionModel vo = new QuestionModel();
             vo.setId(s.getId());
             vo.setTitle(s.getTitle());
             vo.setTitle(s.getContent());
@@ -68,10 +69,10 @@ public class QuestionController {
             vo.setTag(tagList);
             result.add(vo);
         });
-        QuestionsVo questionsVo = new QuestionsVo();
-        questionsVo.setCode(200);
-        questionsVo.setResult(result);
-        return questionsVo;
+        ResultVo resultVo = new ResultVo();
+        resultVo.setCode(200);
+        resultVo.setResult(result);
+        return resultVo;
     }
 
     /**
@@ -80,27 +81,40 @@ public class QuestionController {
      * @param id 文章的id
      * @return id对应的问题
      */
+    // TODO 对应Id的问题是否存在的判断
     @GetMapping(value = "/{id}")
-    public String getId(@PathVariable("id") Long id,HttpSession session) {
+    public GenericVo getId(@PathVariable("id") Long id,HttpSession session) {
+        // 根据问题id查找问题
         QuestionEntity s = questionRepository.findById(id);
-        QuestionVo vo = new QuestionVo();
-        vo.setId(s.getId());
-        vo.setTitle(s.getTitle());
-        vo.setTitle(s.getContent());
-        vo.setDate(s.getDate());
+        QuestionModel questionModel = new QuestionModel();
+
+        // 获取各个可以暴露出去的字段
+        questionModel.setId(s.getId());
+        questionModel.setTitle(s.getTitle());
+        questionModel.setTitle(s.getContent());
+        questionModel.setDate(s.getDate());
+
+        // 查找问题的标签映射
         List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByTagIdAndType(id,"question");
         List tagList = new ArrayList();
+
         // 查找问题所属的标签
         tagMapEntities.stream().forEach(map -> {
             tagList.add(tagRepository.findById(map.getCorrelation()));
         });
         Map result = new LinkedHashMap();
-        result.put("question",vo);
+        result.put("question",questionModel);
         result.put("tag",tagList);
+
         // 判断是否回复过问题
         String uid = (String) session.getAttribute("id");
         result.put("answer",answerRepository.isExists(id,uid));
-        return JsonUtil.formatResult(200,"",result);
+
+        // 封装结果
+        ResultVo resultVo = new ResultVo();
+        resultVo.setCode(200);
+        resultVo.setResult(result);
+        return resultVo;
     }
 
     /**
@@ -112,8 +126,8 @@ public class QuestionController {
      * @return
      */
     @PostMapping(value = "/valid")
-    public CommonVo validTitle(@RequestParam("title") String title) {
-        CommonVo result = new CommonVo();
+    public MessageVo validTitle(@RequestParam("title") String title) {
+        MessageVo result = new MessageVo();
         title = title.trim();
         String last = title.substring(title.length() - 1); // 最后一个字符
         result.setCode(400); // 错误的比例高，所以直接先写上了
@@ -148,9 +162,9 @@ public class QuestionController {
      * @return 返回状态, 问题删除成功或者失败
      */
     @DeleteMapping(value = "/delete/{id}")
-    public CommonVo delete(@PathVariable(value = "id") Long id, HttpSession session) {
+    public MessageVo delete(@PathVariable(value = "id") Long id, HttpSession session) {
         String uid = (String) session.getAttribute("id");
-        CommonVo result = new CommonVo();
+        MessageVo result = new MessageVo();
         if (questionRepository.deleteById(id) == 1){
             result.setCode(200);
             result.setMessage("删除问题成功");
@@ -178,13 +192,13 @@ public class QuestionController {
      * TODO 问题修改历史
      */
     @PostMapping(value = "/modify")
-    public CommonVo modify(@RequestParam(value = "id") Long id,
+    public MessageVo modify(@RequestParam(value = "id") Long id,
                            @RequestParam(value = "title") String title,
                            @RequestParam(value = "content", defaultValue = "") String content,
                            @RequestParam(value = "anonymous",defaultValue = "false") boolean anonymous,
                            HttpSession session) {
         String uid = (String) session.getAttribute("id");
-        CommonVo result = new CommonVo();
+        MessageVo result = new MessageVo();
         if (questionRepository.updateContentByIdAndUid(id, uid, title, content) == 1){
             result.setCode(200);
             result.setMessage("问题修改成功");
@@ -210,7 +224,7 @@ public class QuestionController {
      * 在则发布
      */
     @PostMapping(value = "/post")
-    public CommonVo post(@RequestParam(value = "title") String title,
+    public MessageVo post(@RequestParam(value = "title") String title,
                        @RequestParam(value = "content") String content,
                        @RequestParam(value = "tags") Long[] tags,
                        HttpSession session) {
@@ -218,7 +232,7 @@ public class QuestionController {
         boolean isExists = questionRepository.existsQuestion(title);
         title = title.trim();
         String last = title.substring(title.length() - 1); // 最后一个字符
-        CommonVo result = new CommonVo();
+        MessageVo result = new MessageVo();
         result.setCode(400);
         // 判断标题是否为空
         if (title.equals("")) {
@@ -282,10 +296,10 @@ public class QuestionController {
      * @return
      */
     @PostMapping(value = "/answer/add")
-    public CommonVo answer(@RequestParam(value = "questionId") Long questionId,
+    public MessageVo answer(@RequestParam(value = "questionId") Long questionId,
                           @RequestParam(value = "content") String content,
                           HttpSession session) {
-        CommonVo result = new CommonVo();
+        MessageVo result = new MessageVo();
         String uid = (String) session.getAttribute("id");
         // 检测id是否为空
         if (questionId == null) {
@@ -317,10 +331,10 @@ public class QuestionController {
 
     // 回答删除接口
     @DeleteMapping(value = "/answer/delete")
-    public CommonVo deleteAnswer(
+    public MessageVo deleteAnswer(
             @RequestParam(value = "questionId") Long questionId
             , HttpSession session) {
-        CommonVo result = new CommonVo();
+        MessageVo result = new MessageVo();
         String uid = (String) session.getAttribute("id");
         boolean isReply = answerRepository.isExists(questionId, uid);
        if (isReply){
@@ -343,10 +357,10 @@ public class QuestionController {
 
     // 撤销删除
     @PostMapping(value = "/answer/revoke")
-    public CommonVo revokeAnswer(
+    public MessageVo revokeAnswer(
             @RequestParam(value = "questionId") Long questionId,
             HttpSession session) {
-        CommonVo result = new CommonVo();
+        MessageVo result = new MessageVo();
         String uid = (String) session.getAttribute("id");
         boolean isReply = answerRepository.isExists(questionId, uid);
         if (isReply) {
@@ -369,10 +383,10 @@ public class QuestionController {
     // 设置问题为匿名 / 取消匿名
     // 同时还要设置回答为匿名
     @PostMapping(value = "/anonymous")
-    public CommonVo setAnonymous(
+    public MessageVo setAnonymous(
             @RequestParam(value = "questionId") Long questionId,
             HttpSession session){
-        CommonVo result = new CommonVo();
+        MessageVo result = new MessageVo();
         String uid = (String) session.getAttribute("id");
         boolean status = false;
         // 首先判断一下问题存不存在
@@ -422,8 +436,7 @@ public class QuestionController {
     // 回答点赞
     // TODO 推送点赞
     @PostMapping(value = "/vote")
-    public String vote(@RequestParam(value = "answerId") Long answerId,HttpSession session){
-        String result = null;
+    public GenericVo vote(@RequestParam(value = "answerId") Long answerId, HttpSession session){
         String uid = (String) session.getAttribute("id");
         Map map = new HashMap();
         // 通过回答的id找到问题的id
@@ -432,7 +445,10 @@ public class QuestionController {
         boolean isSelf = answerRepository.isSelf(questionId,uid);
         // 如果是自己的回答
         if (isSelf){
-            result = JsonUtil.formatResult(404,"不能给自己点赞 XD");
+            MessageVo messageVo = new MessageVo();
+            messageVo.setCode(404);
+            messageVo.setMessage("不能给自己点赞 XD");
+            return messageVo;
         }
         else{
             // 判断是否点赞过了
@@ -452,9 +468,11 @@ public class QuestionController {
             // 获取总数
             Long count = answerVoteMapRepository.countAllByQuestionId(questionId);
             map.put("count",count);
-            result = JsonUtil.formatResult(200,"",map);
+            ResultVo resultVo = new ResultVo();
+            resultVo.setCode(200);
+            resultVo.setResult(map);
+            return resultVo;
         }
-        return result;
     }
 }
 

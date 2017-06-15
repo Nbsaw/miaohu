@@ -1,6 +1,7 @@
 package com.nbsaw.miaohu.controller;
 
 import com.nbsaw.miaohu.util.JwtUtil;
+import com.nbsaw.miaohu.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,16 +16,21 @@ public class TokenController  {
     @Autowired
     private JwtUtil jwtUtil;
 
-    /**
-     *  第一次登陆时候的token
-     */
+    // 根据账号密码登陆获取token
     @RequestMapping
-    public String getToken(){
-        return jwtUtil.createJWT();
+    public ResultVo getToken(){
+        ResultVo resultVo = new ResultVo();
+        resultVo.setCode(200);
+        resultVo.setResult(jwtUtil.createJWT());
+        return resultVo;
     }
 
+    // 验证token是否有效
     @PostMapping("/valid")
-    public String getId(String jwt){
-        return jwtUtil.parse(jwt).getId();
+    public ResultVo getId(String jwt){
+        ResultVo resultVo = new ResultVo();
+        resultVo.setCode(200);
+        resultVo.setResult(jwtUtil.parse(jwt).getId());
+        return resultVo;
     }
 }

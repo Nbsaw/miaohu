@@ -6,17 +6,18 @@ import com.nbsaw.miaohu.repository.TagRepository;
 import com.nbsaw.miaohu.entity.QuestionEntity;
 import com.nbsaw.miaohu.service.UserInfoService;
 import com.nbsaw.miaohu.entity.UserEntity;
-import com.nbsaw.miaohu.vo.UserInfoVo;
+import com.nbsaw.miaohu.model.UserInfoModel;
 import com.nbsaw.miaohu.repository.UserRepository;
 import com.nbsaw.miaohu.type.UserType;
 import com.nbsaw.miaohu.util.JsonUtil;
 import com.nbsaw.miaohu.repository.TagMapRepository;
+import com.nbsaw.miaohu.vo.GenericVo;
+import com.nbsaw.miaohu.vo.MessageVo;
+import com.nbsaw.miaohu.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 import java.util.*;
 
 
@@ -53,24 +54,28 @@ public class UserController {
      * @return
      */
     // TODO 第三方登录
-    @GetMapping(value = "/login")
-    public Map login(HttpSession session, @RequestParam("phone") String phone , @RequestParam("password") String password){
-        Map result = new LinkedHashMap();
+    @PostMapping(value = "/login")
+    public GenericVo login(HttpSession session, @RequestParam("phone") String phone , @RequestParam("password") String password){
         try {
+            // 查询
             UserEntity userEntity = userRepository.login(phone,password);
-            UserInfoVo userInfoVo = new UserInfoVo();
-            userInfoVo.setUsername(userEntity.getUsername());
-            userInfoVo.setAvatar(userEntity.getAvatar());
-            userInfoVo.setSex(userEntity.getSex());
+            UserInfoModel userInfoModel = new UserInfoModel();
+            userInfoModel.setUsername(userEntity.getUsername());
+            userInfoModel.setAvatar(userEntity.getAvatar());
+            userInfoModel.setSex(userEntity.getSex());
             session.setAttribute("id",userEntity.getId());
             session.setAttribute("oauth_type", UserType.LOCAL);
-            result.put("code",200);
-            result.put("data", userInfoVo);
+
+            ResultVo resultVo = new ResultVo();
+            resultVo.setCode(200);
+            resultVo.setResult(userInfoModel);
+            return resultVo;
         }catch (Exception e){
-            result.put("code",400);
-            result.put("errors","用户名或者密码错误");
+            MessageVo messageVo = new MessageVo();
+            messageVo.setCode(400);
+            messageVo.setMessage("用户名或者密码错误");
+            return messageVo;
         }
-        return result;
     }
 
     // 获取用户信息
@@ -95,7 +100,7 @@ public class UserController {
      */
     // TODO 分页
     @GetMapping(value = "/question")
-    public String question(HttpSession session){
+    public ResultVo question(HttpSession session){
         String uid = (String) session.getAttribute("id");
         List result = new ArrayList();
         // 查找用户发表的问题
@@ -107,9 +112,7 @@ public class UserController {
             List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByTagIdAndType(q.getId(),"question");
             // 搜索标签
             List tagList = new LinkedList();
-            tagMapEntities.stream().forEach(m -> {
-                tagList.add(tagRepository.findById(m.getCorrelation()));
-            });
+            tagMapEntities.stream().forEach(m -> tagList.add(tagRepository.findById(m.getCorrelation())));
             // 把问题加入映射
             map.put("question",q);
             // 添加问题映射
@@ -117,7 +120,10 @@ public class UserController {
             // 把映射加到列表
             result.add(map);
         });
-        return JsonUtil.formatResult(200,"",result);
+        ResultVo resultVo = new ResultVo();
+        resultVo.setCode(200);
+        resultVo.setResult(result);
+        return resultVo;
     }
 
 }

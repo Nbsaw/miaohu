@@ -1,4 +1,4 @@
-package com.nbsaw.miaohu.vo;
+package com.nbsaw.miaohu.model;
 
 import com.nbsaw.miaohu.entity.TagEntity;
 import lombok.Data;
@@ -11,7 +11,7 @@ import java.util.List;
  * Created by nbsaw on 2017/5/16.
  */
 @Data
-public class QuestionVo implements Serializable {
+public class QuestionModel implements Serializable {
     // 问题id
     private Long id;
 
