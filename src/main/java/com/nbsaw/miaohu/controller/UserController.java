@@ -26,7 +26,6 @@ import java.util.*;
  * 用户rest路由控制器
  * 处理用户的信息
  */
-
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {

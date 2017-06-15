@@ -42,10 +42,7 @@ public class JwtUtil {
         return claims;
     }
 
-    /**
-     * 第一次访问页面的token
-     * @return
-     */
+    // 根据登陆账号密码生成的token
     public String createJWT(){
         String compactJws = Jwts.builder()
                 .setId(UUID.randomUUID().toString())
