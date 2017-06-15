@@ -1,5 +1,6 @@
 package com.nbsaw.miaohu.util;
 import lombok.Data;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -9,14 +10,17 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-@ConfigurationProperties(prefix = "redis.constant")
 public class RedisUtil {
     // 图片验证码
+    @Value("${redis.constant.image}")
     private String image;
+    @Value("${redis.constant.imageTimeOut}")
     private int imageTimeOut;
 
     // 手机验证码
+    @Value("${redis.constant.phone}")
     private String phone;
+    @Value("${redis.constant.phoneTimeOut}")
     private int phoneTimeOut;
 
     // 返回图片验证码码在Redis里面的的格式

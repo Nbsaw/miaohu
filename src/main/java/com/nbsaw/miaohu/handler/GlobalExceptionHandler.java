@@ -12,10 +12,10 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 @ControllerAdvice
 public class GlobalExceptionHandler{
 
-    // 参数缺少错误处理
-    @ExceptionHandler(value = MissingServletRequestParameterException.class)
+    // 参数缺少无效错误处理
+    @ExceptionHandler(value = {MissingServletRequestParameterException.class,IllegalArgumentException.class})
     @ResponseBody
-    public ErrorInfoVo jsonErrorHandler(MissingServletRequestParameterException e) throws Exception {
+    public ErrorInfoVo jsonErrorHandler(Exception e) throws Exception {
         ErrorInfoVo error = new ErrorInfoVo();
         error.setCode(400);
         error.setMessage(e.getMessage());
@@ -32,4 +32,5 @@ public class GlobalExceptionHandler{
         error.setMessage("router is not exists");
         return error;
     }
+
 }

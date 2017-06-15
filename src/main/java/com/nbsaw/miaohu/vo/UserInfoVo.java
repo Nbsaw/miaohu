@@ -2,12 +2,14 @@ package com.nbsaw.miaohu.vo;
 
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * Created by fz on 17-3-21.
  * 可以暴露出去的用户信息
  */
 @Data
-public class UserInfoVo {
+public class UserInfoVo implements Serializable {
     // 用户名
     private String username;
 

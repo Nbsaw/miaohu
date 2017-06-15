@@ -5,12 +5,14 @@ import com.nbsaw.miaohu.repository.QuestionRepository;
 import com.nbsaw.miaohu.entity.TagMapEntity;
 import com.nbsaw.miaohu.repository.TagRepository;
 import com.nbsaw.miaohu.util.JsonUtil;
+import com.nbsaw.miaohu.vo.QuestionsVo;
 import com.nbsaw.miaohu.vo.QuestionVo;
 import com.nbsaw.miaohu.entity.AnswerEntity;
 import com.nbsaw.miaohu.repository.AnswerRepository;
 import com.nbsaw.miaohu.entity.AnswerVoteMapEntity;
 import com.nbsaw.miaohu.repository.AnswerVoteMapRepository;
 import com.nbsaw.miaohu.repository.TagMapRepository;
+import com.nbsaw.miaohu.vo.CommonVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
@@ -45,7 +47,7 @@ public class QuestionController {
      * @return 查询近期的问题
      */
     @GetMapping
-    public String all(@RequestParam(value = "page",defaultValue = "0") int page,HttpSession session) {
+    public QuestionsVo all(@RequestParam(value = "page",defaultValue = "0") int page, HttpSession session) {
         String uid = (String) session.getAttribute("id");
         // TODO 查看问题是否匿名
         List<QuestionEntity> list = questionRepository.findAll(new PageRequest(page,10));
@@ -66,7 +68,10 @@ public class QuestionController {
             vo.setTag(tagList);
             result.add(vo);
         });
-        return JsonUtil.formatResult(200,"",result);
+        QuestionsVo questionsVo = new QuestionsVo();
+        questionsVo.setCode(200);
+        questionsVo.setResult(result);
+        return questionsVo;
     }
 
     /**
@@ -107,27 +112,30 @@ public class QuestionController {
      * @return
      */
     @PostMapping(value = "/valid")
-    public String validTitle(@RequestParam("title") String title) {
-        String result = null;
+    public CommonVo validTitle(@RequestParam("title") String title) {
+        CommonVo result = new CommonVo();
         title = title.trim();
         String last = title.substring(title.length() - 1); // 最后一个字符
+        result.setCode(400); // 错误的比例高，所以直接先写上了
         // 判断标题是否为空
         if (title.equals("")) {
-            result = JsonUtil.formatResult(400, "标题不能为空");
+            result.setMessage("标题不能为空");
         }
         // 51个字的标题限制
         else if (title.length() > 51) {
-            result = JsonUtil.formatResult(400, "标题太长");
+            result.setMessage("标题太长");
         }
         // 末尾问号判断
         else if (!last.equals("?") && !last.equals("？")) {
-            result = JsonUtil.formatResult(400, "你还没有给问题添加问号");
+            result.setMessage("你还没有给问题添加问号");
         } else {
             boolean isExists = questionRepository.existsQuestion(title);
             if (isExists)
-                result = JsonUtil.formatResult(400, "已经存在的问题");
-            else
-                result = JsonUtil.formatResult(200, "可以创建的问题");
+                result.setMessage("已经存在的问题");
+            else{
+                result.setCode(200);
+                result.setMessage("可以创建的问题");
+            }
         }
         return result;
     }
@@ -140,13 +148,17 @@ public class QuestionController {
      * @return 返回状态, 问题删除成功或者失败
      */
     @DeleteMapping(value = "/delete/{id}")
-    public String delete(@PathVariable(value = "id") Long id, HttpSession session) {
+    public CommonVo delete(@PathVariable(value = "id") Long id, HttpSession session) {
         String uid = (String) session.getAttribute("id");
-        String result = null;
-        if (questionRepository.deleteById(id) == 1)
-            result = JsonUtil.formatResult(200, "删除问题成功");
-        else
-            result = JsonUtil.formatResult(400, "删除问题失败");
+        CommonVo result = new CommonVo();
+        if (questionRepository.deleteById(id) == 1){
+            result.setCode(200);
+            result.setMessage("删除问题成功");
+        }
+        else{
+            result.setCode(40);
+            result.setMessage("删除问题失败");
+        }
         return result;
     }
 
@@ -166,17 +178,21 @@ public class QuestionController {
      * TODO 问题修改历史
      */
     @PostMapping(value = "/modify")
-    public String modify(@RequestParam(value = "id") Long id,
-                         @RequestParam(value = "title") String title,
-                         @RequestParam(value = "content", defaultValue = "") String content,
-                         @RequestParam(value = "anonymous",defaultValue = "false") boolean anonymous,
-                         HttpSession session) {
+    public CommonVo modify(@RequestParam(value = "id") Long id,
+                           @RequestParam(value = "title") String title,
+                           @RequestParam(value = "content", defaultValue = "") String content,
+                           @RequestParam(value = "anonymous",defaultValue = "false") boolean anonymous,
+                           HttpSession session) {
         String uid = (String) session.getAttribute("id");
-        String result = null;
-        if (questionRepository.updateContentByIdAndUid(id, uid, title, content) == 1)
-            result = JsonUtil.formatResult(200, "问题修改成功");
-        else
-            result = JsonUtil.formatResult(400, "问题修改失败");
+        CommonVo result = new CommonVo();
+        if (questionRepository.updateContentByIdAndUid(id, uid, title, content) == 1){
+            result.setCode(200);
+            result.setMessage("问题修改成功");
+        }
+        else{
+            result.setCode(400);
+            result.setMessage("问题修改失败");
+        }
         return result;
     }
 
@@ -194,7 +210,7 @@ public class QuestionController {
      * 在则发布
      */
     @PostMapping(value = "/post")
-    public String post(@RequestParam(value = "title") String title,
+    public CommonVo post(@RequestParam(value = "title") String title,
                        @RequestParam(value = "content") String content,
                        @RequestParam(value = "tags") Long[] tags,
                        HttpSession session) {
@@ -202,31 +218,34 @@ public class QuestionController {
         boolean isExists = questionRepository.existsQuestion(title);
         title = title.trim();
         String last = title.substring(title.length() - 1); // 最后一个字符
-        String result = null;
+        CommonVo result = new CommonVo();
+        result.setCode(400);
         // 判断标题是否为空
         if (title.equals("")) {
-            result = JsonUtil.formatResult(400, "标题不能为空");
+            result.setMessage("标题不能为空");
         }
         // 51个字的标题限制
         else if (title.length() > 51) {
-            result = JsonUtil.formatResult(400, "标题太长");
+            result.setMessage("标题太长");
         }
         // 末尾问号判断
         else if (!last.equals("?") && !last.equals("？")) {
-            result = JsonUtil.formatResult(400, "你还没有给问题添加问号");
+            result.setMessage("你还没有给问题添加问号");
         }
         // 判断问题是否已存在
         else if(isExists){
-            result = JsonUtil.formatResult(400, "已经存在的问题");
+            result.setMessage("已经存在的问题");
         }
         // 尝试创建
         else {
             // 获取用户id
             String uid = (String) session.getAttribute("id");
             // 判断传过来的标签是否合法
-            for (long s : tags)
+            for (long s : tags) {
                 if (!tagRepository.exists(s))
-                    return JsonUtil.formatResult(400, "无效的标签");
+                    result.setMessage("无效的标签");
+                return result;
+            }
             // 保存问题
             // NOTE 关于这个问题什么放在前面,
             // 因为如果不放在前面getId会获取不到值 ...
@@ -242,8 +261,9 @@ public class QuestionController {
                 tagMapEntity.setType("question");
                 tagMapRepository.save(tagMapEntity);
             }
-            result = JsonUtil.formatResult(200, "问题发布成功");
-        }
+            result.setCode(200);
+            result.setMessage("问题发布成功");
+       }
         return result;
     }
 
@@ -262,22 +282,25 @@ public class QuestionController {
      * @return
      */
     @PostMapping(value = "/answer/add")
-    public String answer(@RequestParam(value = "questionId") Long questionId,
+    public CommonVo answer(@RequestParam(value = "questionId") Long questionId,
                           @RequestParam(value = "content") String content,
                           HttpSession session) {
-        String result = null;
+        CommonVo result = new CommonVo();
         String uid = (String) session.getAttribute("id");
         // 检测id是否为空
         if (questionId == null) {
-            result = JsonUtil.formatResult(403, "帖子id不应该为空");
+            result.setCode(403);
+            result.setMessage("帖子id不应该为空");
         }
         // 检测是不是已经回答过的问题
         else if (answerRepository.isExists(questionId, uid)) {
-            result = JsonUtil.formatResult(403, "不可以重复回答问题:(");
+            result.setCode(403);
+            result.setMessage("不可以重复回答问题:(");
         }
         // 检验回复是否为空
         else if (content.trim().length() == 0) {
-            result = JsonUtil.formatResult(400, "评论不能为空");
+            result.setCode(400);
+            result.setMessage("评论不能为空");
         }
         // 验证通过提交
         else {
@@ -286,52 +309,59 @@ public class QuestionController {
             answerEntity.setContent(content);
             answerEntity.setUid(uid);
             answerRepository.save(answerEntity);
-            result = JsonUtil.formatResult(200, "评论成功");
+            result.setCode(200);
+            result.setMessage("评论成功");
         }
         return result;
     }
 
     // 回答删除接口
     @DeleteMapping(value = "/answer/delete")
-    public String deleteAnswer(
+    public CommonVo deleteAnswer(
             @RequestParam(value = "questionId") Long questionId
             , HttpSession session) {
-        String result = null;
+        CommonVo result = new CommonVo();
         String uid = (String) session.getAttribute("id");
         boolean isReply = answerRepository.isExists(questionId, uid);
        if (isReply){
            boolean isDeleted = answerRepository.isDeleted(questionId, uid);
            if (isDeleted) {
-               result = JsonUtil.formatResult(400, "已经是删除状态了！");
+               result.setCode(400);
+               result.setMessage("已经是删除状态了！");
            } else {
                answerRepository.setDeletedTrue(questionId, uid);
-               result = JsonUtil.formatResult(200, "回答已删除");
+               result.setCode(200);
+               result.setMessage("回答已删除");
            }
        }
        else{
-           result = JsonUtil.formatResult(400, "没有回答的过问题无法删除");
+           result.setCode(400);
+           result.setMessage("无法删除没有回答的过问题");
        }
         return result;
     }
 
     // 撤销删除
     @PostMapping(value = "/answer/revoke")
-    public String revokeAnswer(
+    public CommonVo revokeAnswer(
             @RequestParam(value = "questionId") Long questionId,
             HttpSession session) {
-        String result = null;
+        CommonVo result = new CommonVo();
         String uid = (String) session.getAttribute("id");
         boolean isReply = answerRepository.isExists(questionId, uid);
         if (isReply) {
             boolean isDeleted = answerRepository.isDeleted(questionId, uid);
             if (isDeleted) {
                 answerRepository.setDeletedFalse(questionId, uid);
-                result = JsonUtil.formatResult(200, "撤销成功");
+                result.setCode(200);
+                result.setMessage("撤销成功");
             } else {
-                result = JsonUtil.formatResult(400, "已经是撤销状态了!");
+                result.setCode(400);
+                result.setMessage("已经是撤销状态了!");
             }
         }else{
-            result = JsonUtil.formatResult(400, "没有回答过的问题无法撤销");
+            result.setCode(400);
+            result.setMessage("没有回答过的问题无法撤销");
         }
         return result;
     }
@@ -339,10 +369,10 @@ public class QuestionController {
     // 设置问题为匿名 / 取消匿名
     // 同时还要设置回答为匿名
     @PostMapping(value = "/anonymous")
-    public String setAnonymous(
+    public CommonVo setAnonymous(
             @RequestParam(value = "questionId") Long questionId,
             HttpSession session){
-        String result = null;
+        CommonVo result = new CommonVo();
         String uid = (String) session.getAttribute("id");
         boolean status = false;
         // 首先判断一下问题存不存在
@@ -355,11 +385,13 @@ public class QuestionController {
                 status = true;
             } else {
                 questionRepository.setAnonymousTrue(questionId, uid);
-                result = JsonUtil.formatResult(200, "已经设为匿名!");
+                result.setCode(200);
+                result.setMessage("已经设为匿名!");
                 status = false;
             }
         }else{
-            result = JsonUtil.formatResult(400, "问题不存在或者没有权限修改");
+            result.setCode(400);
+            result.setMessage("问题不存在或者没有权限修改");
         }
 
         // 判断用户是否回答过问题
@@ -376,10 +408,14 @@ public class QuestionController {
             }
         }
         // 判断状态返回结果
-        if (status)
-            result = JsonUtil.formatResult(200, "已经取消匿名!");
-        else
-            result = JsonUtil.formatResult(200, "已经设置为匿名!");
+        if (status){
+            result.setCode(200);
+            result.setMessage("已经取消匿名!");
+        }
+        else{
+            result.setCode(200);
+            result.setMessage("已经设置为匿名!");
+        }
         return result;
     }
 

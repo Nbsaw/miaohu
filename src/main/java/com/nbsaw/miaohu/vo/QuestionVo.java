@@ -3,6 +3,7 @@ package com.nbsaw.miaohu.vo;
 import com.nbsaw.miaohu.entity.TagEntity;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -10,7 +11,7 @@ import java.util.List;
  * Created by nbsaw on 2017/5/16.
  */
 @Data
-public class QuestionVo {
+public class QuestionVo implements Serializable {
     // 问题id
     private Long id;
 
