@@ -97,6 +97,17 @@ public class UserController {
     }
 
     // TODO 密码修改
+    @PostMapping(value = "/changePassword")
+    public String changePassword(@RequestParam("uid") String uid){
+        UserEntity userEntity = new UserEntity();
+        userEntity.setId(UUID.randomUUID().toString());
+        userEntity.setUsername("test");
+        userEntity.setPassword("25802580");
+        userEntity.setPhone("13164726498");
+        userRepository.save(userEntity);
+        return "asd";
+    }
+
     // TODO 资料修改
 
     /**

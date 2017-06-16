@@ -27,10 +27,7 @@ public class UserEntity implements Serializable {
     private String username; //用户名
 
     @Column(nullable = false)
-    @ColumnTransformer(
-            read = "AES_DECRYPT( `password`,'miaohu23333333' )",
-            write = "AES_ENCRYPT(?,'miaohu23333333')"
-    )
+    @ColumnTransformer(write = "md5(?)")
     private String password; //密码
 
     private String phone; //手机号码
