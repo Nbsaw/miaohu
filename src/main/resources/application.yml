@@ -15,7 +15,7 @@ server:
 spring.profiles.active: dev
 
 # jwt设置
-jwt.timeout: 15000
+jwt.timeout: 604800000
 jwt.key: miaohu233333
 
 # 终端颜色设置

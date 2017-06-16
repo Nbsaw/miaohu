@@ -32,15 +32,19 @@ public class UserController {
     // 用户信息
     @Autowired
     private UserInfoService userInfoService;
+
     // 用户
     @Autowired
     private UserRepository userRepository;
+
     // 问题
     @Autowired
     private QuestionRepository questionRepository;
+
     // 标签
     @Autowired
     private TagRepository tagRepository;
+
     // 标签映射
     @Autowired
     private TagMapRepository tagMapRepository;
@@ -91,6 +95,9 @@ public class UserController {
         }
         return result;
     }
+
+    // TODO 密码修改
+    // TODO 资料修改
 
     /**
      * 获取用户发表的所有的问题

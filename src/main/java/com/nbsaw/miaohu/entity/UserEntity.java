@@ -1,6 +1,9 @@
 package com.nbsaw.miaohu.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.ColumnTransformer;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -23,7 +26,11 @@ public class UserEntity implements Serializable {
     @Column(nullable = false, length = 16)
     private String username; //用户名
 
-    @Column(nullable = false, length = 16)
+    @Column(nullable = false)
+    @ColumnTransformer(
+            read = "AES_DECRYPT( `password`,'miaohu23333333' )",
+            write = "AES_ENCRYPT(?,'miaohu23333333')"
+    )
     private String password; //密码
 
     private String phone; //手机号码
@@ -31,6 +38,10 @@ public class UserEntity implements Serializable {
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date creationDate = new Date(); //创建日期
+
+    // 用户权限
+    @Column(nullable = false)
+    private boolean admin = false;
 
     /**
      * 以下为用户信息

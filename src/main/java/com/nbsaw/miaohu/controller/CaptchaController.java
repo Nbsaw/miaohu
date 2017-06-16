@@ -15,7 +15,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.transform.Result;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Date;
@@ -98,6 +97,7 @@ public class CaptchaController {
    public Map code(@RequestParam String sid , String phone) {
       Map result = new LinkedHashMap();
       Map errors = new LinkedHashMap();
+
       // 验证uuid是否有效
       UUIDUtil.vaild(sid);
 

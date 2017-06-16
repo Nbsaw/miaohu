@@ -88,7 +88,6 @@ public class RegisterController {
     // 正式注册
     @PostMapping
     public Map register(RegisterForm registerForm, HttpSession session,HttpServletRequest request) {
-
         // 校对用户信息
         Map result = validate(registerForm, session,true,request);
 
