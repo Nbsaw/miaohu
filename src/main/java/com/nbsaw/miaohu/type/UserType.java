@@ -1,9 +1,8 @@
 package com.nbsaw.miaohu.type;
 
 /**
- * Created by fz on 17-3-27.
- * 喵乎可以验证的用户基本类型
+ * Created by nbsaw on 2017/6/16.
  */
 public enum UserType {
-    GITHUB,LOCAL,WEIBO,QQ,WEIXIN
+    ADMIN,USER
 }

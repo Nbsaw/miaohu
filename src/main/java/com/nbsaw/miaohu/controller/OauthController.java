@@ -1,7 +1,7 @@
 package com.nbsaw.miaohu.controller;
 
 import com.nbsaw.miaohu.oauth.GithuOAuth;
-import com.nbsaw.miaohu.type.UserType;
+import com.nbsaw.miaohu.type.OauthType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import javax.servlet.http.HttpServletResponse;
@@ -30,7 +30,7 @@ public class OauthController {
         map = restTemplate.postForObject("https://github.com/login/oauth/access_token",oauth,Map.class);
         String access_token = (String) map.get("access_token");
         session.setAttribute("access_token",access_token);
-        session.setAttribute("oauth_type", UserType.GITHUB);
+        session.setAttribute("oauth_type", OauthType.GITHUB);
         response.sendRedirect("http://www.miaohu.moe:9090");
     }
 }

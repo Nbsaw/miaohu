@@ -5,7 +5,7 @@ import com.nbsaw.miaohu.service.UserInfoService;
 import com.nbsaw.miaohu.repository.UserRepository;
 import com.nbsaw.miaohu.model.UserInfoModel;
 import com.nbsaw.miaohu.entity.UserEntity;
-import com.nbsaw.miaohu.type.UserType;
+import com.nbsaw.miaohu.type.OauthType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
@@ -28,8 +28,8 @@ public class UserInfoServiceImpl implements UserInfoService, GetUserInfoService 
     public UserInfoModel getUserInfo(HttpSession session) {
         UserInfoModel userInfoModel = (UserInfoModel) session.getAttribute("userInfo");
         if (userInfoModel == null) {
-            UserType userType = (UserType) session.getAttribute("oauth_type");
-            switch (userType) {
+            OauthType oauthType = (OauthType) session.getAttribute("oauth_type");
+            switch (oauthType) {
                 case LOCAL:
                     userInfoModel = getLocalUser(session);
                     break;

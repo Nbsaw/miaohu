@@ -3,12 +3,12 @@ package com.nbsaw.miaohu.controller;
 import com.nbsaw.miaohu.form.RegisterForm;
 import com.nbsaw.miaohu.entity.UserEntity;
 import com.nbsaw.miaohu.repository.UserRepository;
+import com.nbsaw.miaohu.type.UserType;
 import com.nbsaw.miaohu.util.RedisUtil;
 import com.nbsaw.miaohu.util.RegisterValidUtil;
 import com.nbsaw.miaohu.config.RedisConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.LinkedHashMap;
@@ -99,6 +99,7 @@ public class RegisterController {
             userEntity.setUsername(registerForm.getUsername());
             userEntity.setPassword(registerForm.getPassword());
             userEntity.setPhone(registerForm.getPhone());
+            userEntity.setUserType(UserType.USER);
             userRepository.save(userEntity);
             result.put("msg", "注册成功!!");
         }

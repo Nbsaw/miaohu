@@ -18,7 +18,7 @@ public interface UserRepository extends CrudRepository<UserEntity,String> {
     @Query("select count(u) > 0 from UserEntity u where u.phone = :phone")
     boolean isUserExists(@Param("phone") String phone);
 
-    @Query("select u from UserEntity u where u.phone = :phone and u.password = :password")
+    @Query("select u from UserEntity u where u.phone = :phone and u.password = md5(:password)")
     UserEntity login(@Param(("phone")) String phone,@Param("password") String password);
 
     @Transactional

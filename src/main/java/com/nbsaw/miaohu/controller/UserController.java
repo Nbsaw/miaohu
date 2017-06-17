@@ -8,8 +8,7 @@ import com.nbsaw.miaohu.service.UserInfoService;
 import com.nbsaw.miaohu.entity.UserEntity;
 import com.nbsaw.miaohu.model.UserInfoModel;
 import com.nbsaw.miaohu.repository.UserRepository;
-import com.nbsaw.miaohu.type.UserType;
-import com.nbsaw.miaohu.util.JsonUtil;
+import com.nbsaw.miaohu.type.OauthType;
 import com.nbsaw.miaohu.repository.TagMapRepository;
 import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
@@ -51,24 +50,19 @@ public class UserController {
 
     /**
      * 登录接口,判断手机和密码,把信息存在session里面
-     * @param session
-     * @param phone
-     * @param password
-     * @return
+     * @param phone 手机号码
+     * @param password 账号密码
      */
     // TODO 第三方登录
+    // TODO 分清楚是密码错误还是账号错误
     @PostMapping(value = "/login")
-    public GenericVo login(HttpSession session, @RequestParam("phone") String phone , @RequestParam("password") String password){
+    public GenericVo login(@RequestParam("phone") String phone , @RequestParam("password") String password){
         try {
             // 查询
             UserEntity userEntity = userRepository.login(phone,password);
             UserInfoModel userInfoModel = new UserInfoModel();
             userInfoModel.setUsername(userEntity.getUsername());
             userInfoModel.setAvatar(userEntity.getAvatar());
-            userInfoModel.setSex(userEntity.getSex());
-            session.setAttribute("id",userEntity.getId());
-            session.setAttribute("oauth_type", UserType.LOCAL);
-
             ResultVo resultVo = new ResultVo();
             resultVo.setCode(200);
             resultVo.setResult(userInfoModel);

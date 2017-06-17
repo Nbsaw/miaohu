@@ -1,5 +1,6 @@
 package com.nbsaw.miaohu.entity;
 
+import com.nbsaw.miaohu.type.UserType;
 import lombok.Data;
 import org.hibernate.annotations.ColumnTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,8 +38,8 @@ public class UserEntity implements Serializable {
     private Date creationDate = new Date(); //创建日期
 
     // 用户权限
-    @Column(nullable = false)
-    private boolean admin = false;
+    @Enumerated(EnumType.STRING) //字符串形式
+    private UserType userType;
 
     /**
      * 以下为用户信息
