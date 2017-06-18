@@ -55,17 +55,16 @@ public class UserController {
      */
     // TODO 第三方登录
     // TODO 分清楚是密码错误还是账号错误
+    // TODo 返回用户token
     @PostMapping(value = "/login")
     public GenericVo login(@RequestParam("phone") String phone , @RequestParam("password") String password){
+        // TODO 从Redis获取id，再从数据库查信息
         try {
             // 查询
             UserEntity userEntity = userRepository.login(phone,password);
-            UserInfoModel userInfoModel = new UserInfoModel();
-            userInfoModel.setUsername(userEntity.getUsername());
-            userInfoModel.setAvatar(userEntity.getAvatar());
             ResultVo resultVo = new ResultVo();
             resultVo.setCode(200);
-            resultVo.setResult(userInfoModel);
+            resultVo.setResult();
             return resultVo;
         }catch (Exception e){
             MessageVo messageVo = new MessageVo();
@@ -77,17 +76,25 @@ public class UserController {
 
     // 获取用户信息
     @GetMapping(value = "/info")
-    public Map information(HttpSession session){
-        Map result = new LinkedHashMap();
-        // 从Session获取已经存在的用户access_token,用户类型
-        try {
-            result.put("code",200);
-            result.put("data",userInfoService.getUserInfo(session));
-        }catch (Exception e){
-            result.put("code",401);
-            result.put("errors","没登录拿个猫的信息");
-        }
-        return result;
+    public GenericVo information(HttpSession session){
+        // TODO 从Redis获取id，再从数据库查信息
+//        try {
+//            // 查询
+//            UserEntity userEntity = userRepository.login();
+//            UserInfoModel userInfoModel = new UserInfoModel();
+//            userInfoModel.setUsername(userEntity.getUsername());
+//            userInfoModel.setAvatar(userEntity.getAvatar());
+//            ResultVo resultVo = new ResultVo();
+//            resultVo.setCode(200);
+//            resultVo.setResult(userInfoModel);
+//            return resultVo;
+//        }catch (Exception e){
+//            MessageVo messageVo = new MessageVo();
+//            messageVo.setCode(400);
+//            messageVo.setMessage("用户名或者密码错误");
+//            return messageVo;
+//        }
+        return new MessageVo();
     }
 
     // TODO 密码修改

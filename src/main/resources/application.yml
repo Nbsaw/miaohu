@@ -2,7 +2,7 @@
 project:
       name : miaohu
       version : 0.1.0
- 
+
 # 默认的服务器配置
 server:
       ssl:

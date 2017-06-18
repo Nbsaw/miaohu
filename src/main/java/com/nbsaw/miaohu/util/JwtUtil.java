@@ -42,10 +42,16 @@ public class JwtUtil {
         return claims;
     }
 
+    // 超时
+    public Date getExp(){
+        return new Date(new Date().getTime() + timeout);
+    }
+
     // 根据登陆账号密码生成的token
-    public String createJWT(){
+    public String createJWT(String uid,String leavel){
         String compactJws = Jwts.builder()
-                .setId(UUID.randomUUID().toString())
+                .setId(uid)
+                .setExpiration(getExp())
                 .signWith(SignatureAlgorithm.HS512,key)
                 .compact();
         return compactJws;
