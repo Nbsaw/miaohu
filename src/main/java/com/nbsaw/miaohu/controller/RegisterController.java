@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -59,14 +60,14 @@ public class RegisterController {
         RegisterValidUtil.phoneValid(phone, errors,userRepository);
 
         // 校验图片验证码
-        System.out.println("imageCaptcha : " + imageCaptcha);
-        System.out.println("redisCaptcha : " + redisCaptcha);
         RegisterValidUtil.imageCaptchaValid(imageCaptcha, errors, redisCaptcha);
 
         // 校验手机验证码
         if (is == true){
             String phoneCaptchaFormat = redisUtil.phoneCaptchaFormat(phone);
             String redisPhoneCaptcha = (String) redisConfig.getTemplate().opsForValue().get(phoneCaptchaFormat);
+            System.out.println("phoneCaptcha : " + phoneCaptcha);
+            System.out.println("redisPhoneCaptcha : " + redisPhoneCaptcha);
             RegisterValidUtil.phoneCaptchaValid(phoneCaptcha,errors,redisPhoneCaptcha);
         }
 
@@ -87,7 +88,6 @@ public class RegisterController {
     public Map register(RegisterForm registerForm, String sid,HttpServletRequest request) {
         // 校对用户信息
         Map result = validate(registerForm, sid,true,request);
-
         // 验证不通过的情况
         if ((int) result.get("code") == 200){
             // 把注册信息写入到数据库
@@ -96,7 +96,6 @@ public class RegisterController {
             userEntity.setUsername(registerForm.getUsername());
             userEntity.setPassword(registerForm.getPassword());
             userEntity.setPhone(registerForm.getPhone());
-            userEntity.setUserType(UserType.USER);
             userRepository.save(userEntity);
             result.put("msg", "注册成功!!");
         }

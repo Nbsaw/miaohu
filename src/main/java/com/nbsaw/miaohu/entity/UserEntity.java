@@ -2,6 +2,7 @@ package com.nbsaw.miaohu.entity;
 
 import com.nbsaw.miaohu.type.UserType;
 import lombok.Data;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.ColumnTransformer;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -31,6 +32,7 @@ public class UserEntity implements Serializable {
     @ColumnTransformer(write = "md5(?)")
     private String password; //密码
 
+    @Column(unique = true)
     private String phone; //手机号码
 
     @Column
