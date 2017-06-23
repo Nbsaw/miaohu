@@ -59,8 +59,8 @@ redis.constant.image: ":IMAGE" # 图片验证码在redis的后缀
 redis.constant.imageTimeOut: 5 # 图片验证码超时时间
 
 # 手机验证码
-redis.constant.phone: ":phone" # 手机验证码在redis的后缀
-redis.constant.phoneTimeOut: 3 # 手机验证码超时时间
+redis.constant.phone: ":PHONE" # 手机验证码在redis的后缀
+redis.constant.phoneTimeOut: 1 # 手机验证码超时时间
 
 
 ---

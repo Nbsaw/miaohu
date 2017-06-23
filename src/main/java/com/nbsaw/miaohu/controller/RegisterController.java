@@ -31,23 +31,20 @@ public class RegisterController {
 
     // 第一步检测
     @PostMapping(value = "/valid")
-    public Map valid(@ModelAttribute RegisterForm registerForm, HttpSession session, HttpServletRequest request) {
-        return validate(registerForm, session,false,request);
+    public Map valid(@ModelAttribute RegisterForm registerForm, String sid, HttpServletRequest request) {
+        return validate(registerForm, sid,false,request);
     }
 
     // 检测参数是否合法
-    public Map validate(RegisterForm registerForm, HttpSession session,boolean is,HttpServletRequest request) {
+    public Map validate(RegisterForm registerForm, String sid,boolean is,HttpServletRequest request) {
         Map result = new LinkedHashMap();
         Map errors = new LinkedHashMap();
-
-        // session 设置
-        session.setAttribute("domain","");
 
         // 需要被检测的信息
         String username = registerForm.getUsername();
         String password = registerForm.getPassword();
         String imageCaptcha = registerForm.getImageCaptcha();
-        String imageCaptchaFormat = redisUtil.imageCaptchaFormat(session.getId());
+        String imageCaptchaFormat = redisUtil.imageCaptchaFormat(sid);
         String phoneCaptcha = registerForm.getPhoneCaptcha();
         String redisCaptcha = redisConfig.getTemplate().opsForValue().get(imageCaptchaFormat);
         String phone = registerForm.getPhone();
@@ -68,8 +65,8 @@ public class RegisterController {
 
         // 校验手机验证码
         if (is == true){
-            String phoneCaptchaFormat = redisUtil.phoneCaptchaFormat(session.getId(),phone);
-            String redisPhoneCaptcha = (String) redisConfig.getTemplate().opsForHash().get(phoneCaptchaFormat,"value");
+            String phoneCaptchaFormat = redisUtil.phoneCaptchaFormat(phone);
+            String redisPhoneCaptcha = (String) redisConfig.getTemplate().opsForValue().get(phoneCaptchaFormat);
             RegisterValidUtil.phoneCaptchaValid(phoneCaptcha,errors,redisPhoneCaptcha);
         }
 
@@ -87,9 +84,9 @@ public class RegisterController {
 
     // 正式注册
     @PostMapping
-    public Map register(RegisterForm registerForm, HttpSession session,HttpServletRequest request) {
+    public Map register(RegisterForm registerForm, String sid,HttpServletRequest request) {
         // 校对用户信息
-        Map result = validate(registerForm, session,true,request);
+        Map result = validate(registerForm, sid,true,request);
 
         // 验证不通过的情况
         if ((int) result.get("code") == 200){

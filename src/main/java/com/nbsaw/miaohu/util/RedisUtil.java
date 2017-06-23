@@ -13,24 +13,24 @@ import org.springframework.stereotype.Component;
 public class RedisUtil {
     // 图片验证码
     @Value("${redis.constant.image}")
-    private String image;
+    private String imageSuffix;
     @Value("${redis.constant.imageTimeOut}")
     private int imageTimeOut;
 
     // 手机验证码
     @Value("${redis.constant.phone}")
-    private String phone;
+    private String phoneSuffix;
     @Value("${redis.constant.phoneTimeOut}")
     private int phoneTimeOut;
 
     // 返回图片验证码码在Redis里面的的格式
     public String imageCaptchaFormat(String id){
-        return id + image;
+        return id + imageSuffix;
     }
 
     // 返回手机验证码在Redis里面的格式
-    public String phoneCaptchaFormat(String id,String phone){
-        return id +phone + phone;
+    public String phoneCaptchaFormat(String phone){
+        return phone + phoneSuffix;
     }
 
     // 获取图片验证码超时时间

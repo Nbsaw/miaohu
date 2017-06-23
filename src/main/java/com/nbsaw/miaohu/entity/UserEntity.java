@@ -39,7 +39,7 @@ public class UserEntity implements Serializable {
 
     // 用户权限
     @Enumerated(EnumType.STRING) //字符串形式
-    private UserType userType;
+    private UserType userType = UserType.USER;
 
     /**
      * 以下为用户信息

@@ -94,7 +94,7 @@ public class CaptchaController {
     * 如果不成功的话,返回一条错误信息。
     */
    @GetMapping("/phoneCaptcha")
-   public Map code(@RequestParam String sid , String phone) {
+   public Map code(@RequestParam String sid ,String phone) {
       Map result = new LinkedHashMap();
       Map errors = new LinkedHashMap();
 
@@ -108,19 +108,20 @@ public class CaptchaController {
          result.put("errors", errors);
       } else {
          // 从redis读取手机验证码
-         StringRedisTemplate template = redisConfig.getTemplate();
-         HashOperations<String, String, String> obj = template.opsForHash();
-         String phoneCaptchaFormat =  redisUtil.phoneCaptchaFormat(sid,phone);
-         int phoneTimeOut = redisUtil.getPhoneTimeOut();
+         StringRedisTemplate template= redisConfig.getTemplate();
+         String phoneCaptchaFormat =  redisUtil.phoneCaptchaFormat(phone);
+         String redisCaptcha = template.opsForValue().get(phoneCaptchaFormat);
          // 如果不存在就发送一条验证码到手机,并保存下来
          // 超过60秒限制可以重新发验证码
-         if (obj.get(phoneCaptchaFormat, "value") == null || new Date().getTime() - Long.valueOf(obj.get(phoneCaptchaFormat, "time")) > 60000) {
+         if (redisCaptcha == null) {
             // 手机验证码
             String code = phoneMessageService.sendRegisterCode(phone);
-            // 设置手机验证码的值以及超时时间
-            obj.put(phoneCaptchaFormat, "value", code);
-            obj.put(phoneCaptchaFormat, "time", String.valueOf(new Date().getTime()));
-            template.expire(sid, phoneTimeOut, TimeUnit.MINUTES);
+
+            // 把验证码存到redis
+            ValueOperations obj =  template.opsForValue();
+            obj.set(phoneCaptchaFormat,code.toLowerCase());
+            template.expire(phoneCaptchaFormat,redisUtil.getPhoneTimeOut(), TimeUnit.MINUTES);
+
             result.put("code", 200);
             result.put("msg", "验证码发送成功!");
          } else {
