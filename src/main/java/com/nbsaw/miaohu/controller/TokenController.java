@@ -21,16 +21,7 @@ public class TokenController  {
     public ResultVo getToken(){
         ResultVo resultVo = new ResultVo();
         resultVo.setCode(200);
-        resultVo.setResult(jwtUtil.createJWT());
-        return resultVo;
-    }
-
-    // 验证token是否有效
-    @PostMapping("/valid")
-    public ResultVo getId(String jwt){
-        ResultVo resultVo = new ResultVo();
-        resultVo.setCode(200);
-        resultVo.setResult(jwtUtil.parse(jwt).getId());
+//        resultVo.setResult(jwtUtil.createJWT());
         return resultVo;
     }
 }

@@ -30,7 +30,7 @@ public class JwtTest {
 
         String compactJws4 = Jwts.builder()
                 .setId(UUID.randomUUID().toString())
-                .signWith(SignatureAlgorithm.HS512,key)
+                .signWith(SignatureAlgorithm.HS512,key).claim("userType","asd")
                 .compact();
 
         // 畸形的token
@@ -53,6 +53,6 @@ public class JwtTest {
         }
         // 正常的token
         System.out.println(Jwts.parser().setSigningKey(key).parseClaimsJws(compactJws3));
-        System.out.println(Jwts.parser().setSigningKey(key).parseClaimsJws(compactJws4));
+        System.out.println(Jwts.parser().setSigningKey(key).parseClaimsJws(compactJws4).getBody());
     }
 }

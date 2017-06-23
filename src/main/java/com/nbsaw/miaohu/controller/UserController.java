@@ -10,12 +10,15 @@ import com.nbsaw.miaohu.model.UserInfoModel;
 import com.nbsaw.miaohu.repository.UserRepository;
 import com.nbsaw.miaohu.type.OauthType;
 import com.nbsaw.miaohu.repository.TagMapRepository;
+import com.nbsaw.miaohu.util.JwtUtil;
 import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.ResultVo;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
@@ -48,6 +51,10 @@ public class UserController {
     @Autowired
     private TagMapRepository tagMapRepository;
 
+    // jwt
+    @Autowired
+    private JwtUtil jwtUtil;
+
     /**
      * 登录接口,判断手机和密码,把信息存在session里面
      * @param phone 手机号码
@@ -64,7 +71,8 @@ public class UserController {
             UserEntity userEntity = userRepository.login(phone,password);
             ResultVo resultVo = new ResultVo();
             resultVo.setCode(200);
-            resultVo.setResult();
+            String token = jwtUtil.createJWT(userEntity.getId(),userEntity.getUserType());
+            resultVo.setResult(token);
             return resultVo;
         }catch (Exception e){
             MessageVo messageVo = new MessageVo();
@@ -76,25 +84,30 @@ public class UserController {
 
     // 获取用户信息
     @GetMapping(value = "/info")
-    public GenericVo information(HttpSession session){
+    public GenericVo information(HttpServletRequest request){
         // TODO 从Redis获取id，再从数据库查信息
-//        try {
-//            // 查询
-//            UserEntity userEntity = userRepository.login();
-//            UserInfoModel userInfoModel = new UserInfoModel();
-//            userInfoModel.setUsername(userEntity.getUsername());
-//            userInfoModel.setAvatar(userEntity.getAvatar());
-//            ResultVo resultVo = new ResultVo();
-//            resultVo.setCode(200);
-//            resultVo.setResult(userInfoModel);
-//            return resultVo;
-//        }catch (Exception e){
-//            MessageVo messageVo = new MessageVo();
-//            messageVo.setCode(400);
-//            messageVo.setMessage("用户名或者密码错误");
-//            return messageVo;
-//        }
-        return new MessageVo();
+        try {
+            // 解析token
+            String token = request.getHeader("token");
+            System.out.println(token);
+            String uid = (String) jwtUtil.parse(token).get("uid");
+
+            // 查询
+            UserEntity userEntity = userRepository.findAllById(uid);
+            UserInfoModel userInfoModel = new UserInfoModel();
+            userInfoModel.setUsername(userEntity.getUsername());
+            userInfoModel.setAvatar(userEntity.getAvatar());
+            ResultVo resultVo = new ResultVo();
+            resultVo.setCode(200);
+            resultVo.setResult(userInfoModel);
+
+            return resultVo;
+        }catch (Exception e){
+            MessageVo messageVo = new MessageVo();
+            messageVo.setCode(400);
+            messageVo.setMessage("用户名或者密码错误");
+            return messageVo;
+        }
     }
 
     // TODO 密码修改

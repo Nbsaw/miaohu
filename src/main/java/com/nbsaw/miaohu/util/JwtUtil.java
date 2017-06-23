@@ -1,5 +1,6 @@
 package com.nbsaw.miaohu.util;
 
+import com.nbsaw.miaohu.type.UserType;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.Date;
 import java.util.UUID;
+import java.util.logging.Level;
 
 /**
  * Created by nbsaw on 2017/6/9.
@@ -31,7 +33,7 @@ public class JwtUtil {
     public Claims parse(String token){
         Claims claims = null;
         try{
-            Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+            claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
         }catch (MalformedJwtException e){
             System.out.println("不是有效的token");
         }catch (ExpiredJwtException e){
@@ -48,11 +50,12 @@ public class JwtUtil {
     }
 
     // 根据登陆账号密码生成的token
-    public String createJWT(String uid,String leavel){
+    public String createJWT(String uid,UserType userType){
         String compactJws = Jwts.builder()
-                .setId(uid)
-                .setExpiration(getExp())
                 .signWith(SignatureAlgorithm.HS512,key)
+                .setExpiration(getExp())
+                .claim("uid",uid)
+                .claim("userType",userType.toString())  // 用户权限设置
                 .compact();
         return compactJws;
     }
