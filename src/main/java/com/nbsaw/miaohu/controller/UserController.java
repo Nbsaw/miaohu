@@ -82,7 +82,11 @@ public class UserController {
         }
     }
 
-    // 获取用户信息
+    /**
+     * 获取用户信息
+     * @param request 从request的header里面获取token
+     * @return 获取用户信息
+     */
     @GetMapping(value = "/info")
     public GenericVo information(HttpServletRequest request){
         // TODO 从Redis获取id，再从数据库查信息
@@ -111,6 +115,7 @@ public class UserController {
     }
 
     // TODO 密码修改
+    // TODO 让token失效
     @PostMapping(value = "/changePassword")
     public String changePassword(@RequestParam("uid") String uid){
         UserEntity userEntity = new UserEntity();
@@ -122,17 +127,19 @@ public class UserController {
         return "asd";
     }
 
-    // TODO 资料修改
-
     /**
      * 获取用户发表的所有的问题
-     * @param session
+     * @param request 从request的header里面获取token
      * @return 获取用户发表的所有的问题
      */
     // TODO 分页
     @GetMapping(value = "/question")
-    public ResultVo question(HttpSession session){
-        String uid = (String) session.getAttribute("id");
+    public ResultVo question(HttpServletRequest request){
+        // 解析token
+        String token = request.getHeader("token");
+        System.out.println(token);
+        String uid = (String) jwtUtil.parse(token).get("uid");
+
         List result = new ArrayList();
         // 查找用户发表的问题
         List<QuestionEntity> questionEntities =  questionRepository.findAllByUid(uid);
@@ -157,4 +164,8 @@ public class UserController {
         return resultVo;
     }
 
+    // TODO 资料修改
+
+    // TODO 注销登陆
+    // 从redis删除token
 }
