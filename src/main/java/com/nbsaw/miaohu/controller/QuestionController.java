@@ -283,9 +283,12 @@ public class QuestionController {
 
     // 查找问题的评论
     @GetMapping(value = "/answer/{id}")
-    public String selectAnswerById(@PathVariable("id") Long id) {
+    public ResultVo selectAnswerById(@PathVariable("id") Long id) {
         List<AnswerEntity> list = answerRepository.findAllByQuestionId(id,new PageRequest(0,5));
-        return JsonUtil.formatResult(200, "", list);
+        ResultVo resultVo = new ResultVo();
+        resultVo.setCode(200);
+        resultVo.setResult(list);
+        return resultVo;
     }
 
     /**
