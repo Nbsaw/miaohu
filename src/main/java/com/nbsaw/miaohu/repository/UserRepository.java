@@ -15,13 +15,13 @@ import javax.transaction.Transactional;
 @Repository
 public interface UserRepository extends CrudRepository<UserEntity,String> {
 
+    UserEntity findAllById(String id);
+
     @Query("select count(u) > 0 from UserEntity u where u.phone = :phone")
     boolean isUserExists(@Param("phone") String phone);
 
     @Query("select u from UserEntity u where u.phone = :phone and u.password = md5(:password)")
     UserEntity login(@Param(("phone")) String phone,@Param("password") String password);
-
-    UserEntity findAllById(String id);
 
     @Transactional
     @Modifying

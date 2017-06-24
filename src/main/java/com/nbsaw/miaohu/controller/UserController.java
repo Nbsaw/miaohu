@@ -66,18 +66,27 @@ public class UserController {
     @PostMapping(value = "/login")
     public GenericVo login(@RequestParam("phone") String phone , @RequestParam("password") String password){
         // TODO 从Redis获取id，再从数据库查信息
-        try {
-            // 查询
-            UserEntity userEntity = userRepository.login(phone,password);
-            ResultVo resultVo = new ResultVo();
-            resultVo.setCode(200);
-            String token = jwtUtil.createJWT(userEntity.getId(),userEntity.getUserType());
-            resultVo.setResult(token);
-            return resultVo;
-        }catch (Exception e){
+        // 检查手机号码是否存在
+        if (userRepository.isUserExists(phone)){
+            try{
+                // 校对用户手机号码密码
+                UserEntity userEntity = userRepository.login(phone,password);
+                ResultVo resultVo = new ResultVo();
+                resultVo.setCode(200);
+                String token = jwtUtil.createJWT(userEntity.getId(),userEntity.getUserType());
+                resultVo.setResult(token);
+            return resultVo;}
+            catch (Exception e){
+                MessageVo messageVo = new MessageVo();
+                messageVo.setCode(400);
+                messageVo.setMessage("用户密码错误");
+                return messageVo;
+            }
+        }
+        else{
             MessageVo messageVo = new MessageVo();
             messageVo.setCode(400);
-            messageVo.setMessage("用户名或者密码错误");
+            messageVo.setMessage("用户不存在");
             return messageVo;
         }
     }
