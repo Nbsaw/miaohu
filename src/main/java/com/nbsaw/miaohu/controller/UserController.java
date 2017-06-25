@@ -130,11 +130,10 @@ public class UserController {
 
         // 解析token
         String token = request.getHeader("token");
-        System.out.println(token);
         String uid = (String) jwtUtil.parse(token).get("uid");
 
         // 修改密码
-        Boolean status = userRepository.updatePasswordByUid(uid,"13164726498") == 1;
+        Boolean status = userRepository.updatePasswordByUid(uid,password) == 1;
         if (status == true){
             messageVo.setCode(200);
             messageVo.setMessage("修改密码成功！");

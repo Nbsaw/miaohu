@@ -49,6 +49,9 @@ dependencies {
     // json object
     compile group: 'org.json', name: 'json', version: '20160810'
 
+    // 七牛
+    compile 'com.qiniu:qiniu-java-sdk:7.2.+'
+
     // jwt
     compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.7.0'
     // mysql 连接驱动

@@ -29,7 +29,7 @@ public class JwtUtil {
 
     // TODO 超时
     // TODO 是否有效
-    // TODO
+    // TODO 详细的错误声明
     public Claims parse(String token){
         Claims claims = null;
         try{
