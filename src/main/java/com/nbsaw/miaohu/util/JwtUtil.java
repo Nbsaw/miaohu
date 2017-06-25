@@ -1,5 +1,7 @@
 package com.nbsaw.miaohu.util;
 
+import com.nbsaw.miaohu.exception.ExJwtException;
+import com.nbsaw.miaohu.exception.InValidJwtException;
 import com.nbsaw.miaohu.type.UserType;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,16 +32,16 @@ public class JwtUtil {
     // TODO 超时
     // TODO 是否有效
     // TODO 详细的错误声明
-    public Claims parse(String token){
+    public Claims parse(String token) throws InValidJwtException, ExJwtException {
         Claims claims = null;
         try{
             claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
         }catch (MalformedJwtException e){
-            System.out.println("不是有效的token");
+            throw new InValidJwtException();
         }catch (ExpiredJwtException e){
-            System.out.println("token已超时");
+            throw new ExJwtException();
         }catch (SignatureException e){
-            System.out.println("签名不合法");
+            throw new InValidJwtException();
         }
         return claims;
     }

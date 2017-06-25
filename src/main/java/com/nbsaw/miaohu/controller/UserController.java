@@ -1,5 +1,7 @@
 package com.nbsaw.miaohu.controller;
 
+import com.nbsaw.miaohu.exception.ExJwtException;
+import com.nbsaw.miaohu.exception.InValidJwtException;
 import com.nbsaw.miaohu.repository.QuestionRepository;
 import com.nbsaw.miaohu.entity.TagMapEntity;
 import com.nbsaw.miaohu.repository.TagRepository;
@@ -124,7 +126,7 @@ public class UserController {
 
     // TODO 让token失效
     @PostMapping(value = "/changePassword")
-    public MessageVo changePassword(HttpServletRequest request, @RequestParam("password") String password){
+    public MessageVo changePassword(HttpServletRequest request, @RequestParam("password") String password) throws ExJwtException, InValidJwtException {
         // 返回的数据
         MessageVo messageVo = new MessageVo();
 
@@ -152,10 +154,9 @@ public class UserController {
      */
     // TODO 分页
     @GetMapping(value = "/question")
-    public ResultVo question(HttpServletRequest request){
+    public ResultVo question(HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 解析token
         String token = request.getHeader("token");
-        System.out.println(token);
         String uid = (String) jwtUtil.parse(token).get("uid");
 
         List result = new ArrayList();

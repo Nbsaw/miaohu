@@ -1,4 +1,6 @@
 package com.nbsaw.miaohu.handler;
+import com.nbsaw.miaohu.exception.ExJwtException;
+import com.nbsaw.miaohu.exception.InValidJwtException;
 import com.nbsaw.miaohu.vo.MessageVo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -19,6 +21,7 @@ public class GlobalExceptionHandler{
 
     // 参数缺少无效错误处理
     @ExceptionHandler(value = {MissingServletRequestParameterException.class,IllegalArgumentException.class})
+    @ResponseBody
     public MessageVo jsonErrorHandler(Exception e) throws Exception {
         MessageVo error = new MessageVo();
         error.setCode(400);
@@ -28,6 +31,7 @@ public class GlobalExceptionHandler{
 
     // 文件大小限制
     @ExceptionHandler(value = MultipartException.class)
+    @ResponseBody
     public MessageVo uploadErrorHandler(MultipartException e) throws Exception {
         MessageVo error = new MessageVo();
         if (e.getCause().getMessage().contains("org.apache.tomcat.util.http.fileupload.FileUploadBase$FileSizeLimitExceededException")){
@@ -40,10 +44,18 @@ public class GlobalExceptionHandler{
         return error;
     }
 
+    // 登陆异常处理
+    @ExceptionHandler(value = {InValidJwtException.class,ExJwtException.class})
+    @ResponseBody
+    public MessageVo loginErrorHandler(Exception e) throws Exception {
+        MessageVo error = new MessageVo();
+        error.setCode(400);
+        error.setMessage(e.getMessage());
+        return error;
+    }
 
     // 404 错误处理
     @ExceptionHandler(NoHandlerFoundException.class)
-    @ResponseStatus(value= HttpStatus.NOT_FOUND)
     @ResponseBody
     public MessageVo requestHandlingNoHandlerFound() {
         MessageVo error = new MessageVo();

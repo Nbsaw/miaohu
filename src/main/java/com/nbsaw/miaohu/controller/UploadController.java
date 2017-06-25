@@ -1,6 +1,9 @@
 package com.nbsaw.miaohu.controller;
 
 import com.google.gson.Gson;
+import com.nbsaw.miaohu.exception.ExJwtException;
+import com.nbsaw.miaohu.exception.InValidJwtException;
+import com.nbsaw.miaohu.util.JwtUtil;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
 import com.qiniu.storage.Configuration;
@@ -8,11 +11,14 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 /**
@@ -21,10 +27,17 @@ import java.io.IOException;
 @RestController
 @RequestMapping(value = "/upload")
 public class UploadController {
+    // jwt
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @PostMapping(value = "/avatar")
-    public String uploadAvatar(@RequestParam("avatar") MultipartFile avatar) throws IOException {
+    public String uploadAvatar(@RequestParam("avatar") MultipartFile avatar, HttpServletRequest request) throws IOException, ExJwtException, InValidJwtException {
         // 获取token
-        
+        String token = request.getHeader("token");
+        System.out.println(token);
+        String uid = (String) jwtUtil.parse(token).get("uid");
+
         // 凭证生成
         String accessKey = "QDmYg322MuVo4vmYAWk06I160-q9xiWKFXtZI7O3";
         String secretKey = "i-iCBJNP4_e0X1HqaWEy4zIBNpHnYi77GCUy0QFa";
