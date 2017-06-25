@@ -23,6 +23,8 @@ import java.io.IOException;
 public class UploadController {
     @PostMapping(value = "/avatar")
     public String uploadAvatar(@RequestParam("avatar") MultipartFile avatar) throws IOException {
+        // 获取token
+        
         // 凭证生成
         String accessKey = "QDmYg322MuVo4vmYAWk06I160-q9xiWKFXtZI7O3";
         String secretKey = "i-iCBJNP4_e0X1HqaWEy4zIBNpHnYi77GCUy0QFa";
@@ -43,8 +45,6 @@ public class UploadController {
         Response response = uploadManager.put(avatar.getBytes(), key, upToken);
         //解析上传成功的结果
         DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
-        System.out.println(qiniuUrl + putRet.hash);
-        System.out.println("upload success !");
         return "ok";
     }
 }

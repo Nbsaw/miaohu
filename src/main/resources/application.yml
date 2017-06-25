@@ -53,6 +53,9 @@ spring.redis.pool.min-idle: 0 # Target for the minimum number of idle connection
 spring.redis.port: 6379 # Redis server port.s
 spring.redis.timeout: 2000 # Connection timeout in milliseconds.
 
+# 文件上传大小上限
+spring.http.multipart.max-file-size: 1024KB
+
 # Redis 常量
 # 图片验证码
 redis.constant.image: ":IMAGE" # 图片验证码在redis的后缀
