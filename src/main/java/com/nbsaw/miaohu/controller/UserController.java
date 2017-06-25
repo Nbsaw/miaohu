@@ -17,6 +17,7 @@ import com.nbsaw.miaohu.vo.ResultVo;
 import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sun.plugin2.message.Message;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -61,8 +62,6 @@ public class UserController {
      * @param password 账号密码
      */
     // TODO 第三方登录
-    // TODO 分清楚是密码错误还是账号错误
-    // TODo 返回用户token
     @PostMapping(value = "/login")
     public GenericVo login(@RequestParam("phone") String phone , @RequestParam("password") String password){
         // TODO 从Redis获取id，再从数据库查信息
@@ -98,7 +97,7 @@ public class UserController {
      */
     @GetMapping(value = "/info")
     public GenericVo information(HttpServletRequest request){
-        // TODO 从Redis获取id，再从数据库查信息
+        // TODO 从Redis获取id，再从数据库查信息 -> 主要是判断用户是否注销了
         try {
             // 解析token
             String token = request.getHeader("token");
@@ -123,17 +122,28 @@ public class UserController {
         }
     }
 
-    // TODO 密码修改
     // TODO 让token失效
     @PostMapping(value = "/changePassword")
-    public String changePassword(@RequestParam("uid") String uid){
-        UserEntity userEntity = new UserEntity();
-        userEntity.setId(UUID.randomUUID().toString());
-        userEntity.setUsername("test");
-        userEntity.setPassword("25802580");
-        userEntity.setPhone("13164726498");
-        userRepository.save(userEntity);
-        return "asd";
+    public MessageVo changePassword(HttpServletRequest request, @RequestParam("password") String password){
+        // 返回的数据
+        MessageVo messageVo = new MessageVo();
+
+        // 解析token
+        String token = request.getHeader("token");
+        System.out.println(token);
+        String uid = (String) jwtUtil.parse(token).get("uid");
+
+        // 修改密码
+        Boolean status = userRepository.updatePasswordByUid(uid,"13164726498") == 1;
+        if (status == true){
+            messageVo.setCode(200);
+            messageVo.setMessage("修改密码成功！");
+        }
+        else{
+            messageVo.setCode(400);
+            messageVo.setMessage("修改密码失败！");
+        }
+        return messageVo;
     }
 
     /**
