@@ -2,10 +2,7 @@ package com.nbsaw.miaohu.entity;
 
 import com.nbsaw.miaohu.type.UserType;
 import lombok.Data;
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.ColumnTransformer;
-import org.springframework.beans.factory.annotation.Autowired;
-
 import javax.persistence.*;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;

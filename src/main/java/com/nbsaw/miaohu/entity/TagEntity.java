@@ -1,7 +1,6 @@
 package com.nbsaw.miaohu.entity;
 
 import lombok.Data;
-
 import javax.persistence.*;
 
 /**

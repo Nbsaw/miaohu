@@ -1,7 +1,6 @@
 package com.nbsaw.miaohu.vo;
 
 import lombok.Data;
-
 import java.io.Serializable;
 
 /**

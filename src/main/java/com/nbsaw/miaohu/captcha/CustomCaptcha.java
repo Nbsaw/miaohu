@@ -3,7 +3,6 @@ package com.nbsaw.miaohu.captcha;
 import com.google.code.kaptcha.GimpyEngine;
 import com.google.code.kaptcha.util.Configurable;
 import com.jhlabs.image.RippleFilter;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 

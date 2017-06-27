@@ -2,7 +2,6 @@ package com.nbsaw.miaohu.service;
 
 import com.nbsaw.miaohu.model.UserInfoModel;
 import org.springframework.stereotype.Service;
-
 import javax.servlet.http.HttpSession;
 
 /**

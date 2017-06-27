@@ -6,7 +6,7 @@ import lombok.Data;
  * 返回信息的vo
  */
 @Data
-public class MessageVo extends GenericVo {
+public class MessageVo extends GenericVo  {
     // 消息
     private String message;
 }

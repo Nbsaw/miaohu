@@ -6,13 +6,8 @@ import com.nbsaw.miaohu.type.UserType;
 import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
-
 import java.util.Date;
-import java.util.UUID;
-import java.util.logging.Level;
 
 /**
  * Created by nbsaw on 2017/6/9.

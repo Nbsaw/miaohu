@@ -1,7 +1,6 @@
 package com.nbsaw.miaohu.util;
 
 import com.nbsaw.miaohu.repository.UserRepository;
-
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -94,7 +93,6 @@ public class RegisterValidUtil {
         }
         return temp;
     }
-
 
     // 判断用户名是否合法
     public static void usernameValid(String username, Map errors) {
