@@ -15,32 +15,32 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class HttpRedirectConfig {
-    @Bean
-    public EmbeddedServletContainerFactory servletContainer(@Value("${server.port}") int port) {
-        TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory() {
-            @Override
-            protected void postProcessContext(Context context) {
-                SecurityConstraint constraint = new SecurityConstraint();
-                constraint.setUserConstraint("CONFIDENTIAL");
-                SecurityCollection collection = new SecurityCollection();
-                collection.addPattern("/*");
-                constraint.addCollection(collection);
-                context.addConstraint(constraint);
-            }
-        };
-        tomcat.addAdditionalTomcatConnectors(httpConnector(port));
-        return tomcat;
-    }
-
-    @Bean
-    public Connector httpConnector(int port) {
-        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
-        connector.setScheme("http");
-        //Connector监听的http的端口号
-        connector.setPort(80);
-        connector.setSecure(false);
-        //监听到http的端口号后转向到的https的端口号
-        connector.setRedirectPort(port);
-        return connector;
-    }
+//    @Bean
+//    public EmbeddedServletContainerFactory servletContainer(@Value("${server.port}") int port) {
+//        TomcatEmbeddedServletContainerFactory tomcat = new TomcatEmbeddedServletContainerFactory() {
+//            @Override
+//            protected void postProcessContext(Context context) {
+//                SecurityConstraint constraint = new SecurityConstraint();
+//                constraint.setUserConstraint("CONFIDENTIAL");
+//                SecurityCollection collection = new SecurityCollection();
+//                collection.addPattern("/*");
+//                constraint.addCollection(collection);
+//                context.addConstraint(constraint);
+//            }
+//        };
+//        tomcat.addAdditionalTomcatConnectors(httpConnector(port));
+//        return tomcat;
+//    }
+//
+//    @Bean
+//    public Connector httpConnector(int port) {
+//        Connector connector = new Connector("org.apache.coyote.http11.Http11NioProtocol");
+//        connector.setScheme("http");
+//        //Connector监听的http的端口号
+//        connector.setPort(80);
+//        connector.setSecure(false);
+//        //监听到http的端口号后转向到的https的端口号
+//        connector.setRedirectPort(port);
+//        return connector;
+//    }
 }

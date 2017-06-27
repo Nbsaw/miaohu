@@ -3,14 +3,6 @@ project:
       name : miaohu
       version : 0.1.2
 
-# 默认的服务器配置
-server:
-      ssl:
-          key-store: keystore.p12
-          key-store-password: 25802580
-          keyStoreType: PKCS12
-          keyAlias: tomcat
-
 # 环境设置
 spring.profiles.active: dev
 
