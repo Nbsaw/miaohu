@@ -3,6 +3,8 @@ package com.nbsaw.miaohu.controller;
 import com.nbsaw.miaohu.form.RegisterForm;
 import com.nbsaw.miaohu.entity.UserEntity;
 import com.nbsaw.miaohu.repository.UserRepository;
+import com.nbsaw.miaohu.type.UserType;
+import com.nbsaw.miaohu.util.JwtUtil;
 import com.nbsaw.miaohu.util.RedisUtil;
 import com.nbsaw.miaohu.util.RegisterValidUtil;
 import com.nbsaw.miaohu.config.RedisConfig;
@@ -25,6 +27,8 @@ public class RegisterController {
     private UserRepository userRepository;
     @Autowired
     private RedisUtil redisUtil;
+    @Autowired
+    private JwtUtil jwtUtil;
 
     // 第一步检测
     @PostMapping(value = "/valid")
@@ -86,14 +90,20 @@ public class RegisterController {
         Map result = validate(registerForm, sid,true,request);
         // 验证不通过的情况
         if ((int) result.get("code") == 200){
+            // 初始化信息
+            String userId = UUID.randomUUID().toString();
+            UserType userType = UserType.USER;
             // 把注册信息写入到数据库
             UserEntity userEntity = new UserEntity();
-            userEntity.setId(UUID.randomUUID().toString());
+            userEntity.setId(userId);
             userEntity.setUsername(registerForm.getUsername());
             userEntity.setPassword(registerForm.getPassword());
             userEntity.setPhone(registerForm.getPhone());
+            userEntity.setUserType(userType);
             userRepository.save(userEntity);
-            result.put("msg", "注册成功!!");
+            // 设置token
+            String token = jwtUtil.createJWT(userId,userType);
+            result.put("result",token);
         }
         return result;
     }

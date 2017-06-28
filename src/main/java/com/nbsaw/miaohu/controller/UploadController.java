@@ -42,14 +42,17 @@ public class UploadController {
         String secretKey = "i-iCBJNP4_e0X1HqaWEy4zIBNpHnYi77GCUy0QFa";
         String bucket = "miaohu";
         String qiniuUrl = "http://os33nc36m.bkt.clouddn.com/";
+
         // 默认不指定key的情况下，以文件内容的hash值作为文件名
         String key = null;
         Auth auth = Auth.create(accessKey, secretKey);
+
         // 返回数据格式设置
         StringMap putPolicy = new StringMap();
         putPolicy.put("returnBody", "{\"key\":\"$(key)\",\"hash\":\"$(etag)\",\"bucket\":\"$(bucket)\",\"fsize\":$(fsize)}");
         long expireSeconds = 3600;
         String upToken = auth.uploadToken(bucket, null, expireSeconds, putPolicy);
+
         //构造一个带指定Zone对象的配置类
         // 此处为华东机房的配置
         Configuration cfg = new Configuration(Zone.zone0());
