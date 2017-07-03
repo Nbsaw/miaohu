@@ -65,12 +65,6 @@ server:
       port: 8443
       address: 0.0.0.0
 
-# 资源设置
-#spring.resources.chain.enabled: true
-#spring.resources.chain.cache: true
-#spring.resources.chain.gzipped: true
-#spring.resources.static-locations: file:E:\javascript\webpack\public\ # 坑壁window一定要以\结尾
-
 # debug信息开启
 debug: true
 ---
