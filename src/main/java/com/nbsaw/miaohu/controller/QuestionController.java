@@ -1,6 +1,8 @@
 package com.nbsaw.miaohu.controller;
 
 import com.nbsaw.miaohu.entity.QuestionEntity;
+import com.nbsaw.miaohu.exception.ExJwtException;
+import com.nbsaw.miaohu.exception.InValidJwtException;
 import com.nbsaw.miaohu.repository.QuestionRepository;
 import com.nbsaw.miaohu.entity.TagMapEntity;
 import com.nbsaw.miaohu.repository.TagRepository;
@@ -10,12 +12,15 @@ import com.nbsaw.miaohu.repository.AnswerRepository;
 import com.nbsaw.miaohu.entity.AnswerVoteMapEntity;
 import com.nbsaw.miaohu.repository.AnswerVoteMapRepository;
 import com.nbsaw.miaohu.repository.TagMapRepository;
+import com.nbsaw.miaohu.util.JwtUtil;
 import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
@@ -28,6 +33,7 @@ public class QuestionController {
     @Autowired private TagMapRepository tagMapRepository;
     @Autowired private AnswerRepository answerRepository;
     @Autowired private AnswerVoteMapRepository answerVoteMapRepository;
+    @Autowired private JwtUtil jwtUtil;
 
     // 查询近期发布的问题
     @GetMapping
@@ -61,7 +67,12 @@ public class QuestionController {
     // TODO 对应Id的问题是否存在的判断
     // 根据传过来的id获取对应的问题
     @GetMapping(value = "/{id}")
-    public GenericVo getId(@PathVariable("id") Long id,HttpSession session) {
+    public GenericVo getId(@PathVariable("id") Long id,HttpServletRequest request) throws ExJwtException, InValidJwtException {
+        // 解析token
+        String token = request.getHeader("token");
+        System.out.println(token);
+        String uid = (String) jwtUtil.parse(token).get("uid");
+
         // 根据问题id查找问题
         QuestionEntity s = questionRepository.findById(id);
         QuestionModel questionModel = new QuestionModel();
@@ -85,7 +96,6 @@ public class QuestionController {
         result.put("tag",tagList);
 
         // 判断是否回复过问题
-        String uid = (String) session.getAttribute("id");
         result.put("answer",answerRepository.isExists(id,uid));
 
         // 封装结果
@@ -148,11 +158,16 @@ public class QuestionController {
     // 根据id以及传过来的标题,内容修改对应的问题
     @PostMapping(value = "/modify")
     public MessageVo modify(@RequestParam(value = "id") Long id,
-                           @RequestParam(value = "title") String title,
-                           @RequestParam(value = "content", defaultValue = "") String content,
-                           @RequestParam(value = "anonymous",defaultValue = "false") boolean anonymous,
-                           HttpSession session) {
-        String uid = (String) session.getAttribute("id");
+                            @RequestParam(value = "title") String title,
+                            @RequestParam(value = "content", defaultValue = "") String content,
+                            @RequestParam(value = "anonymous",defaultValue = "false") boolean anonymous,
+                            HttpServletRequest request) throws ExJwtException, InValidJwtException {
+        // 解析token
+        String token = request.getHeader("token");
+        System.out.println(token);
+        String uid = (String) jwtUtil.parse(token).get("uid");
+
+        // 结果设置
         MessageVo result = new MessageVo();
         if (questionRepository.updateContentByIdAndUid(id, uid, title, content) == 1){
             result.setCode(200);
@@ -170,13 +185,21 @@ public class QuestionController {
     public MessageVo post(@RequestParam(value = "title") String title,
                        @RequestParam(value = "content") String content,
                        @RequestParam(value = "tags") Long[] tags,
-                       HttpSession session) {
+                          HttpServletRequest request) throws ExJwtException, InValidJwtException {
+        // 解析token
+        String token = request.getHeader("token");
+        System.out.println(token);
+        String uid = (String) jwtUtil.parse(token).get("uid");
+
         QuestionEntity questionEntity = new QuestionEntity();
         boolean isExists = questionRepository.existsQuestion(title);
         title = title.trim();
         String last = title.substring(title.length() - 1); // 最后一个字符
+
+        // 结果设置
         MessageVo result = new MessageVo();
         result.setCode(400);
+
         // 判断标题是否为空
         if (title.equals("")) {
             result.setMessage("标题不能为空");
@@ -195,8 +218,6 @@ public class QuestionController {
         }
         // 尝试创建
         else {
-            // 获取用户id
-            String uid = (String) session.getAttribute("id");
             // 判断传过来的标签是否合法
             for (long s : tags) {
                 if (!tagRepository.exists(s))
@@ -237,10 +258,15 @@ public class QuestionController {
     // 回答问题
     @PostMapping(value = "/answer/add")
     public MessageVo answer(@RequestParam(value = "questionId") Long questionId,
-                          @RequestParam(value = "content") String content,
-                          HttpSession session) {
+                            @RequestParam(value = "content") String content,
+                            HttpServletRequest request) throws ExJwtException, InValidJwtException {
+        // 解析token
+        String token = request.getHeader("token");
+        System.out.println(token);
+        String uid = (String) jwtUtil.parse(token).get("uid");
+
         MessageVo result = new MessageVo();
-        String uid = (String) session.getAttribute("id");
+
         // 检测id是否为空
         if (questionId == null) {
             result.setCode(403);
@@ -272,10 +298,15 @@ public class QuestionController {
     // 回答删除接口
     @DeleteMapping(value = "/answer/delete")
     public MessageVo deleteAnswer(
-            @RequestParam(value = "questionId") Long questionId
-            , HttpSession session) {
+            @RequestParam(value = "questionId") Long questionId,
+            HttpServletRequest request) throws ExJwtException, InValidJwtException {
+
+        // 解析token
+        String token = request.getHeader("token");
+        System.out.println(token);
+        String uid = (String) jwtUtil.parse(token).get("uid");
+
         MessageVo result = new MessageVo();
-        String uid = (String) session.getAttribute("id");
         boolean isReply = answerRepository.isExists(questionId, uid);
        if (isReply){
            boolean isDeleted = answerRepository.isDeleted(questionId, uid);
@@ -299,9 +330,14 @@ public class QuestionController {
     @PostMapping(value = "/answer/revoke")
     public MessageVo revokeAnswer(
             @RequestParam(value = "questionId") Long questionId,
-            HttpSession session) {
+            HttpServletRequest request) throws ExJwtException, InValidJwtException {
+
+        // 解析token
+        String token = request.getHeader("token");
+        System.out.println(token);
+        String uid = (String) jwtUtil.parse(token).get("uid");
+
         MessageVo result = new MessageVo();
-        String uid = (String) session.getAttribute("id");
         boolean isReply = answerRepository.isExists(questionId, uid);
         if (isReply) {
             boolean isDeleted = answerRepository.isDeleted(questionId, uid);
@@ -324,9 +360,14 @@ public class QuestionController {
     @PostMapping(value = "/anonymous")
     public MessageVo setAnonymous(
             @RequestParam(value = "questionId") Long questionId,
-            HttpSession session){
+            HttpServletRequest request) throws ExJwtException, InValidJwtException {
+
+        // 解析token
+        String token = request.getHeader("token");
+        System.out.println(token);
+        String uid = (String) jwtUtil.parse(token).get("uid");
+
         MessageVo result = new MessageVo();
-        String uid = (String) session.getAttribute("id");
         boolean status = false;
         // 首先判断一下问题存不存在
         boolean isExists = questionRepository.isExists(questionId);
@@ -375,8 +416,14 @@ public class QuestionController {
     // TODO 推送点赞
     // 回答点赞
     @PostMapping(value = "/vote")
-    public GenericVo vote(@RequestParam(value = "answerId") Long answerId, HttpSession session){
-        String uid = (String) session.getAttribute("id");
+    public GenericVo vote(@RequestParam(value = "answerId") Long answerId,
+                          HttpServletRequest request) throws ExJwtException, InValidJwtException {
+
+        // 解析token
+        String token = request.getHeader("token");
+        System.out.println(token);
+        String uid = (String) jwtUtil.parse(token).get("uid");
+
         Map map = new HashMap();
         // 通过回答的id找到问题的id
         Long questionId = answerVoteMapRepository.findQuestionId(answerId);
