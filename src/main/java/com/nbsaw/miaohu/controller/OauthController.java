@@ -10,13 +10,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by fz on 17-3-22.
- */
 @RestController
 @RequestMapping(value="/oauth")
 public class OauthController {
-    /** github Oauth 回调地址 */
     @GetMapping("/github")
     void callback(HttpSession session, @RequestParam("code") String code, HttpServletResponse response)throws IOException {
         String client_id="9d37c9f54b2009868da8";

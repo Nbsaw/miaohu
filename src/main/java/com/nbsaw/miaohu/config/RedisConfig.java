@@ -9,10 +9,6 @@ import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import redis.clients.jedis.JedisPoolConfig;
 
-/**
- * Created by fz on 17-4-9.
- * Redis 的配置文件
- */
 @Configuration
 @EnableAutoConfiguration
 public class RedisConfig {
@@ -34,10 +30,8 @@ public class RedisConfig {
         return factory;
     }
 
-
     public StringRedisTemplate getTemplate() {
         StringRedisTemplate template = new StringRedisTemplate(getConnectionFactory());
-        // explicitly enable transaction support
         template.setEnableTransactionSupport(true);
         return template;
     }

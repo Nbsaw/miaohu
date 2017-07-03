@@ -19,27 +19,15 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.util.*;
 
-/**
- * Created by fz on 17-3-31.
- */
 @RestController
 @RequestMapping(value = "/question")
 public class QuestionController {
-    // 问题
-    @Autowired
-    private QuestionRepository questionRepository;
-    // 标签
-    @Autowired
-    private TagRepository tagRepository;
-    // 标签映射
-    @Autowired
-    private TagMapRepository tagMapRepository;
-    // 评论
-    @Autowired
-    private AnswerRepository answerRepository;
-    // 回答点赞
-    @Autowired
-    private AnswerVoteMapRepository answerVoteMapRepository;
+
+    @Autowired private QuestionRepository questionRepository;
+    @Autowired private TagRepository tagRepository;
+    @Autowired private TagMapRepository tagMapRepository;
+    @Autowired private AnswerRepository answerRepository;
+    @Autowired private AnswerVoteMapRepository answerVoteMapRepository;
 
     /**
      * 查询近期的问题

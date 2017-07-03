@@ -6,7 +6,6 @@ import com.nbsaw.miaohu.repository.QuestionRepository;
 import com.nbsaw.miaohu.entity.TagMapEntity;
 import com.nbsaw.miaohu.repository.TagRepository;
 import com.nbsaw.miaohu.entity.QuestionEntity;
-import com.nbsaw.miaohu.service.UserInfoService;
 import com.nbsaw.miaohu.entity.UserEntity;
 import com.nbsaw.miaohu.model.UserInfoModel;
 import com.nbsaw.miaohu.repository.UserRepository;
@@ -20,45 +19,19 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
-
-/**
- * Created by fz on 17-3-22.
- * 用户rest路由控制器
- * 处理用户的信息
- */
 @RestController
 @RequestMapping(value = "/user")
 public class UserController {
-    // 用户信息
-    @Autowired
-    private UserInfoService userInfoService;
 
-    // 用户
-    @Autowired
-    private UserRepository userRepository;
+    @Autowired private UserRepository userRepository;
+    @Autowired private QuestionRepository questionRepository;
+    @Autowired private TagRepository tagRepository;
+    @Autowired private TagMapRepository tagMapRepository;
+    @Autowired private JwtUtil jwtUtil;
 
-    // 问题
-    @Autowired
-    private QuestionRepository questionRepository;
 
-    // 标签
-    @Autowired
-    private TagRepository tagRepository;
-
-    // 标签映射
-    @Autowired
-    private TagMapRepository tagMapRepository;
-
-    // jwt
-    @Autowired
-    private JwtUtil jwtUtil;
-
-    /**
-     * 登录接口,判断手机和密码,把信息存在session里面
-     * @param phone 手机号码
-     * @param password 账号密码
-     */
     // TODO 第三方登录
+    // 登录验证
     @PostMapping(value = "/login")
     public GenericVo login(@RequestParam("phone") String phone , @RequestParam("password") String password){
         // TODO 从Redis获取id，再从数据库查信息
@@ -87,11 +60,7 @@ public class UserController {
         }
     }
 
-    /**
-     * 获取用户信息
-     * @param request 从request的header里面获取token
-     * @return 获取用户信息
-     */
+    // 获取用户信息
     @GetMapping(value = "/info")
     public GenericVo information(HttpServletRequest request){
         // TODO 从Redis获取id，再从数据库查信息 -> 主要是判断用户是否注销了
@@ -120,6 +89,7 @@ public class UserController {
     }
 
     // TODO 让token失效
+    // 修改用户密码
     @PostMapping(value = "/changePassword")
     public MessageVo changePassword(HttpServletRequest request, @RequestParam("password") String password) throws ExJwtException, InValidJwtException {
         // 返回的数据
@@ -142,12 +112,8 @@ public class UserController {
         return messageVo;
     }
 
-    /**
-     * 获取用户发表的所有的问题
-     * @param request 从request的header里面获取token
-     * @return 获取用户发表的所有的问题
-     */
     // TODO 分页
+    // 获取用户发表过的问题
     @GetMapping(value = "/question")
     public ResultVo question(HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 解析token

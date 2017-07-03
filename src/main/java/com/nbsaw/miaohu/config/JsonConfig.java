@@ -12,14 +12,12 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 import java.io.IOException;
 
-/**
- * Created by nbsaw on 2017/6/15.
- */
 @Configuration
 public class JsonConfig {
     @Bean
     @Primary
     @ConditionalOnMissingBean(ObjectMapper.class)
+    // 把Json里面的null字值转换成""
     public ObjectMapper jacksonObjectMapper(Jackson2ObjectMapperBuilder builder) {
         ObjectMapper objectMapper = builder.createXmlMapper(false).build();
         objectMapper.getSerializerProvider().setNullValueSerializer(new JsonSerializer<Object>() {

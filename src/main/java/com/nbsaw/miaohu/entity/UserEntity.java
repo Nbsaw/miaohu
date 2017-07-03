@@ -16,49 +16,41 @@ import java.util.Date;
 @Table(name = "user")
 @Data
 public class UserEntity implements Serializable {
-    /**
-     * 以下为账号信息
-     */
     @Id
-    private String id; //用户id
+    private String id;
 
     @Column(nullable = false, length = 16)
-    private String username; //用户名
+    private String username;
 
     @Column(nullable = false)
     @ColumnTransformer(write = "md5(?)")
-    private String password; //密码
+    private String password;
 
     @Column(unique = true)
-    private String phone; //手机号码
+    private String phone;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private Date creationDate = new Date(); //创建日期
+    private Date creationDate = new Date();
 
-    // 用户权限
-    @Enumerated(EnumType.STRING) //字符串形式
+    @Enumerated(EnumType.STRING)
     private UserType userType = UserType.USER;
-
-    /**
-     * 以下为用户信息
-     */
 
     @Min(1)
     @Max(150)
-    private Integer age; //年龄
+    private Integer age;
 
-    private String sex = "男"; //性别
+    private String sex = "男";
 
     @Column(name = "avatar")
-    private String avatar = "http://7xqvgr.com1.z0.glb.clouddn.com/01.png"; //头像
+    private String avatar = "http://7xqvgr.com1.z0.glb.clouddn.com/01.png";
 
-    private String bio = "这个人不懒但是什么也没留下"; //个人简历
+    private String bio = "这个人不懒但是什么也没留下";
 
-    private String domain; //个人网站
+    private String domain;
 
-    private String education; //教育
+    private String education;
 
-    private String domicile; //居住地
+    private String domicile;
 
 }

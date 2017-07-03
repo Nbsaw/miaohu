@@ -10,8 +10,14 @@ import java.util.List;
  * Created by Nbsaw on 17-5-5.
  */
 public interface TagMapRepository extends Repository<TagMapEntity,Long> {
-    // 保存
-    void save(TagMapEntity entity);
+
+    /**
+     * ---------------------------------------------------------------------------
+     *
+     *                                 查 找
+     *
+     * ---------------------------------------------------------------------------
+     */
 
     // 根据id和类型查找
     List<TagMapEntity> findAllByTagIdAndType(Long id,String type);
@@ -24,4 +30,16 @@ public interface TagMapRepository extends Repository<TagMapEntity,Long> {
 
     // 显示所有的映射
     List<TagEntity> findAll();
+
+
+    /**
+     * ---------------------------------------------------------------------------
+     *
+     *                                 保 存
+     *
+     * ---------------------------------------------------------------------------
+     */
+
+    // 保存
+    void save(TagMapEntity entity);
 }

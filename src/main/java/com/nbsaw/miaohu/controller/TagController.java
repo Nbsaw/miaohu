@@ -13,18 +13,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.LinkedList;
 import java.util.List;
 
-/**
- * Created by Nbsaw on 17-5-5.
- */
 @RestController
 @RequestMapping("/tag")
 public class TagController {
-    @Autowired
-    private TagRepository tagRepository;
-    @Autowired
-    private TagMapRepository tagMapRepository;
-    @Autowired
-    private QuestionRepository questionRepository;
+
+    @Autowired private TagRepository tagRepository;
+    @Autowired private TagMapRepository tagMapRepository;
+    @Autowired private QuestionRepository questionRepository;
 
     // 查找所有的标签
     @GetMapping

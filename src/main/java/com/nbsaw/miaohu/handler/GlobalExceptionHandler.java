@@ -1,4 +1,5 @@
 package com.nbsaw.miaohu.handler;
+
 import com.nbsaw.miaohu.exception.ExJwtException;
 import com.nbsaw.miaohu.exception.InValidJwtException;
 import com.nbsaw.miaohu.vo.MessageVo;
@@ -8,10 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
-/**
- * Created by nbsaw on 2017/6/13.
- * 错误处理
- */
 @ControllerAdvice
 public class GlobalExceptionHandler{
 

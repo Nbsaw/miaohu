@@ -1,6 +1,5 @@
 package com.nbsaw.miaohu.repository;
 
-
 import com.nbsaw.miaohu.entity.TagEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.Repository;
@@ -11,8 +10,14 @@ import java.util.List;
  * Created by Nbsaw on 17-5-5.
  */
 public interface TagRepository extends Repository<TagEntity,Long> {
-    // 保存一个标签
-    void save(TagEntity tagEntity);
+    /**
+     * ---------------------------------------------------------------------------
+     *
+     *                                 查 找
+     *
+     * ---------------------------------------------------------------------------
+     */
+
     // 判断id是否存在
     boolean exists(Long id);
     // 根据名字判断是否存在
@@ -25,4 +30,15 @@ public interface TagRepository extends Repository<TagEntity,Long> {
     // 通过名字查找标签
     @Query("select t from TagEntity  t where t.name like CONCAT('%',:name,'%')")
     List<TagEntity> findAllByNameLike(@Param("name") String name);
+
+    /**
+     * ---------------------------------------------------------------------------
+     *
+     *                                 保 存
+     *
+     * ---------------------------------------------------------------------------
+     */
+
+    // 保存一个标签
+    void save(TagEntity tagEntity);
 }

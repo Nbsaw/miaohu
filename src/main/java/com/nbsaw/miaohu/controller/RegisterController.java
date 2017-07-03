@@ -15,28 +15,16 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
-/**
- * Created by fz on 17-4-9.
- */
 @RestController
 @RequestMapping(value = "/register")
 public class RegisterController {
-    @Autowired
-    private RedisConfig redisConfig;
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private RedisUtil redisUtil;
-    @Autowired
-    private JwtUtil jwtUtil;
 
-    // 第一步检测
-    @PostMapping(value = "/valid")
-    public Map valid(@ModelAttribute RegisterForm registerForm, String sid, HttpServletRequest request) {
-        return validate(registerForm, sid,false,request);
-    }
+    @Autowired private RedisConfig redisConfig;
+    @Autowired private UserRepository userRepository;
+    @Autowired private RedisUtil redisUtil;
+    @Autowired private JwtUtil jwtUtil;
 
-    // 检测参数是否合法
+    // 检验表单参数是否合法
     public Map validate(RegisterForm registerForm, String sid,boolean is,HttpServletRequest request) {
         Map result = new LinkedHashMap();
         Map errors = new LinkedHashMap();
@@ -83,7 +71,13 @@ public class RegisterController {
         return result;
     }
 
-    // 正式注册
+    // 预检测路由
+    @PostMapping(value = "/valid")
+    public Map valid(@ModelAttribute RegisterForm registerForm, String sid, HttpServletRequest request) {
+        return validate(registerForm, sid,false,request);
+    }
+
+    // 正式注册路由
     @PostMapping
     public Map register(RegisterForm registerForm, String sid,HttpServletRequest request) {
         // 校对用户信息

@@ -6,10 +6,15 @@ import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 import javax.transaction.Transactional;
 
-/**
- * Created by nbsaw on 2017/5/17.
- */
 public interface AnswerVoteMapRepository extends Repository<AnswerVoteMapEntity,Long> {
+    /**
+     * ---------------------------------------------------------------------------
+     *
+     *                                 查 找
+     *
+     * ---------------------------------------------------------------------------
+     */
+
     // 查看是否点赞
     @Query("select count(a) > 0 from AnswerVoteMapEntity a where a.answerId = :answerId and a.uid = :uid")
     boolean isVote(@Param("answerId") Long answerId , @Param("uid") String uid);
@@ -21,8 +26,24 @@ public interface AnswerVoteMapRepository extends Repository<AnswerVoteMapEntity,
     // 点赞的总数
     Long countAllByQuestionId(Long questionId);
 
+    /**
+     * ---------------------------------------------------------------------------
+     *
+     *                                 增 加
+     *
+     * ---------------------------------------------------------------------------
+     */
+
     // 回答点赞
     void save(AnswerVoteMapEntity answerVoteMapEntity);
+
+    /**
+     * ---------------------------------------------------------------------------
+     *
+     *                                 删 除
+     *
+     * ---------------------------------------------------------------------------
+     */
 
     // 取消点赞
     @Transactional

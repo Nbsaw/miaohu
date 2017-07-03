@@ -9,15 +9,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import java.util.Date;
 
-/**
- * Created by nbsaw on 2017/6/9.
- */
-
 @Component
 public class JwtUtil {
+
     private int timeout;
     private String key;
 
+    // 初始化
     @Autowired
     private JwtUtil(@Value("${jwt.timeout}") int timeout,@Value("${jwt.key}") String key) {
         this.timeout = timeout;
@@ -27,6 +25,7 @@ public class JwtUtil {
     // TODO 超时
     // TODO 是否有效
     // TODO 详细的错误声明
+    // 解析传过来的token
     public Claims parse(String token) throws InValidJwtException, ExJwtException {
         Claims claims = null;
         try{
@@ -41,12 +40,12 @@ public class JwtUtil {
         return claims;
     }
 
-    // 超时
+    // 获取jwt的超时时间
     public Date getExp(){
         return new Date(new Date().getTime() + timeout);
     }
 
-    // 根据登陆账号密码生成的token
+    // 根据用户的id以及用户的类型生成对应的jwt
     public String createJWT(String uid,UserType userType){
         String compactJws = Jwts.builder()
                 .signWith(SignatureAlgorithm.HS512,key)

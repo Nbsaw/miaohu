@@ -9,22 +9,18 @@ import com.taobao.api.response.AlibabaAliqinFcSmsNumSendResponse;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Component;
 
-/**
- * Created by fz on 17-4-6.
- * 手机短信服务,使用了阿里大于
- */
 @Component
 public class PhoneMessageImpl implements PhoneMessageService {
+
+    // 日志设置
+    private static Logger logger = Logger.getLogger(PhoneMessageImpl.class);
+
+    // 验证码的配置
     private final String URL = "http://gw.api.taobao.com/router/rest"; // api地址
     private final String APPKEY = "23737153";
     private String SECRET = "96b6c075231e49e77cf951efd6dca529";
-    private static Logger logger = Logger.getLogger(PhoneMessageImpl.class);
 
-    /**
-     * 发送注册验证码到手机,返回验证码
-     * @param phone 发送到手机号
-     * @return 返回随机生成的6位短信验证码
-     */
+    // 将生成的验证码发送到手机，并且返回验证码的结果
     @Override
     public String sendRegisterCode(String phone) {
         String random = String.valueOf((int)((Math.random()*9+1)*100000)); //随机数生成

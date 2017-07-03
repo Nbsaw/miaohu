@@ -1,14 +1,11 @@
 package com.nbsaw.miaohu.util;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-/**
- * Created by nbsaw on 2017/6/14.
- * Redis 工具
- */
-
 @Component
 public class RedisUtil {
+
     // 图片验证码
     @Value("${redis.constant.image}")
     private String imageSuffix;

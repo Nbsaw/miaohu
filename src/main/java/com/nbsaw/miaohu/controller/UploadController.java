@@ -20,15 +20,11 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
-/**
- * Created by nbsaw on 6/25/2017.
- */
 @RestController
 @RequestMapping(value = "/upload")
 public class UploadController {
-    // jwt
-    @Autowired
-    private JwtUtil jwtUtil;
+
+    @Autowired private JwtUtil jwtUtil;
 
     @PostMapping(value = "/avatar")
     public String uploadAvatar(@RequestParam("avatar") MultipartFile avatar, HttpServletRequest request) throws IOException, ExJwtException, InValidJwtException {
@@ -58,8 +54,10 @@ public class UploadController {
         Configuration cfg = new Configuration(Zone.zone0());
         UploadManager uploadManager = new UploadManager(cfg);
         Response response = uploadManager.put(avatar.getBytes(), key, upToken);
+
         //解析上传成功的结果
         DefaultPutRet putRet = new Gson().fromJson(response.bodyString(), DefaultPutRet.class);
+
         return "ok";
     }
 }

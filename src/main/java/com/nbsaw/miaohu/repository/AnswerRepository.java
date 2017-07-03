@@ -9,12 +9,15 @@ import org.springframework.data.repository.query.Param;
 import javax.transaction.Transactional;
 import java.util.List;
 
-/**
- * Created by Nbsaw on 17-5-3.
- */
 public interface AnswerRepository extends Repository<AnswerEntity,Long> {
-    // 保存
-    void save(AnswerEntity answerEntity);
+
+    /**
+     * ---------------------------------------------------------------------------
+     *
+     *                                 查 找
+     *
+     * ---------------------------------------------------------------------------
+     */
 
     // 查找评论
     List<AnswerEntity> findAllByQuestionId(Long questionId,Pageable pageable);
@@ -27,15 +30,40 @@ public interface AnswerRepository extends Repository<AnswerEntity,Long> {
     @Query("select count(qc) > 0 from AnswerEntity qc where qc.questionId = :questionId and qc.uid = :uid")
     boolean isExists(@Param("questionId") Long questionId , @Param("uid") String uid);
 
+    // 查询删除状态
+    @Query("select qc.deleted from AnswerEntity qc where qc.questionId = :questionId and qc.uid = :uid ")
+    boolean isDeleted(@Param("questionId") Long questionId,@Param("uid") String uid);
+
+    // 判断问题是否为匿名
+    @Query("select qc.anonymous from AnswerEntity qc where qc.questionId = :questionId and qc.uid = :uid")
+    boolean isAnonymous(@Param("questionId") Long questionId,@Param("uid") String uid);
+
+
+    /**
+     * ---------------------------------------------------------------------------
+     *
+     *                                 修 改
+     *
+     * ---------------------------------------------------------------------------
+     */
+
     // 修改回答
     @Transactional
     @Modifying
     @Query("update AnswerEntity qc set qc.content = :content where qc.questionId = :questionId and qc.uid = :uid")
     Integer updateComment(@Param("questionId") Long questionId,@Param("uid") String uid,@Param("content") String content);
 
-    // 查询删除状态
-    @Query("select qc.deleted from AnswerEntity qc where qc.questionId = :questionId and qc.uid = :uid ")
-    boolean isDeleted(@Param("questionId") Long questionId,@Param("uid") String uid);
+    // 设置回答为匿名
+    @Transactional
+    @Modifying
+    @Query("update AnswerEntity qc set qc.anonymous = true where qc.questionId = :questionId and qc.uid = :uid")
+    Integer setAnonymousTrue(@Param("questionId") Long questionId, @Param("uid") String uid);
+
+    // 设置回答为实名
+    @Transactional
+    @Modifying
+    @Query("update AnswerEntity qc set qc.anonymous = false where qc.questionId = :questionId and qc.uid = :uid")
+    Integer setAnonymousFalse(@Param("questionId") Long questionId, @Param("uid") String uid);
 
     // 删除回答(其实是改变回答状态)
     @Transactional
@@ -49,19 +77,15 @@ public interface AnswerRepository extends Repository<AnswerEntity,Long> {
     @Query("update AnswerEntity qc set qc.deleted = false where qc.questionId = :questionId and qc.uid = :uid")
     Integer setDeletedFalse(@Param("questionId") Long questionId,@Param("uid") String uid);
 
-    // 判断问题是否为匿名
-    @Query("select qc.anonymous from AnswerEntity qc where qc.questionId = :questionId and qc.uid = :uid")
-    boolean isAnonymous(@Param("questionId") Long questionId,@Param("uid") String uid);
 
-    // 设置回答为匿名
-    @Transactional
-    @Modifying
-    @Query("update AnswerEntity qc set qc.anonymous = true where qc.questionId = :questionId and qc.uid = :uid")
-    Integer setAnonymousTrue(@Param("questionId") Long questionId, @Param("uid") String uid);
+    /**
+     * ---------------------------------------------------------------------------
+     *
+     *                                 增 加
+     *
+     * ---------------------------------------------------------------------------
+     */
 
-    // 设置回答为实名
-    @Transactional
-    @Modifying
-    @Query("update AnswerEntity qc set qc.anonymous = false where qc.questionId = :questionId and qc.uid = :uid")
-    Integer setAnonymousFalse(@Param("questionId") Long questionId, @Param("uid") String uid);
+    // 保存
+    void save(AnswerEntity answerEntity);
 }

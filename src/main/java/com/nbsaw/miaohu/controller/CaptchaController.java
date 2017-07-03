@@ -21,12 +21,10 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-/**
- * Created by fz on 17-4-5.
- */
 @RestController
 @RequestMapping(value = "/captcha")
 public class CaptchaController {
+
    @Autowired private RedisConfig redisConfig;
    @Autowired private DefaultKaptcha defaultKaptcha;
    @Autowired private UserRepository userRepository;
@@ -34,7 +32,7 @@ public class CaptchaController {
    @Autowired private JwtUtil jwtUtil;
    @Autowired private RedisUtil redisUtil;
 
-   // 获取一个会话id
+   // 用来作为凭证使用的Sid
    @GetMapping(value = "/sid")
    public ResultVo getSid(){
       ResultVo sidVo = new ResultVo();
@@ -43,19 +41,10 @@ public class CaptchaController {
       return sidVo;
    }
 
-   /**
-    * 返回一张验证码图片前端。格式为image/jpeg
-    * 设置验证码的时效
-    * @param sid 会话id
-    * @param response http响应
-    * @return 返回一张验证码图片。格式为image/jpeg
-    * @throws IOException
-    */
+   // 返回一张图片验证码
    @GetMapping
    public ModelAndView getCaptcha(@RequestParam String sid, HttpServletResponse response) throws IOException {
       // 验证uuid是否有效
-      UUIDUtil.vaild(sid);
-
       // 设置响应
       response.setDateHeader("Expires", 0);
       response.setHeader("Cache-Control",
@@ -79,53 +68,58 @@ public class CaptchaController {
       ValueOperations obj =  template.opsForValue();
       obj.set(key,capText.toLowerCase());
       template.expire(key,redisUtil.getImageTimeOut(), TimeUnit.MINUTES);
+
       return null;
    }
 
-   /**
-    * 发送验证码到接收到的手机号码上
-    * 先检测手机号码是不是合法的,不合法会返回错误信息
-    * 在数据库里查询手机是否被注册了,如果注册了返回错误信息
-    * @param sid 会话id
-    * @param phone 需要发送验证码的手机号码
-    * @return 成功的话会返回一条发送成功信息,
-    * 如果不成功的话,返回一条错误信息。
-    */
+   // 发送一条手机验证码
    @GetMapping("/phoneCaptcha")
    public Map code(@RequestParam String sid ,String phone) {
+      // 结果集与错误列表初始化
       Map result = new LinkedHashMap();
       Map errors = new LinkedHashMap();
 
       // 验证uuid是否有效
-      UUIDUtil.vaild(sid);
+      UUIDUtil.valid(sid);
 
-      // 校验手机号码是否合法
+      // 校验手机号码是否合法并记录到错误列表里
       RegisterValidUtil.phoneValid(phone, errors,userRepository);
+
+      // 如果错误列表不为空
       if (!errors.isEmpty()) {
          result.put("code", 400);
          result.put("errors", errors);
-      } else {
+      }
+      // 如果错误列表为空
+      else {
          // 从redis读取手机验证码
          StringRedisTemplate template= redisConfig.getTemplate();
          String phoneCaptchaFormat =  redisUtil.phoneCaptchaFormat(phone);
          String redisCaptcha = template.opsForValue().get(phoneCaptchaFormat);
-         // 如果不存在就发送一条验证码到手机,并保存下来
-         // 超过60秒限制可以重新发验证码
+
+         // 如果Redis里面读取不到验证码，生成并返回生成成功的结果
          if (redisCaptcha == null) {
-            // 手机验证码
+
+            // 生成一个新的手机验证码
             String code = phoneMessageService.sendRegisterCode(phone);
 
             // 把验证码存到redis
             ValueOperations obj =  template.opsForValue();
             obj.set(phoneCaptchaFormat,code.toLowerCase());
+
+            // 设置验证码的超时时间
             template.expire(phoneCaptchaFormat,redisUtil.getPhoneTimeOut(), TimeUnit.MINUTES);
 
+            //
             result.put("code", 200);
             result.put("msg", "验证码发送成功!");
-         } else {
+         }
+         // 如果Redis里面读到了验证码，返回已存在，需要60s后才能重发
+         else {
             result.put("code", 304);
             result.put("errors", "已发送过验证码,请过60s后重发");
          }
+
       }
       return result;
    }
