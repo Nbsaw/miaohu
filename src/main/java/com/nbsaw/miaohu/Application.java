@@ -6,7 +6,7 @@ import org.springframework.context.ApplicationContext;
 
 @SpringBootApplication
 public class Application {
-    // start server
+    // 启动服务器
     public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(Application.class, args);
     }

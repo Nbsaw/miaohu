@@ -29,11 +29,7 @@ public class QuestionController {
     @Autowired private AnswerRepository answerRepository;
     @Autowired private AnswerVoteMapRepository answerVoteMapRepository;
 
-    /**
-     * 查询近期的问题
-     * @param session
-     * @return 查询近期的问题
-     */
+    // 查询近期发布的问题
     @GetMapping
     public ResultVo all(@RequestParam(value = "page",defaultValue = "0") int page, HttpSession session) {
         String uid = (String) session.getAttribute("id");
@@ -62,13 +58,8 @@ public class QuestionController {
         return resultVo;
     }
 
-    /**
-     * 根据传过来的id获取某个问题
-     *
-     * @param id 文章的id
-     * @return id对应的问题
-     */
     // TODO 对应Id的问题是否存在的判断
+    // 根据传过来的id获取对应的问题
     @GetMapping(value = "/{id}")
     public GenericVo getId(@PathVariable("id") Long id,HttpSession session) {
         // 根据问题id查找问题
@@ -104,14 +95,7 @@ public class QuestionController {
         return resultVo;
     }
 
-    /**
-     * 验证标题是否合法
-     * 有坑,问号不同算不同问题，知乎也是这样子
-     * 所以我懒得改，当作是feature !!
-     *
-     * @param title
-     * @return
-     */
+    // 验证标题是否合法
     @PostMapping(value = "/valid")
     public MessageVo validTitle(@RequestParam("title") String title) {
         MessageVo result = new MessageVo();
@@ -141,13 +125,7 @@ public class QuestionController {
         return result;
     }
 
-    /**
-     * 根据传过来的id删除某个问题
-     *
-     * @param id      问题的id
-     * @param session
-     * @return 返回状态, 问题删除成功或者失败
-     */
+    // 根据传过来的id删除对应的问题
     @DeleteMapping(value = "/delete/{id}")
     public MessageVo delete(@PathVariable(value = "id") Long id, HttpSession session) {
         String uid = (String) session.getAttribute("id");
@@ -163,21 +141,11 @@ public class QuestionController {
         return result;
     }
 
-    /**
-     * 根据id以及传过来的标题,内容修改
-     * 对应的问题
-     * 回答内容修改接口
-     *
-     * @param id      问题的id
-     * @param title   问题的标题
-     * @param content 问题的内容
-     * @param session
-     * @return 返回状态, 修改成功或者失败
-     * TODO 加个问题修改理由表
-     * TODO 加上是否匿名的字段
-     * TODO 加上标签字段
-     * TODO 问题修改历史
-     */
+     // TODO 加个问题修改理由表
+     // TODO 加上是否匿名的字段
+     // TODO 加上标签字段
+     // TODO 问题修改历史
+    // 根据id以及传过来的标题,内容修改对应的问题
     @PostMapping(value = "/modify")
     public MessageVo modify(@RequestParam(value = "id") Long id,
                            @RequestParam(value = "title") String title,
@@ -197,19 +165,7 @@ public class QuestionController {
         return result;
     }
 
-    /**
-     * 发布一个新的问题,根据session
-     * 里面查到的用户,先判断问题是否
-     * 已经存在在数据库里面了,如果存在
-     * 返回失败,不存在则发布
-     *
-     * @param title   问题的标题
-     * @param content 问题的内容
-     * @param session
-     * @return 先判断问题是否已经存在在
-     * 数据库里面了如果存在返回失败,不存
-     * 在则发布
-     */
+    // 发布一个新的问题
     @PostMapping(value = "/post")
     public MessageVo post(@RequestParam(value = "title") String title,
                        @RequestParam(value = "content") String content,
@@ -278,13 +234,7 @@ public class QuestionController {
         return resultVo;
     }
 
-    /**
-     * 回答问题
-     *
-     * @param questionId
-     * @param content
-     * @return
-     */
+    // 回答问题
     @PostMapping(value = "/answer/add")
     public MessageVo answer(@RequestParam(value = "questionId") Long questionId,
                           @RequestParam(value = "content") String content,
@@ -345,7 +295,7 @@ public class QuestionController {
         return result;
     }
 
-    // 撤销删除
+    // 撤销删除问题
     @PostMapping(value = "/answer/revoke")
     public MessageVo revokeAnswer(
             @RequestParam(value = "questionId") Long questionId,
@@ -370,8 +320,7 @@ public class QuestionController {
         return result;
     }
 
-    // 设置问题为匿名 / 取消匿名
-    // 同时还要设置回答为匿名
+    // 设置问题,回答为匿名 / 取消匿名
     @PostMapping(value = "/anonymous")
     public MessageVo setAnonymous(
             @RequestParam(value = "questionId") Long questionId,
@@ -423,8 +372,8 @@ public class QuestionController {
         return result;
     }
 
-    // 回答点赞
     // TODO 推送点赞
+    // 回答点赞
     @PostMapping(value = "/vote")
     public GenericVo vote(@RequestParam(value = "answerId") Long answerId, HttpSession session){
         String uid = (String) session.getAttribute("id");
