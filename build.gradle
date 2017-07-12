@@ -23,7 +23,7 @@ targetCompatibility = 1.8
 
 jar {
     baseName = 'miaohu'
-    version =  '0.1.3'
+    version =  '0.1.4'
 }
 
 repositories {
@@ -32,42 +32,54 @@ repositories {
     maven { url "http://repo.spring.io/milestone" }
 }
 
+ext{
+    springboot =  "1.5.4.RELEASE"
+    kaptcha    =  "0.0.9"
+    json       =  "20160810"
+    qiniu      =  "7.2.+"
+    jwt        =  "0.7.0"
+    mysql      =  "6.0.6"
+    junit      =  "4.11"
+    lombok     =  "1.16.16"
+}
+
 dependencies {
-    // spring boot 核心
-    compile("org.springframework.boot:spring-boot-starter-web")
-
-    // spring boot devtools
-    compile ("org.springframework.boot:spring-boot-devtools")
-
-    // spring boot jpa 支持
-    compile (group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa')
-
-    // spring boot redis 支持
-    compile ("org.springframework.boot:spring-boot-starter-data-redis")
-
-    // kaptcha 验证码库
-    compile (group: 'com.github.axet', name: 'kaptcha', version: '0.0.9')
-
-    // json object
-    compile group: 'org.json', name: 'json', version: '20160810'
-
-    // 七牛
-    compile 'com.qiniu:qiniu-java-sdk:7.2.+'
-
-    // jwt
-    compile group: 'io.jsonwebtoken', name: 'jjwt', version: '0.7.0'
-    // mysql 连接驱动
-    compile (group: 'mysql', name: 'mysql-connector-java')
-
-    // 单元测试
-    compile (group: 'junit', name: 'junit', version: '4.11')
-
     // 添加本地jar包
     compile fileTree(dir:'libs',include:['*.jar'])
 
-    // lombok
-    compile group: 'org.projectlombok', name: 'lombok', version: '1.16.16'
+    // spring boot 核心
+    compile"org.springframework.boot:spring-boot-starter-web:$springboot"
+
+    // spring boot devtools
+    compile "org.springframework.boot:spring-boot-devtools:$springboot"
+
+    // spring boot jpa 支持
+    compile "org.springframework.boot:spring-boot-starter-data-jpa:$springboot"
+
+    // spring boot redis 支持
+    compile "org.springframework.boot:spring-boot-starter-data-redis:$springboot"
 
     // spring boot 测试
-    testCompile(group: 'org.springframework.boot', name: 'spring-boot-starter-test')
+    testCompile "org.springframework.boot:spring-boot-starter-test:$springboot"
+
+    // kaptcha 验证码库
+    compile "com.github.axet:kaptcha:$kaptcha"
+
+    // json object
+    compile"org.json:json:$json"
+
+    // 七牛
+    compile "com.qiniu:qiniu-java-sdk:$qiniu"
+
+    // jwt
+    compile "io.jsonwebtoken:jjwt:$jwt"
+
+    // mysql 连接驱动
+    compile "mysql:mysql-connector-java:$mysql"
+
+    // 单元测试
+    testCompile "junit:junit:$junit"
+
+    // lombok
+    compile "org.projectlombok:lombok:$lombok"
 }

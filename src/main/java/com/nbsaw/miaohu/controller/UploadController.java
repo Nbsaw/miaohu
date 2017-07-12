@@ -60,4 +60,6 @@ public class UploadController {
 
         return "ok";
     }
+
+    // TODO Tag Avatar
 }
