@@ -10,7 +10,7 @@ public class RegisterValidUtil {
     // 手机号码检测
     public static void phoneValid(String phone, Map errors,UserRepository userRepository) {
         // 判断手机号码是否合法
-        Pattern pattern = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$");
+        Pattern pattern = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0-1,5-9]))\\d{8}$");
         if (phone == null || phone.length() == 0) {
             errors.put("phone", "请填写手机号码");
         }
