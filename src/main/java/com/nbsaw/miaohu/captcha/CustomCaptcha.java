@@ -6,7 +6,7 @@ import com.jhlabs.image.RippleFilter;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-class CustomCaptcha extends Configurable implements GimpyEngine
+public class CustomCaptcha extends Configurable implements GimpyEngine
 {
     public BufferedImage getDistortedImage(BufferedImage baseImage)
     {

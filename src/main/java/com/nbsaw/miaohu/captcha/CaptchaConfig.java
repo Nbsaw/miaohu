@@ -36,6 +36,9 @@ class CaptchaConfig {
         // 验证码生成的文字设置
         properties.setProperty("kaptcha.textproducer.char.string","0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
+        // 实现
+        properties.setProperty("kaptcha.obscurificator.impl","com.nbsaw.miaohu.captcha.CustomCaptcha");
+
         // 将配置导入到 DefaultKaptcha 实例中
         Config config=new Config(properties);
         defaultKaptcha.setConfig(config);
