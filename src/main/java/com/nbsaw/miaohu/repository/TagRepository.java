@@ -6,9 +6,6 @@ import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 import java.util.List;
 
-/**
- * Created by Nbsaw on 17-5-5.
- */
 public interface TagRepository extends Repository<TagEntity,Long> {
     /**
      * ---------------------------------------------------------------------------

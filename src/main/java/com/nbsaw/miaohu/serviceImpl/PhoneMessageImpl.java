@@ -11,14 +11,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class PhoneMessageImpl implements PhoneMessageService {
-
     // 日志设置
-    private static Logger logger = Logger.getLogger(PhoneMessageImpl.class);
+    private final static Logger logger = Logger.getLogger(PhoneMessageImpl.class);
 
     // 验证码的配置
     private final String URL = "http://gw.api.taobao.com/router/rest"; // api地址
     private final String APPKEY = "23737153";
-    private String SECRET = "96b6c075231e49e77cf951efd6dca529";
+    private final String SECRET = "96b6c075231e49e77cf951efd6dca529";
 
     // 将生成的验证码发送到手机，并且返回验证码的结果
     @Override
@@ -31,7 +30,7 @@ public class PhoneMessageImpl implements PhoneMessageService {
         req.setSmsParamString("{number:'"+random+"'}"); // 六位随机验证码
         req.setRecNum(phone); // 发送到号码
         req.setSmsTemplateCode("SMS_60000851"); // 短信验证模板ID
-        AlibabaAliqinFcSmsNumSendResponse rsp = null;
+        AlibabaAliqinFcSmsNumSendResponse rsp;
         try {
             rsp = client.execute(req);
             logger.info(rsp.getBody());

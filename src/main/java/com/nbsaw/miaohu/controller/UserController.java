@@ -21,7 +21,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping(value = "/user")
-public class UserController {
+class UserController {
 
     @Autowired private UserRepository userRepository;
     @Autowired private QuestionRepository questionRepository;
@@ -101,7 +101,7 @@ public class UserController {
 
         // 修改密码
         Boolean status = userRepository.updatePasswordByUid(uid,password) == 1;
-        if (status == true){
+        if (status){
             messageVo.setCode(200);
             messageVo.setMessage("修改密码成功！");
         }
@@ -124,13 +124,13 @@ public class UserController {
         // 查找用户发表的问题
         List<QuestionEntity> questionEntities =  questionRepository.findAllByUid(uid);
         // 查找问题所属的标签
-        questionEntities.stream().forEach(q ->{
+        questionEntities.forEach(q ->{
             // 创建一个映射
             Map map = new LinkedHashMap();
             List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByTagIdAndType(q.getId(),"question");
             // 搜索标签
             List tagList = new LinkedList();
-            tagMapEntities.stream().forEach(m -> tagList.add(tagRepository.findById(m.getCorrelation())));
+            tagMapEntities.forEach(m -> tagList.add(tagRepository.findById(m.getCorrelation())));
             // 把问题加入映射
             map.put("question",q);
             // 添加问题映射

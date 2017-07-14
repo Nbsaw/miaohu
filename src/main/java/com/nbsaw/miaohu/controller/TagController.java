@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tag")
-public class TagController {
+class TagController {
 
     @Autowired private TagRepository tagRepository;
     @Autowired private TagMapRepository tagMapRepository;
@@ -57,7 +57,7 @@ public class TagController {
     public GenericVo findById(@PathVariable("id") Long id){
         List<TagMapEntity> tagMapEntities =  tagMapRepository.findAllByTagId(id);
         List result = new LinkedList();
-        tagMapEntities.stream().forEach(map->{
+        tagMapEntities.forEach(map->{
             if (map.getType().equals("question"))
             result.add(questionRepository.findById(map.getCorrelation()));
         });

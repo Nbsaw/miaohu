@@ -9,9 +9,6 @@ import javax.validation.constraints.Min;
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * Created by fz on 17-3-24.
- */
 @Entity
 @Table(name = "user")
 @Data

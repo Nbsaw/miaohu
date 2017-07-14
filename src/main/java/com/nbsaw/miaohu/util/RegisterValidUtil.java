@@ -75,7 +75,7 @@ public class RegisterValidUtil {
         int length = m.matches() ? 2 : 3;
         if (username == null || username.length() == 0) {
             errors.put("username", "请填写用户名");
-        } else if (username.indexOf(" ") != -1) {
+        } else if (username.contains(" ")) {
             errors.put("username", "用户名不应该包含空格");
         } else if (!isValidName(username)) {
             errors.put("username", "用户名不应该包含特殊字符");

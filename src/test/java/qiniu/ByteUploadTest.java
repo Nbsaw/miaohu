@@ -9,10 +9,6 @@ import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 import java.io.*;
-/**
- * Created by nbsaw on 6/25/2017.
- * QiNiu byte streams upload demo
- */
 public class ByteUploadTest {
     public static void main(String[] args) throws IOException {
         // Generate token

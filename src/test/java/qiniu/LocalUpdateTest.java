@@ -9,10 +9,7 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
-/**
- * Created by nbsaw on 6/25/2017.
- * QiNiu local file upload demo
- */
+
 public class LocalUpdateTest {
     public static void main(String[] args) throws QiniuException {
         // Generate token

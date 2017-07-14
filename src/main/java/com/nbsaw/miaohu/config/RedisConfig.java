@@ -12,12 +12,11 @@ import redis.clients.jedis.JedisPoolConfig;
 @Configuration
 @EnableAutoConfiguration
 public class RedisConfig {
-    private static Logger logger = Logger.getLogger(RedisConfig.class);
+    private final static Logger logger = Logger.getLogger(RedisConfig.class);
 
     @Bean
     public JedisPoolConfig getRedisConfig(){
-        JedisPoolConfig config = new JedisPoolConfig();
-        return config;
+        return new JedisPoolConfig();
     }
 
     @Bean

@@ -17,7 +17,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(value = "/register")
-public class RegisterController {
+class RegisterController {
 
     @Autowired private RedisConfig redisConfig;
     @Autowired private UserRepository userRepository;
@@ -25,7 +25,7 @@ public class RegisterController {
     @Autowired private JwtUtil jwtUtil;
 
     // 检验表单参数是否合法
-    public Map validate(RegisterForm registerForm, String sid,boolean is,HttpServletRequest request) {
+    private Map validate(RegisterForm registerForm, String sid, boolean is, HttpServletRequest request) {
         Map result = new LinkedHashMap();
         Map errors = new LinkedHashMap();
 
@@ -51,9 +51,9 @@ public class RegisterController {
         RegisterValidUtil.imageCaptchaValid(imageCaptcha, errors, redisCaptcha);
 
         // 校验手机验证码
-        if (is == true){
+        if (is){
             String phoneCaptchaFormat = redisUtil.phoneCaptchaFormat(phone);
-            String redisPhoneCaptcha = (String) redisConfig.getTemplate().opsForValue().get(phoneCaptchaFormat);
+            String redisPhoneCaptcha =  redisConfig.getTemplate().opsForValue().get(phoneCaptchaFormat);
             System.out.println("phoneCaptcha : " + phoneCaptcha);
             System.out.println("redisPhoneCaptcha : " + redisPhoneCaptcha);
             RegisterValidUtil.phoneCaptchaValid(phoneCaptcha,errors,redisPhoneCaptcha);

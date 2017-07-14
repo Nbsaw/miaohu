@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping(value = "/captcha")
-public class CaptchaController {
+class CaptchaController {
 
    @Autowired private RedisConfig redisConfig;
    @Autowired private DefaultKaptcha defaultKaptcha;
@@ -35,7 +35,7 @@ public class CaptchaController {
    // 用来作为凭证使用的Sid
    @GetMapping(value = "/sid")
    public ResultVo getSid(){
-      ResultVo sidVo = new ResultVo();
+      ResultVo<String> sidVo = new ResultVo();
       sidVo.setCode(200);
       sidVo.setResult(UUID.randomUUID().toString());
       return sidVo;
@@ -44,7 +44,6 @@ public class CaptchaController {
    // 返回一张图片验证码
    @GetMapping
    public ModelAndView getCaptcha(@RequestParam String sid, HttpServletResponse response) throws IOException {
-      // 验证uuid是否有效
       // 设置响应
       response.setDateHeader("Expires", 0);
       response.setHeader("Cache-Control",
@@ -65,7 +64,7 @@ public class CaptchaController {
       // 保存图片验证码到redis,并设置过期时间
       StringRedisTemplate template= redisConfig.getTemplate();
       String key = redisUtil.imageCaptchaFormat(sid);
-      ValueOperations obj =  template.opsForValue();
+      ValueOperations<String,String> obj =  template.opsForValue();
       obj.set(key,capText.toLowerCase());
       template.expire(key,redisUtil.getImageTimeOut(), TimeUnit.MINUTES);
 
@@ -78,9 +77,6 @@ public class CaptchaController {
       // 结果集与错误列表初始化
       Map result = new LinkedHashMap();
       Map errors = new LinkedHashMap();
-
-      // 验证uuid是否有效
-      UUIDUtil.valid(sid);
 
       // 校验手机号码是否合法并记录到错误列表里
       RegisterValidUtil.phoneValid(phone, errors,userRepository);

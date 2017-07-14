@@ -8,9 +8,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import javax.transaction.Transactional;
 
-/**
- * Created by fz on 17-3-29.
- */
 @Repository
 public interface UserRepository extends CrudRepository<UserEntity,String> {
 

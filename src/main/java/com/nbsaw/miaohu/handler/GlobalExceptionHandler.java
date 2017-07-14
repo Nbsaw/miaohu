@@ -10,7 +10,7 @@ import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 @ControllerAdvice
-public class GlobalExceptionHandler{
+class GlobalExceptionHandler{
 
     @Value("${spring.http.multipart.max-file-size}")
     private String maxSize;

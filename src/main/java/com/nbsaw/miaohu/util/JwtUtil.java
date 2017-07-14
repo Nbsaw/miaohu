@@ -12,8 +12,8 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private int timeout;
-    private String key;
+    private final int timeout;
+    private final String key;
 
     // 初始化
     @Autowired
@@ -27,32 +27,29 @@ public class JwtUtil {
     // TODO 详细的错误声明
     // 解析传过来的token
     public Claims parse(String token) throws InValidJwtException, ExJwtException {
-        Claims claims = null;
+        Claims claims;
         try{
             claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
         }catch (MalformedJwtException e){
             throw new InValidJwtException();
         }catch (ExpiredJwtException e){
             throw new ExJwtException();
-        }catch (SignatureException e){
-            throw new InValidJwtException();
         }
         return claims;
     }
 
     // 获取jwt的超时时间
-    public Date getExp(){
+    private Date getExp(){
         return new Date(new Date().getTime() + timeout);
     }
 
     // 根据用户的id以及用户的类型生成对应的jwt
     public String createJWT(String uid,UserType userType){
-        String compactJws = Jwts.builder()
+        return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS512,key)
                 .setExpiration(getExp())
                 .claim("uid",uid)
                 .claim("userType",userType.toString())  // 用户权限设置
                 .compact();
-        return compactJws;
     }
 }

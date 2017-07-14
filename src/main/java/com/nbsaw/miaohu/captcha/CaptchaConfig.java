@@ -10,7 +10,7 @@ import java.util.Properties;
 
 @Configuration
 @EnableAutoConfiguration
-public class CaptchaConfig {
+class CaptchaConfig {
     @Bean(name="captchaProducer")
     @Scope(value = "prototype")
     public DefaultKaptcha getKaptchaBean(){

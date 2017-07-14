@@ -1,15 +1,12 @@
 package com.nbsaw.miaohu.controller;
 
-import com.nbsaw.miaohu.entity.QuestionEntity;
+import com.nbsaw.miaohu.entity.*;
 import com.nbsaw.miaohu.exception.ExJwtException;
 import com.nbsaw.miaohu.exception.InValidJwtException;
 import com.nbsaw.miaohu.repository.QuestionRepository;
-import com.nbsaw.miaohu.entity.TagMapEntity;
 import com.nbsaw.miaohu.repository.TagRepository;
 import com.nbsaw.miaohu.model.QuestionModel;
-import com.nbsaw.miaohu.entity.AnswerEntity;
 import com.nbsaw.miaohu.repository.AnswerRepository;
-import com.nbsaw.miaohu.entity.AnswerVoteMapEntity;
 import com.nbsaw.miaohu.repository.AnswerVoteMapRepository;
 import com.nbsaw.miaohu.repository.TagMapRepository;
 import com.nbsaw.miaohu.util.JwtUtil;
@@ -26,7 +23,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping(value = "/question")
-public class QuestionController {
+class QuestionController {
 
     @Autowired private QuestionRepository questionRepository;
     @Autowired private TagRepository tagRepository;
@@ -41,20 +38,18 @@ public class QuestionController {
         String uid = (String) session.getAttribute("id");
         // TODO 查看问题是否匿名
         List<QuestionEntity> list = questionRepository.findAll(new PageRequest(page,10));
-        List<QuestionModel> result = new ArrayList<QuestionModel>();
+        List<QuestionModel> result = new ArrayList<>();
         // 重新封装数据
-        list.stream().forEach(s -> {
+        list.forEach(s -> {
             QuestionModel vo = new QuestionModel();
             vo.setId(s.getId());
             vo.setTitle(s.getTitle());
             vo.setTitle(s.getContent());
             vo.setDate(s.getDate());
             List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByTagIdAndType(vo.getId(),"question");
-            List tagList = new ArrayList();
+            List<TagEntity> tagList = new ArrayList<>();
             // 查找问题所属的标签
-            tagMapEntities.stream().forEach(map -> {
-                tagList.add(tagRepository.findById(map.getCorrelation()));
-            });
+            tagMapEntities.forEach(map -> tagList.add(tagRepository.findById(map.getCorrelation())));
             vo.setTag(tagList);
             result.add(vo);
         });
@@ -88,9 +83,7 @@ public class QuestionController {
         List tagList = new ArrayList();
 
         // 查找问题所属的标签
-        tagMapEntities.stream().forEach(map -> {
-            tagList.add(tagRepository.findById(map.getCorrelation()));
-        });
+        tagMapEntities.forEach(map -> tagList.add(tagRepository.findById(map.getCorrelation())));
         Map result = new LinkedHashMap();
         result.put("question",questionModel);
         result.put("tag",tagList);

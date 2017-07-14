@@ -22,7 +22,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping(value = "/upload")
-public class UploadController {
+class UploadController {
 
     @Autowired private JwtUtil jwtUtil;
 
