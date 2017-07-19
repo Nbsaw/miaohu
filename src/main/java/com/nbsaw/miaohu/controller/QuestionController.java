@@ -214,9 +214,10 @@ class QuestionController {
         else {
             // 判断传过来的标签是否合法
             for (long s : tags) {
-                if (!tagRepository.exists(s))
+                if (!tagRepository.exists(s)){
                     result.setMessage("无效的标签");
-                return result;
+                    return result;
+                }
             }
             // 保存问题
             // NOTE 关于这个问题什么放在前面,
