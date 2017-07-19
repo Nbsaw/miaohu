@@ -114,7 +114,7 @@ class QuestionController {
             result.setMessage("标题太长");
         }
         // 末尾问号判断
-        else if (last.equals("?") || !last.equals("？")) {
+        else if (last.equals("?") || last.equals("？")) {
             boolean isExists = questionRepository.existsQuestion(title);
             if (isExists)
                 result.setMessage("已经存在的问题");
