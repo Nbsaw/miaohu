@@ -22,7 +22,7 @@ character-set-server = utf8
 然后创建对应的数据库。
 
 ``` mysql
-CREATE miaohu;
+CREATE DATABASE miaohu;
 ```
 
 之后再启动项目。
