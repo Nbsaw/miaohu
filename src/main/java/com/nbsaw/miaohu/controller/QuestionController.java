@@ -44,7 +44,7 @@ class QuestionController {
             QuestionModel vo = new QuestionModel();
             vo.setId(s.getId());
             vo.setTitle(s.getTitle());
-            vo.setTitle(s.getContent());
+            vo.setContent(s.getContent());
             vo.setDate(s.getDate());
             List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByTagIdAndType(vo.getId(),"question");
             List<TagEntity> tagList = new ArrayList<>();
