@@ -19,10 +19,10 @@ public interface TagMapRepository extends Repository<TagMapEntity,Long> {
     List<TagMapEntity> findAllByTagIdAndType(Long id,String type);
 
     // 根据id查找
-    List<TagMapEntity> findAllByTagId(Long id);
+    List<TagMapEntity> findAllByTagId(Long tagId);
 
     // 根据帖子id找标签
-    List<TagMapEntity> findAllByCorrelation(Long id);
+    List<TagMapEntity> findAllByCorrelation(Long correlation);
 
     // 显示所有的映射
     List<TagEntity> findAll();

@@ -60,7 +60,7 @@ class QuestionController {
     }
 
     // TODO 对应Id的问题是否存在的判断
-    // 根据传过来的id获取对应的问题
+    // 根据传过来的问题id获取对应的问题
     @GetMapping(value = "/{id}")
     public GenericVo getId(@PathVariable("id") Long id,HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 解析token
@@ -129,7 +129,7 @@ class QuestionController {
         return result;
     }
 
-    // 根据传过来的id删除对应的问题
+    // 根据传过来的问题id删除对应的问题
     @DeleteMapping(value = "/delete/{id}")
     public MessageVo delete(@PathVariable(value = "id") Long id, HttpSession session) {
         String uid = (String) session.getAttribute("id");
@@ -178,7 +178,7 @@ class QuestionController {
     @PostMapping(value = "/post")
     public MessageVo post(@RequestParam(value = "title") String title,
                        @RequestParam(value = "content") String content,
-                       @RequestParam(value = "tags") Long[] tags,
+                       @RequestParam(value = "tags") String[] tags,
                           HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 解析token
         String token = request.getHeader("token");
@@ -213,9 +213,9 @@ class QuestionController {
         // 尝试创建
         else {
             // 判断传过来的标签是否合法
-            for (long s : tags) {
-                if (!tagRepository.exists(s)){
-                    result.setMessage("无效的标签");
+            for (String tagName : tags) {
+                if (!tagRepository.existsName(tagName)){
+                    result.setMessage(tagName + "是无效的标签");
                     return result;
                 }
             }
@@ -227,10 +227,10 @@ class QuestionController {
             questionEntity.setContent(content);
             questionRepository.save(questionEntity);
             // 标签都合法保存下来
-            for (long s : tags) {
+            for (String tagName : tags) {
                 TagMapEntity tagMapEntity = new TagMapEntity();
                 tagMapEntity.setCorrelation(questionEntity.getId());
-                tagMapEntity.setTagId(s);
+                tagMapEntity.setTagId(tagRepository.findByName(tagName).getId());
                 tagMapEntity.setType("question");
                 tagMapRepository.save(tagMapEntity);
             }

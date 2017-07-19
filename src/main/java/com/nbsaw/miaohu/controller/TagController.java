@@ -36,10 +36,20 @@ class TagController {
                          @RequestParam(name = "bio",defaultValue = "") String bio,
                          @RequestParam(name = "avatar",defaultValue = "http://7xqvgr.com1.z0.glb.clouddn.com/defaultTag.png") String avatar){
         MessageVo result = new MessageVo();
+
         if (tagRepository.existsName(tagName)){
             result.setCode(400);
             result.setMessage("标签已存在!");
-        }else{
+        }
+        else if (tagName.trim().isEmpty()){
+            result.setCode(400);
+            result.setMessage("标签名不能为空!");
+        }
+        else if (tagName.contains(" ")){
+            result.setCode(400);
+            result.setMessage("标签不能包含空格!");
+        }
+        else{
             TagEntity tagEntity = new TagEntity();
             tagEntity.setName(tagName);
             tagEntity.setAvatar(avatar);
@@ -51,28 +61,37 @@ class TagController {
         return result;
     }
 
-    // TODO 对应Id标签不存在的处理
-    // 根据id查找
-    @GetMapping(value = "/{id}")
-    public GenericVo findById(@PathVariable("id") Long id){
-        List<TagMapEntity> tagMapEntities =  tagMapRepository.findAllByTagId(id);
-        List result = new LinkedList();
-        tagMapEntities.forEach(map->{
-            if (map.getType().equals("question"))
-            result.add(questionRepository.findById(map.getCorrelation()));
-        });
-        ResultVo resultVo = new ResultVo();
-        resultVo.setCode(200);
-        resultVo.setResult(result);
-        return resultVo;
+    // TODO 对应名字标签不存在的处理
+    // 根据名字查找标签下的所有问题以及文章
+    @GetMapping(value = "/{tagName}")
+    public GenericVo findById(@PathVariable("tagName") String tagName){
+        TagEntity tag = tagRepository.findByName(tagName);
+        if (tag == null){
+            MessageVo messageVo = new MessageVo();
+            messageVo.setCode(404);
+            messageVo.setMessage("标签不存在");
+            return messageVo;
+        }else{
+            Long tagId = tag.getId();
+            ResultVo resultVo = new ResultVo();
+            List<TagMapEntity> tagMapEntities =  tagMapRepository.findAllByTagId(tagId);
+            List result = new LinkedList();
+            tagMapEntities.forEach(map->{
+                if (map.getType().equals("question"))
+                    result.add(questionRepository.findById(map.getCorrelation()));
+            });
+            resultVo.setCode(200);
+            resultVo.setResult(result);
+            return resultVo;
+        }
     }
 
     // 根据名字查找标签
-    @GetMapping(value = "/search/{name}")
-    public ResultVo findByNameLike(@PathVariable("name") String name){
+    @GetMapping(value = "/search/{tagName}")
+    public ResultVo findByNameLike(@PathVariable("tagName") String tagName){
         ResultVo resultVo = new ResultVo();
         resultVo.setCode(200);
-        resultVo.setResult(tagRepository.findAllByNameLike(name));
+        resultVo.setResult(tagRepository.findAllByNameLike(tagName));
         return resultVo;
     }
 }
