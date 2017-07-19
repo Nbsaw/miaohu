@@ -45,7 +45,7 @@ class GlobalExceptionHandler{
     @ResponseBody
     public MessageVo loginErrorHandler(Exception e) throws Exception {
         MessageVo error = new MessageVo();
-        error.setCode(400);
+        error.setCode(401);
         error.setMessage(e.getMessage());
         return error;
     }
