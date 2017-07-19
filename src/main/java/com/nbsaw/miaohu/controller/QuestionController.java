@@ -114,9 +114,7 @@ class QuestionController {
             result.setMessage("标题太长");
         }
         // 末尾问号判断
-        else if (!last.equals("?") && !last.equals("？")) {
-            result.setMessage("你还没有给问题添加问号");
-        } else {
+        else if (last.equals("?") || !last.equals("？")) {
             boolean isExists = questionRepository.existsQuestion(title);
             if (isExists)
                 result.setMessage("已经存在的问题");
@@ -124,6 +122,9 @@ class QuestionController {
                 result.setCode(200);
                 result.setMessage("可以创建的问题");
             }
+        }
+        else {
+            result.setMessage("你还没有给问题添加问号");
         }
         return result;
     }
