@@ -7,13 +7,13 @@ import com.nbsaw.miaohu.entity.TagMapEntity;
 import com.nbsaw.miaohu.repository.TagRepository;
 import com.nbsaw.miaohu.entity.QuestionEntity;
 import com.nbsaw.miaohu.entity.UserEntity;
-import com.nbsaw.miaohu.model.UserInfoModel;
 import com.nbsaw.miaohu.repository.UserRepository;
 import com.nbsaw.miaohu.repository.TagMapRepository;
 import com.nbsaw.miaohu.util.JwtUtil;
 import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.ResultVo;
+import com.nbsaw.miaohu.vo.UserInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
@@ -72,12 +72,12 @@ class UserController {
 
             // 查询
             UserEntity userEntity = userRepository.findAllById(uid);
-            UserInfoModel userInfoModel = new UserInfoModel();
-            userInfoModel.setUsername(userEntity.getUsername());
-            userInfoModel.setAvatar(userEntity.getAvatar());
+            UserInfoVo userInfoVo = new UserInfoVo();
+            userInfoVo.setUsername(userEntity.getUsername());
+            userInfoVo.setAvatar(userEntity.getAvatar());
             ResultVo resultVo = new ResultVo();
             resultVo.setCode(200);
-            resultVo.setResult(userInfoModel);
+            resultVo.setResult(userInfoVo);
 
             return resultVo;
         }catch (Exception e){

@@ -11,7 +11,7 @@ public interface ArticleRepositroy  extends CrudRepository<ArticleEntity,String>
      *
      * ---------------------------------------------------------------------------
      */
-    
+
 
 
     /**
