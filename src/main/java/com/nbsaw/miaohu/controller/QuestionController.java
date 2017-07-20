@@ -248,7 +248,64 @@ class QuestionController {
         return result;
     }
 
-    // 查找问题的评论
+    // 设置(问题,回答)都为匿名 / 取消匿名
+    @PostMapping(value = "/anonymous")
+    public MessageVo setAnonymous(
+            @RequestParam(value = "questionId") Long questionId,
+            HttpServletRequest request) throws ExJwtException, InValidJwtException {
+
+        // 解析token
+        String token = request.getHeader("token");
+        System.out.println(token);
+        String uid = (String) jwtUtil.parse(token).get("uid");
+
+        MessageVo result = new MessageVo();
+        boolean status = false;
+        // 首先判断一下问题存不存在
+        boolean isExists = questionRepository.isExists(questionId);
+        if (isExists) {
+            // 判断问题是否是匿名状态
+            boolean isAnonymous = questionRepository.isAnonymous(questionId);
+            if (isAnonymous) {
+                questionRepository.setAnonymousFalse(questionId, uid);
+                status = true;
+            } else {
+                questionRepository.setAnonymousTrue(questionId, uid);
+                result.setCode(200);
+                result.setMessage("已经设为匿名!");
+                status = false;
+            }
+        }else{
+            result.setCode(400);
+            result.setMessage("问题不存在或者没有权限修改");
+        }
+
+        // 判断用户是否回答过问题
+        boolean isAnswerExists = answerRepository.isExists(questionId,uid);
+        // 判断问题是否为匿名
+        if (isAnswerExists){
+            boolean isnswerAnonymous = answerRepository.isAnonymous(questionId,uid);
+            if (isnswerAnonymous){
+                answerRepository.setAnonymousFalse(questionId,uid);
+                status = true;
+            }else {
+                answerRepository.setAnonymousTrue(questionId,uid);
+                status = false;
+            }
+        }
+        // 判断状态返回结果
+        if (status){
+            result.setCode(200);
+            result.setMessage("已经取消匿名!");
+        }
+        else{
+            result.setCode(200);
+            result.setMessage("已经设置为匿名!");
+        }
+        return result;
+    }
+
+    // 查找问题的某个评论
     @GetMapping(value = "/answer/{id}")
     public ResultVo selectAnswerById(@PathVariable("id") Long id) {
         List<AnswerEntity> list = answerRepository.findAllByQuestionId(id,new PageRequest(0,5));
@@ -298,7 +355,7 @@ class QuestionController {
         return result;
     }
 
-    // 回答删除接口
+    // 回答删除
     @DeleteMapping(value = "/answer/delete")
     public MessageVo deleteAnswer(
             @RequestParam(value = "questionId") Long questionId,
@@ -329,7 +386,7 @@ class QuestionController {
         return result;
     }
 
-    // 撤销删除问题
+    // 撤销删除回答
     @PostMapping(value = "/answer/revoke")
     public MessageVo revokeAnswer(
             @RequestParam(value = "questionId") Long questionId,
@@ -359,66 +416,9 @@ class QuestionController {
         return result;
     }
 
-    // 设置问题,回答为匿名 / 取消匿名
-    @PostMapping(value = "/anonymous")
-    public MessageVo setAnonymous(
-            @RequestParam(value = "questionId") Long questionId,
-            HttpServletRequest request) throws ExJwtException, InValidJwtException {
-
-        // 解析token
-        String token = request.getHeader("token");
-        System.out.println(token);
-        String uid = (String) jwtUtil.parse(token).get("uid");
-
-        MessageVo result = new MessageVo();
-        boolean status = false;
-        // 首先判断一下问题存不存在
-        boolean isExists = questionRepository.isExists(questionId);
-        if (isExists) {
-            // 判断问题是否是匿名状态
-            boolean isAnonymous = questionRepository.isAnonymous(questionId);
-            if (isAnonymous) {
-                questionRepository.setAnonymousFalse(questionId, uid);
-                status = true;
-            } else {
-                questionRepository.setAnonymousTrue(questionId, uid);
-                result.setCode(200);
-                result.setMessage("已经设为匿名!");
-                status = false;
-            }
-        }else{
-            result.setCode(400);
-            result.setMessage("问题不存在或者没有权限修改");
-        }
-
-        // 判断用户是否回答过问题
-        boolean isAnswerExists = answerRepository.isExists(questionId,uid);
-        // 判断问题是否为匿名
-        if (isAnswerExists){
-            boolean isnswerAnonymous = answerRepository.isAnonymous(questionId,uid);
-            if (isnswerAnonymous){
-                    answerRepository.setAnonymousFalse(questionId,uid);
-                    status = true;
-            }else {
-                answerRepository.setAnonymousTrue(questionId,uid);
-                status = false;
-            }
-        }
-        // 判断状态返回结果
-        if (status){
-            result.setCode(200);
-            result.setMessage("已经取消匿名!");
-        }
-        else{
-            result.setCode(200);
-            result.setMessage("已经设置为匿名!");
-        }
-        return result;
-    }
-
     // TODO 推送点赞
     // 回答点赞
-    @PostMapping(value = "/vote")
+    @PostMapping(value = "/answer/vote")
     public GenericVo vote(@RequestParam(value = "answerId") Long answerId,
                           HttpServletRequest request) throws ExJwtException, InValidJwtException {
 
