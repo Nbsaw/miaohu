@@ -2,6 +2,7 @@ package com.nbsaw.miaohu.entity;
 
 import lombok.Data;
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "answer")
@@ -23,6 +24,10 @@ public class AnswerEntity {
 
     @Column(nullable = false)
     private long vote = 0L;
+
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date date = new Date();
 
     @Column(nullable = false)
     private boolean deleted = false;

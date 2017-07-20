@@ -2,6 +2,7 @@ package com.nbsaw.miaohu.entity;
 
 import lombok.Data;
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "tag")
@@ -20,4 +21,8 @@ public class TagEntity {
 
     @Column(nullable = false)
     private String avatar;
+
+    @Column
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date date = new Date();
 }

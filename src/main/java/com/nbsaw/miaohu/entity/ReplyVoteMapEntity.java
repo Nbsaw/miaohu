@@ -1,20 +1,19 @@
 package com.nbsaw.miaohu.entity;
 
 import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "answer_vote_map")
+@Table(name = "reply_vote_map")
 @Data
-public class AnswerVoteMapEntity {
+public class ReplyVoteMapEntity {
     @Id
     @GeneratedValue
     private Long id;
 
-    private Long answerId;
-
-    private Long questionId;
+    private Long articleId;
 
     private String uid;
 

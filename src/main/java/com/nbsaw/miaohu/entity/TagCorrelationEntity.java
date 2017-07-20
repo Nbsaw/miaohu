@@ -7,6 +7,8 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "tag_correlation")
+// 关联标签表
+// 例如 js -> javascript , node -> node.js
 public class TagCorrelationEntity {
     @Id
     @GeneratedValue
