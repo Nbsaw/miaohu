@@ -3,9 +3,9 @@ package com.nbsaw.miaohu.controller;
 import com.nbsaw.miaohu.entity.*;
 import com.nbsaw.miaohu.exception.ExJwtException;
 import com.nbsaw.miaohu.exception.InValidJwtException;
+import com.nbsaw.miaohu.vo.QuestionVo;
 import com.nbsaw.miaohu.repository.QuestionRepository;
 import com.nbsaw.miaohu.repository.TagRepository;
-import com.nbsaw.miaohu.model.QuestionModel;
 import com.nbsaw.miaohu.repository.AnswerRepository;
 import com.nbsaw.miaohu.repository.AnswerVoteMapRepository;
 import com.nbsaw.miaohu.repository.TagMapRepository;
@@ -16,7 +16,6 @@ import com.nbsaw.miaohu.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.*;
@@ -33,24 +32,29 @@ class QuestionController {
     @Autowired private JwtUtil jwtUtil;
 
     // 查询近期发布的问题
+    // TODO 用户资料
+    // TODO 话题只显示一个
     @GetMapping
     public ResultVo all(@RequestParam(value = "page",defaultValue = "0") int page, HttpSession session) {
         String uid = (String) session.getAttribute("id");
         // TODO 查看问题是否匿名
         List<QuestionEntity> list = questionRepository.findAll(new PageRequest(page,10));
-        List<QuestionModel> result = new ArrayList<>();
+        List<QuestionVo> result = new ArrayList<>();
         // 重新封装数据
         list.forEach(s -> {
-            QuestionModel vo = new QuestionModel();
+            QuestionVo vo = new QuestionVo();
             vo.setId(s.getId());
             vo.setTitle(s.getTitle());
             vo.setContent(s.getContent());
             vo.setDate(s.getDate());
+            // 查找问题
             List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByTagIdAndType(vo.getId(),"question");
-            List<TagEntity> tagList = new ArrayList<>();
             // 查找问题所属的标签
+            List<TagEntity> tagList = new ArrayList<>();
             tagMapEntities.forEach(map -> tagList.add(tagRepository.findById(map.getCorrelation())));
             vo.setTag(tagList);
+            // 查找问题相关的用户
+
             result.add(vo);
         });
         ResultVo resultVo = new ResultVo();
@@ -70,7 +74,7 @@ class QuestionController {
 
         // 根据问题id查找问题
         QuestionEntity s = questionRepository.findById(id);
-        QuestionModel questionModel = new QuestionModel();
+        QuestionVo questionModel = new QuestionVo();
 
         // 获取各个可以暴露出去的字段
         questionModel.setId(s.getId());
@@ -98,7 +102,7 @@ class QuestionController {
         return resultVo;
     }
 
-    // 验证标题是否合法
+    // 验证问题标题是否合法
     @PostMapping(value = "/valid")
     public MessageVo validTitle(@RequestParam("title") String title) {
         MessageVo result = new MessageVo();
@@ -131,8 +135,12 @@ class QuestionController {
 
     // 根据传过来的问题id删除对应的问题
     @DeleteMapping(value = "/delete/{id}")
-    public MessageVo delete(@PathVariable(value = "id") Long id, HttpSession session) {
-        String uid = (String) session.getAttribute("id");
+    public MessageVo delete(@PathVariable(value = "id") Long id,HttpServletRequest request) throws ExJwtException, InValidJwtException {
+        // 解析token
+        String token = request.getHeader("token");
+        System.out.println(token);
+        String uid = (String) jwtUtil.parse(token).get("uid");
+
         MessageVo result = new MessageVo();
         if (questionRepository.deleteById(id) == 1){
             result.setCode(200);
