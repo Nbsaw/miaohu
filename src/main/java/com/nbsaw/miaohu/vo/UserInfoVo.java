@@ -1,10 +1,10 @@
-package com.nbsaw.miaohu.model;
+package com.nbsaw.miaohu.vo;
 
 import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class UserInfoModel implements Serializable {
+public class UserInfoVo implements Serializable {
     private String username;
 
     private String avatar;

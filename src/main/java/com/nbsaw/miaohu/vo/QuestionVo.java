@@ -1,4 +1,4 @@
-package com.nbsaw.miaohu.model;
+package com.nbsaw.miaohu.vo;
 
 import com.nbsaw.miaohu.entity.TagEntity;
 import lombok.Data;
@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 @Data
-public class QuestionModel implements Serializable {
+public class QuestionVo implements Serializable {
 
     private Long id;
 
@@ -19,4 +19,5 @@ public class QuestionModel implements Serializable {
 
     private List<TagEntity> tag;
 
+    private UserInfoVo userInfoVo;
 }
