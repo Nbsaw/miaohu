@@ -64,7 +64,7 @@ class UserController {
     public GenericVo information(HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // TODO 从Redis获取id，再从数据库查信息 -> 主要是判断用户是否注销了
         try {
-            // 解析token
+            // 获取uid
             String uid = jwtUtil.getUid(request);
 
             // 查询
@@ -89,7 +89,7 @@ class UserController {
     // 修改用户密码
     @PostMapping(value = "/changePassword")
     public MessageVo changePassword(HttpServletRequest request, @RequestParam("password") String password) throws ExJwtException, InValidJwtException {
-        // 解析token
+        // 获取uid
         String uid = jwtUtil.getUid(request);
 
         // 返回的数据
@@ -112,7 +112,7 @@ class UserController {
     // 获取用户发表过的问题
     @GetMapping(value = "/question")
     public ResultVo question(HttpServletRequest request) throws ExJwtException, InValidJwtException {
-        // 解析token
+        // 获取uid
         String uid = jwtUtil.getUid(request);
 
         List result = new ArrayList();

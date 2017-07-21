@@ -1,8 +1,15 @@
 package com.nbsaw.miaohu.controller;
 
+import com.nbsaw.miaohu.entity.ArticleEntity;
+import com.nbsaw.miaohu.entity.TagMapEntity;
 import com.nbsaw.miaohu.exception.ExJwtException;
 import com.nbsaw.miaohu.exception.InValidJwtException;
 import com.nbsaw.miaohu.repository.ArticleRepository;
+import com.nbsaw.miaohu.repository.TagMapRepository;
+import com.nbsaw.miaohu.repository.TagRepository;
+import com.nbsaw.miaohu.type.ReplyStatusType;
+import com.nbsaw.miaohu.util.EnumUtil;
+import com.nbsaw.miaohu.util.JwtUtil;
 import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.ResultVo;
@@ -16,6 +23,9 @@ import javax.servlet.http.HttpSession;
 public class ArticleController {
 
     @Autowired ArticleRepository articleRepository;
+    @Autowired JwtUtil jwtUtil;
+    @Autowired TagRepository tagRepository;
+    @Autowired TagMapRepository tagMapRepository;
 
     // 根据传过来的文章id获取对应的文章
     @GetMapping(value = "/{id}")
@@ -35,25 +45,64 @@ public class ArticleController {
         return null;
     }
 
-    // 根据id以及传过来的标题,内容修改对应的文章
-    @PostMapping(value = "/modify")
-    public MessageVo modify(@RequestParam(value = "id") Long id,
-                            @RequestParam(value = "title") String title,
-                            @RequestParam(value = "content", defaultValue = "") String content,
-                            @RequestParam(value = "anonymous", defaultValue = "false") boolean anonymous,
-                            HttpServletRequest request)  {
-        return null;
-    }
 
     // 发布一个新的文章
-    // TODO 文章回复状态
     @PostMapping(value = "/post")
     public MessageVo post(@RequestParam(value = "title") String title,
                           @RequestParam(value = "content") String content,
                           @RequestParam(value = "tags") String[] tags,
-                          HttpServletRequest request) {
+                          @RequestParam(value = "replyStatus") String replyStatus,
+                          HttpServletRequest request) throws ExJwtException, InValidJwtException {
+        // 获取uid
+        String uid = jwtUtil.getUid(request);
 
-        return null;
+        // 结果设置
+        MessageVo messageVo = new MessageVo();
+        messageVo.setCode(400);
+
+        // 判断标题是否为空
+        if (title.equals("")) {
+            messageVo.setMessage("标题不能为空");
+        }
+        // 字符不能小于3个
+        else if (title.length() < 3){
+            messageVo.setMessage("问题字数太少了吧");
+        }
+        // 51个字的标题限制
+        else if (title.length() > 10) {
+            messageVo.setMessage("标题超过10个字,无法保存");
+        }
+        else {
+            // 判断传过来的标签是否合法
+            for (String tagName : tags) {
+                if (!tagRepository.existsName(tagName)) {
+                    messageVo.setMessage(tagName + "是无效的标签");
+                    return messageVo;
+                }
+            }
+            // 回复权限检查
+            if (EnumUtil.equalsOf(ReplyStatusType.class,replyStatus)){
+                messageVo.setMessage("无效的文章状态");
+                return messageVo;
+            }
+            // 保存文章
+            ArticleEntity articleEntity = new ArticleEntity();
+            articleEntity.setTitle(title);
+            articleEntity.setContent(content);
+            articleRepository.save(articleEntity);
+            // 标签都合法保存下来
+            for (String tagName : tags) {
+                TagMapEntity tagMapEntity = new TagMapEntity();
+                tagMapEntity.setCorrelation(articleEntity.getId());
+                tagMapEntity.setTagId(tagRepository.findByName(tagName).getId());
+                tagMapEntity.setType("article");
+                tagMapRepository.save(tagMapEntity);
+            }
+            // 设置返回信息
+            messageVo.setCode(200);
+            messageVo.setMessage("文章发布成功");
+        }
+        return messageVo;
     }
 
     // 查找文章的评论

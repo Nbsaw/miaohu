@@ -28,7 +28,7 @@ class UploadController {
 
     @PostMapping(value = "/avatar")
     public String uploadAvatar(@RequestParam("avatar") MultipartFile avatar, HttpServletRequest request) throws IOException, ExJwtException, InValidJwtException {
-        // 解析token
+        // 获取uid
         String uid = jwtUtil.getUid(request);
 
         // 凭证生成

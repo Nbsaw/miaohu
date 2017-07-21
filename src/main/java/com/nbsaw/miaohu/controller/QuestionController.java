@@ -35,7 +35,7 @@ class QuestionController {
     // TODO 话题只显示一个
     @GetMapping
     public ResultVo all(@RequestParam(value = "page",defaultValue = "0") int page, HttpServletRequest request) throws ExJwtException, InValidJwtException {
-        // 解析token
+        // 获取uid
         String uid = jwtUtil.getUid(request);
 
         // TODO 查看问题是否匿名
@@ -68,7 +68,7 @@ class QuestionController {
     // 根据传过来的问题id获取对应的问题
     @GetMapping(value = "/{id}")
     public GenericVo getId(@PathVariable("id") Long id,HttpServletRequest request) throws ExJwtException, InValidJwtException {
-        // 解析token
+        // 获取uid
         String uid = jwtUtil.getUid(request);
 
         // 根据问题id查找问题
@@ -135,7 +135,7 @@ class QuestionController {
     // 根据传过来的问题id删除对应的问题
     @DeleteMapping(value = "/delete/{id}")
     public MessageVo delete(@PathVariable(value = "id") Long id,HttpServletRequest request) throws ExJwtException, InValidJwtException {
-        // 解析token
+        // 获取uid
         String uid = jwtUtil.getUid(request);
 
         MessageVo result = new MessageVo();
@@ -161,7 +161,7 @@ class QuestionController {
                             @RequestParam(value = "content", defaultValue = "") String content,
                             @RequestParam(value = "anonymous",defaultValue = "false") boolean anonymous,
                             HttpServletRequest request) throws ExJwtException, InValidJwtException {
-        // 解析token
+        // 获取uid
         String uid = jwtUtil.getUid(request);
 
         // 结果设置
@@ -183,7 +183,7 @@ class QuestionController {
                        @RequestParam(value = "content") String content,
                        @RequestParam(value = "tags") String[] tags,
                           HttpServletRequest request) throws ExJwtException, InValidJwtException {
-        // 解析token
+        // 获取uid
         String uid = jwtUtil.getUid(request);
 
         QuestionEntity questionEntity = new QuestionEntity();
@@ -192,32 +192,36 @@ class QuestionController {
         String last = title.substring(title.length() - 1); // 最后一个字符
 
         // 结果设置
-        MessageVo result = new MessageVo();
-        result.setCode(400);
+        MessageVo messageVo = new MessageVo();
+        messageVo.setCode(400);
 
         // 判断标题是否为空
         if (title.equals("")) {
-            result.setMessage("标题不能为空");
+            messageVo.setMessage("标题不能为空");
+        }
+        // 字符不能小于3个
+        else if (title.length() < 3){
+            messageVo.setMessage("问题字数太少了吧");
         }
         // 51个字的标题限制
         else if (title.length() > 51) {
-            result.setMessage("标题太长");
+            messageVo.setMessage("标题太长");
         }
         // 末尾问号判断
         else if (!last.equals("?") && !last.equals("？")) {
-            result.setMessage("你还没有给问题添加问号");
+            messageVo.setMessage("你还没有给问题添加问号");
         }
         // 判断问题是否已存在
         else if(isExists){
-            result.setMessage("已经存在的问题");
+            messageVo.setMessage("已经存在的问题");
         }
-        // 尝试创建
+        // 尝试保存问题
         else {
             // 判断传过来的标签是否合法
             for (String tagName : tags) {
                 if (!tagRepository.existsName(tagName)){
-                    result.setMessage(tagName + "是无效的标签");
-                    return result;
+                    messageVo.setMessage(tagName + "是无效的标签");
+                    return messageVo;
                 }
             }
             // 保存问题
@@ -235,10 +239,10 @@ class QuestionController {
                 tagMapEntity.setType("question");
                 tagMapRepository.save(tagMapEntity);
             }
-            result.setCode(200);
-            result.setMessage("问题发布成功");
+            messageVo.setCode(200);
+            messageVo.setMessage("问题发布成功");
        }
-        return result;
+        return messageVo;
     }
 
     // 设置(问题,回答)都为匿名 / 取消匿名
@@ -246,7 +250,7 @@ class QuestionController {
     public MessageVo setAnonymous(
             @RequestParam(value = "questionId") Long questionId,
             HttpServletRequest request) throws ExJwtException, InValidJwtException {
-        // 解析token
+        // 获取uid
         String uid = jwtUtil.getUid(request);
 
         MessageVo result = new MessageVo();
@@ -310,7 +314,7 @@ class QuestionController {
     public MessageVo answer(@RequestParam(value = "questionId") Long questionId,
                             @RequestParam(value = "content") String content,
                             HttpServletRequest request) throws ExJwtException, InValidJwtException {
-        // 解析token
+        // 获取uid
         String uid = jwtUtil.getUid(request);
 
         MessageVo result = new MessageVo();
@@ -348,7 +352,7 @@ class QuestionController {
     public MessageVo deleteAnswer(
             @RequestParam(value = "questionId") Long questionId,
             HttpServletRequest request) throws ExJwtException, InValidJwtException {
-        // 解析token
+        // 获取uid
         String uid = jwtUtil.getUid(request);
 
         MessageVo result = new MessageVo();
@@ -376,7 +380,7 @@ class QuestionController {
     public MessageVo revokeAnswer(
             @RequestParam(value = "questionId") Long questionId,
             HttpServletRequest request) throws ExJwtException, InValidJwtException {
-        // 解析token
+        // 获取uid
         String uid = jwtUtil.getUid(request);
 
         MessageVo result = new MessageVo();
@@ -403,7 +407,7 @@ class QuestionController {
     @PostMapping(value = "/answer/vote")
     public GenericVo vote(@RequestParam(value = "answerId") Long answerId,
                           HttpServletRequest request) throws ExJwtException, InValidJwtException {
-        // 解析token
+        // 获取uid
         String uid = jwtUtil.getUid(request);
 
         Map map = new HashMap();
