@@ -20,7 +20,7 @@ public class QuestionEntity {
 
     @Lob
     @Column(length = 1000000)
-    private String  content;
+    private String content;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)

@@ -2,12 +2,12 @@ package com.nbsaw.miaohu.vo;
 
 import com.nbsaw.miaohu.entity.TagEntity;
 import lombok.Data;
-import java.io.Serializable;
+
 import java.util.Date;
 import java.util.List;
 
 @Data
-public class QuestionVo implements Serializable {
+public class ArticleVo {
     private Long id;
 
     private String title;
@@ -20,5 +20,5 @@ public class QuestionVo implements Serializable {
 
     private UserInfoVo userInfoVo;
 
-    private String type = "question";
+    private String type = "article";
 }

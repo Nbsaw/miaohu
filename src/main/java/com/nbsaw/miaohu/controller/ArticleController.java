@@ -81,14 +81,16 @@ public class ArticleController {
                 }
             }
             // 回复权限检查
-            if (EnumUtil.equalsOf(ReplyStatusType.class,replyStatus)){
+            if (!EnumUtil.equalsOf(ReplyStatusType.class,replyStatus)){
                 messageVo.setMessage("无效的文章状态");
                 return messageVo;
             }
             // 保存文章
             ArticleEntity articleEntity = new ArticleEntity();
+            articleEntity.setUid(uid);
             articleEntity.setTitle(title);
             articleEntity.setContent(content);
+            articleEntity.setReplyStatus(ReplyStatusType.valueOf(replyStatus));
             articleRepository.save(articleEntity);
             // 标签都合法保存下来
             for (String tagName : tags) {

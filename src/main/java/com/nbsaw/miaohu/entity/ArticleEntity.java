@@ -4,7 +4,6 @@ import com.nbsaw.miaohu.type.ReplyStatusType;
 import lombok.Data;
 import javax.persistence.*;
 import java.util.Date;
-import java.util.UUID;
 
 @Entity
 @Table(name = "article")
@@ -14,14 +13,14 @@ public class ArticleEntity {
     @GeneratedValue
     private long id;
 
-    private UUID uid;
+    private String uid;
 
     @Column(length = 51,nullable = false)
     private String title;
 
     @Lob
     @Column(length = 1000000)
-    private String  content;
+    private String content;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)

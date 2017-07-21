@@ -12,6 +12,8 @@ public interface ArticleRepository extends Repository<ArticleEntity,String> {
      * ---------------------------------------------------------------------------
      */
 
+    // 根据文章id查找对应文章
+    ArticleEntity findById(Long id);
 
 
     /**
