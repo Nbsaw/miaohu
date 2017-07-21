@@ -34,7 +34,6 @@ class UserController {
     // 登录验证
     @PostMapping(value = "/login")
     public GenericVo login(@RequestParam("phone") String phone , @RequestParam("password") String password){
-        // TODO 从Redis获取id，再从数据库查信息
         // 检查手机号码是否存在
         if (userRepository.isUserExists(phone)){
             try{
@@ -62,13 +61,11 @@ class UserController {
 
     // 获取用户信息
     @GetMapping(value = "/info")
-    public GenericVo information(HttpServletRequest request){
+    public GenericVo information(HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // TODO 从Redis获取id，再从数据库查信息 -> 主要是判断用户是否注销了
         try {
             // 解析token
-            String token = request.getHeader("token");
-            System.out.println(token);
-            String uid = (String) jwtUtil.parse(token).get("uid");
+            String uid = jwtUtil.getUid(request);
 
             // 查询
             UserEntity userEntity = userRepository.findAllById(uid);
@@ -80,7 +77,7 @@ class UserController {
             resultVo.setResult(userInfoVo);
 
             return resultVo;
-        }catch (Exception e){
+        }catch (NullPointerException e){
             MessageVo messageVo = new MessageVo();
             messageVo.setCode(400);
             messageVo.setMessage("用户名或者密码错误");
@@ -92,12 +89,11 @@ class UserController {
     // 修改用户密码
     @PostMapping(value = "/changePassword")
     public MessageVo changePassword(HttpServletRequest request, @RequestParam("password") String password) throws ExJwtException, InValidJwtException {
+        // 解析token
+        String uid = jwtUtil.getUid(request);
+
         // 返回的数据
         MessageVo messageVo = new MessageVo();
-
-        // 解析token
-        String token = request.getHeader("token");
-        String uid = (String) jwtUtil.parse(token).get("uid");
 
         // 修改密码
         Boolean status = userRepository.updatePasswordByUid(uid,password) == 1;
@@ -117,8 +113,7 @@ class UserController {
     @GetMapping(value = "/question")
     public ResultVo question(HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 解析token
-        String token = request.getHeader("token");
-        String uid = (String) jwtUtil.parse(token).get("uid");
+        String uid = jwtUtil.getUid(request);
 
         List result = new ArrayList();
         // 查找用户发表的问题

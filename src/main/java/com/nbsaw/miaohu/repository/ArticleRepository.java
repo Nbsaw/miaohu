@@ -1,9 +1,9 @@
 package com.nbsaw.miaohu.repository;
 
 import com.nbsaw.miaohu.entity.ArticleEntity;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.Repository;
 
-public interface ArticleRepositroy  extends CrudRepository<ArticleEntity,String> {
+public interface ArticleRepository extends Repository<ArticleEntity,String> {
     /**
      * ---------------------------------------------------------------------------
      *
@@ -39,5 +39,6 @@ public interface ArticleRepositroy  extends CrudRepository<ArticleEntity,String>
      *
      * ---------------------------------------------------------------------------
      */
-
+    // 保存到数据库
+    void save(ArticleEntity articleEntity);
 }

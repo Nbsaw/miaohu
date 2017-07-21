@@ -17,7 +17,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.*;
 
 @RestController
@@ -35,8 +34,10 @@ class QuestionController {
     // TODO 用户资料
     // TODO 话题只显示一个
     @GetMapping
-    public ResultVo all(@RequestParam(value = "page",defaultValue = "0") int page, HttpSession session) {
-        String uid = (String) session.getAttribute("id");
+    public ResultVo all(@RequestParam(value = "page",defaultValue = "0") int page, HttpServletRequest request) throws ExJwtException, InValidJwtException {
+        // 解析token
+        String uid = jwtUtil.getUid(request);
+
         // TODO 查看问题是否匿名
         List<QuestionEntity> list = questionRepository.findAll(new PageRequest(page,10));
         List<QuestionVo> result = new ArrayList<>();
@@ -68,9 +69,7 @@ class QuestionController {
     @GetMapping(value = "/{id}")
     public GenericVo getId(@PathVariable("id") Long id,HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 解析token
-        String token = request.getHeader("token");
-        System.out.println(token);
-        String uid = (String) jwtUtil.parse(token).get("uid");
+        String uid = jwtUtil.getUid(request);
 
         // 根据问题id查找问题
         QuestionEntity s = questionRepository.findById(id);
@@ -137,9 +136,7 @@ class QuestionController {
     @DeleteMapping(value = "/delete/{id}")
     public MessageVo delete(@PathVariable(value = "id") Long id,HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 解析token
-        String token = request.getHeader("token");
-        System.out.println(token);
-        String uid = (String) jwtUtil.parse(token).get("uid");
+        String uid = jwtUtil.getUid(request);
 
         MessageVo result = new MessageVo();
         if (questionRepository.deleteById(id) == 1){
@@ -165,9 +162,7 @@ class QuestionController {
                             @RequestParam(value = "anonymous",defaultValue = "false") boolean anonymous,
                             HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 解析token
-        String token = request.getHeader("token");
-        System.out.println(token);
-        String uid = (String) jwtUtil.parse(token).get("uid");
+        String uid = jwtUtil.getUid(request);
 
         // 结果设置
         MessageVo result = new MessageVo();
@@ -189,9 +184,7 @@ class QuestionController {
                        @RequestParam(value = "tags") String[] tags,
                           HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 解析token
-        String token = request.getHeader("token");
-        System.out.println(token);
-        String uid = (String) jwtUtil.parse(token).get("uid");
+        String uid = jwtUtil.getUid(request);
 
         QuestionEntity questionEntity = new QuestionEntity();
         boolean isExists = questionRepository.existsQuestion(title);
@@ -253,11 +246,8 @@ class QuestionController {
     public MessageVo setAnonymous(
             @RequestParam(value = "questionId") Long questionId,
             HttpServletRequest request) throws ExJwtException, InValidJwtException {
-
         // 解析token
-        String token = request.getHeader("token");
-        System.out.println(token);
-        String uid = (String) jwtUtil.parse(token).get("uid");
+        String uid = jwtUtil.getUid(request);
 
         MessageVo result = new MessageVo();
         boolean status = false;
@@ -321,9 +311,7 @@ class QuestionController {
                             @RequestParam(value = "content") String content,
                             HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 解析token
-        String token = request.getHeader("token");
-        System.out.println(token);
-        String uid = (String) jwtUtil.parse(token).get("uid");
+        String uid = jwtUtil.getUid(request);
 
         MessageVo result = new MessageVo();
 
@@ -360,11 +348,8 @@ class QuestionController {
     public MessageVo deleteAnswer(
             @RequestParam(value = "questionId") Long questionId,
             HttpServletRequest request) throws ExJwtException, InValidJwtException {
-
         // 解析token
-        String token = request.getHeader("token");
-        System.out.println(token);
-        String uid = (String) jwtUtil.parse(token).get("uid");
+        String uid = jwtUtil.getUid(request);
 
         MessageVo result = new MessageVo();
         boolean isReply = answerRepository.isExists(questionId, uid);
@@ -391,11 +376,8 @@ class QuestionController {
     public MessageVo revokeAnswer(
             @RequestParam(value = "questionId") Long questionId,
             HttpServletRequest request) throws ExJwtException, InValidJwtException {
-
         // 解析token
-        String token = request.getHeader("token");
-        System.out.println(token);
-        String uid = (String) jwtUtil.parse(token).get("uid");
+        String uid = jwtUtil.getUid(request);
 
         MessageVo result = new MessageVo();
         boolean isReply = answerRepository.isExists(questionId, uid);
@@ -421,11 +403,8 @@ class QuestionController {
     @PostMapping(value = "/answer/vote")
     public GenericVo vote(@RequestParam(value = "answerId") Long answerId,
                           HttpServletRequest request) throws ExJwtException, InValidJwtException {
-
         // 解析token
-        String token = request.getHeader("token");
-        System.out.println(token);
-        String uid = (String) jwtUtil.parse(token).get("uid");
+        String uid = jwtUtil.getUid(request);
 
         Map map = new HashMap();
         // 通过回答的id找到问题的id

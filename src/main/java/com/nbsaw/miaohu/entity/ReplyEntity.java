@@ -32,4 +32,7 @@ public class ReplyEntity {
     @Column
     @Temporal(TemporalType.TIMESTAMP)
     private Date date = new Date();
+
+    // 是否通过审核
+    private boolean pass;
 }

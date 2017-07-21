@@ -1,19 +1,22 @@
 package com.nbsaw.miaohu.controller;
 
-
 import com.nbsaw.miaohu.exception.ExJwtException;
 import com.nbsaw.miaohu.exception.InValidJwtException;
+import com.nbsaw.miaohu.repository.ArticleRepository;
 import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.ResultVo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping(value = "/article")
 public class ArticleController {
+
+    @Autowired ArticleRepository articleRepository;
+
     // 根据传过来的文章id获取对应的文章
     @GetMapping(value = "/{id}")
     public GenericVo getId(@PathVariable("id") Long id, HttpServletRequest request) throws ExJwtException, InValidJwtException {
@@ -43,11 +46,13 @@ public class ArticleController {
     }
 
     // 发布一个新的文章
+    // TODO 文章回复状态
     @PostMapping(value = "/post")
     public MessageVo post(@RequestParam(value = "title") String title,
                           @RequestParam(value = "content") String content,
                           @RequestParam(value = "tags") String[] tags,
                           HttpServletRequest request) {
+
         return null;
     }
 

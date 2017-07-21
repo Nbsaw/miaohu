@@ -7,6 +7,8 @@ import io.jsonwebtoken.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Component
@@ -51,5 +53,12 @@ public class JwtUtil {
                 .claim("uid",uid)
                 .claim("userType",userType.toString())  // 用户权限设置
                 .compact();
+    }
+
+    // 获取用户uid
+    public String getUid(HttpServletRequest request) throws ExJwtException, InValidJwtException {
+        // 解析token
+        String token = request.getHeader("token");
+        return (String) parse(token).get("uid");
     }
 }
