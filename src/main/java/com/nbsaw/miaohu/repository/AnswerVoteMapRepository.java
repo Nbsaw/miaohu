@@ -2,11 +2,12 @@ package com.nbsaw.miaohu.repository;
 
 import com.nbsaw.miaohu.entity.AnswerVoteMapEntity;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 import javax.transaction.Transactional;
 
-public interface AnswerVoteMapRepository extends Repository<AnswerVoteMapEntity,Long> {
+public interface AnswerVoteMapRepository extends CrudRepository<AnswerVoteMapEntity,Long> {
     /**
      * ---------------------------------------------------------------------------
      *
@@ -25,17 +26,6 @@ public interface AnswerVoteMapRepository extends Repository<AnswerVoteMapEntity,
 
     // 点赞的总数
     Long countAllByQuestionId(Long questionId);
-
-    /**
-     * ---------------------------------------------------------------------------
-     *
-     *                                 增 加
-     *
-     * ---------------------------------------------------------------------------
-     */
-
-    // 回答点赞
-    void save(AnswerVoteMapEntity answerVoteMapEntity);
 
     /**
      * ---------------------------------------------------------------------------

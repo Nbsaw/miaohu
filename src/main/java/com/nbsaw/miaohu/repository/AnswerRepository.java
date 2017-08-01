@@ -4,12 +4,12 @@ import com.nbsaw.miaohu.entity.AnswerEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import javax.transaction.Transactional;
 import java.util.List;
 
-public interface AnswerRepository extends Repository<AnswerEntity,Long> {
+public interface AnswerRepository extends CrudRepository<AnswerEntity,Long> {
 
     /**
      * ---------------------------------------------------------------------------
@@ -77,15 +77,4 @@ public interface AnswerRepository extends Repository<AnswerEntity,Long> {
     @Query("update AnswerEntity qc set qc.deleted = false where qc.questionId = :questionId and qc.uid = :uid")
     Integer setDeletedFalse(@Param("questionId") Long questionId,@Param("uid") String uid);
 
-
-    /**
-     * ---------------------------------------------------------------------------
-     *
-     *                                 增 加
-     *
-     * ---------------------------------------------------------------------------
-     */
-
-    // 保存
-    void save(AnswerEntity answerEntity);
 }

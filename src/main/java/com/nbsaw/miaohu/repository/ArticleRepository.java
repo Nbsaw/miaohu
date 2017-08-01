@@ -1,21 +1,9 @@
 package com.nbsaw.miaohu.repository;
 
 import com.nbsaw.miaohu.entity.ArticleEntity;
-import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface ArticleRepository extends Repository<ArticleEntity,String> {
-    /**
-     * ---------------------------------------------------------------------------
-     *
-     *                                 查 找
-     *
-     * ---------------------------------------------------------------------------
-     */
-
-    // 根据文章id查找对应文章
-    ArticleEntity findById(Long id);
-
-
+public interface ArticleRepository extends CrudRepository<ArticleEntity,String> {
     /**
      * ---------------------------------------------------------------------------
      *
@@ -32,15 +20,4 @@ public interface ArticleRepository extends Repository<ArticleEntity,String> {
      *
      * ---------------------------------------------------------------------------
      */
-
-
-    /**
-     * ---------------------------------------------------------------------------
-     *
-     *                                 保 存
-     *
-     * ---------------------------------------------------------------------------
-     */
-    // 保存到数据库
-    void save(ArticleEntity articleEntity);
 }

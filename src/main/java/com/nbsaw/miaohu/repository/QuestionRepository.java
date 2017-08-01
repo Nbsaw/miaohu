@@ -4,12 +4,12 @@ import com.nbsaw.miaohu.entity.QuestionEntity;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import javax.transaction.Transactional;
 import java.util.List;
 
-public interface QuestionRepository extends Repository<QuestionEntity,Long> {
+public interface QuestionRepository extends CrudRepository<QuestionEntity,Long> {
 
     /**
      * ---------------------------------------------------------------------------
@@ -80,15 +80,4 @@ public interface QuestionRepository extends Repository<QuestionEntity,Long> {
     // 删除问题
     @Transactional
     Integer deleteById(Long id);
-
-
-    /**
-     * ---------------------------------------------------------------------------
-     *
-     *                                 保 存
-     *
-     * ---------------------------------------------------------------------------
-     */
-    // 保存到数据库
-    void save(QuestionEntity questionEntity);
 }

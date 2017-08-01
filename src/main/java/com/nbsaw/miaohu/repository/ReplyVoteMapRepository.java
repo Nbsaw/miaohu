@@ -1,9 +1,9 @@
 package com.nbsaw.miaohu.repository;
 
 import com.nbsaw.miaohu.entity.ReplyVoteMapEntity;
-import org.springframework.data.repository.Repository;
+import org.springframework.data.repository.CrudRepository;
 
-public interface ReplyVoteMapRepository extends Repository<ReplyVoteMapEntity,Long> {
+public interface ReplyVoteMapRepository extends CrudRepository<ReplyVoteMapEntity,Long> {
 
     /**
      * ---------------------------------------------------------------------------

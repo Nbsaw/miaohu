@@ -1,12 +1,13 @@
 package com.nbsaw.miaohu.controller;
 
+import com.nbsaw.miaohu.repository.ArticleRepository;
 import com.nbsaw.miaohu.repository.QuestionRepository;
 import com.nbsaw.miaohu.entity.TagEntity;
-import com.nbsaw.miaohu.entity.TagMapEntity;
 import com.nbsaw.miaohu.repository.TagRepository;
 import com.nbsaw.miaohu.repository.TagMapRepository;
 import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
+import com.nbsaw.miaohu.vo.QAResultVo;
 import com.nbsaw.miaohu.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +21,7 @@ class TagController {
     @Autowired private TagRepository tagRepository;
     @Autowired private TagMapRepository tagMapRepository;
     @Autowired private QuestionRepository questionRepository;
+    @Autowired private ArticleRepository articleRepository;
 
     // 查找所有的标签
     @GetMapping
@@ -74,14 +76,19 @@ class TagController {
         }else{
             Long tagId = tag.getId();
             ResultVo resultVo = new ResultVo();
-            List<TagMapEntity> tagMapEntities =  tagMapRepository.findAllByTagId(tagId);
+//            List<QAResultVo> qaResultVos =  tagMapRepository.selectById();
             List result = new LinkedList();
-            tagMapEntities.forEach(map->{
-                if (map.getType().equals("question"))
-                    result.add(questionRepository.findById(map.getCorrelation()));
-            });
+//            qaResultVos.forEach(map->{
+//                QAResultVo qa = new QAResultVo();
+//                qa.setId(Long.valueOf(map[0].toString()));
+//                qa.setTitle(map[1].toString());
+//                qa.setContent(map[2].toString());
+////                qa.setUid(UUID.fromString(map[3].toString()));
+//                qa.setDate(map[4].toString());
+//                result.add(qa);
+//            });
             resultVo.setCode(200);
-            resultVo.setResult(result);
+//            resultVo.setResult(qaResultVos);
             return resultVo;
         }
     }
@@ -94,4 +101,6 @@ class TagController {
         resultVo.setResult(tagRepository.findAllByNameLike(tagName));
         return resultVo;
     }
+
+    // 修改文章、问题的标签
 }
