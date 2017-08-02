@@ -67,28 +67,15 @@ class TagController {
     // 根据名字查找标签下的所有问题以及文章
     @GetMapping(value = "/{tagName}")
     public GenericVo findById(@PathVariable("tagName") String tagName){
-        TagEntity tag = tagRepository.findByName(tagName);
+        TagEntity tag = tagRepository.findByNameIgnoreCase(tagName);
         if (tag == null){
             MessageVo messageVo = new MessageVo();
             messageVo.setCode(404);
             messageVo.setMessage("标签不存在");
             return messageVo;
         }else{
-            Long tagId = tag.getId();
             ResultVo resultVo = new ResultVo();
-//            List<QAResultVo> qaResultVos =  tagMapRepository.selectById();
-            List result = new LinkedList();
-//            qaResultVos.forEach(map->{
-//                QAResultVo qa = new QAResultVo();
-//                qa.setId(Long.valueOf(map[0].toString()));
-//                qa.setTitle(map[1].toString());
-//                qa.setContent(map[2].toString());
-////                qa.setUid(UUID.fromString(map[3].toString()));
-//                qa.setDate(map[4].toString());
-//                result.add(qa);
-//            });
-            resultVo.setCode(200);
-//            resultVo.setResult(qaResultVos);
+
             return resultVo;
         }
     }

@@ -96,7 +96,7 @@ public class ArticleController {
             for (String tagName : tags) {
                 TagMapEntity tagMapEntity = new TagMapEntity();
                 tagMapEntity.setCorrelation(articleEntity.getId());
-                tagMapEntity.setTagId(tagRepository.findByName(tagName).getId());
+                tagMapEntity.setTagId(tagRepository.findByNameIgnoreCase(tagName).getId());
                 tagMapEntity.setType("article");
                 tagMapRepository.save(tagMapEntity);
             }

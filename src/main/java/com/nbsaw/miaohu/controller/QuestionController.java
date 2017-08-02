@@ -235,7 +235,7 @@ class QuestionController {
             for (String tagName : tags) {
                 TagMapEntity tagMapEntity = new TagMapEntity();
                 tagMapEntity.setCorrelation(questionEntity.getId());
-                tagMapEntity.setTagId(tagRepository.findByName(tagName).getId());
+                tagMapEntity.setTagId(tagRepository.findByNameIgnoreCase(tagName).getId());
                 tagMapEntity.setType("question");
                 tagMapRepository.save(tagMapEntity);
             }

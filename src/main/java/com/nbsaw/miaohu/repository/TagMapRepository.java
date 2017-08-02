@@ -21,4 +21,6 @@ public interface TagMapRepository extends CrudRepository<TagMapEntity,Long> {
     // 根据帖子id找标签
     List<TagMapEntity> findAllByCorrelation(Long correlation);
 
+
+
 }

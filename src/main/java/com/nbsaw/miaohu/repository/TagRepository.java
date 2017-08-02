@@ -28,7 +28,6 @@ public interface TagRepository extends CrudRepository<TagEntity,Long> {
     List<TagEntity> findAllByNameLike(@Param("name") String name);
 
     // 通过名字查找标签
-    @Query("select t from TagEntity t where lower(t.name) = lower(:name)")
-    TagEntity findByName(@Param("name") String name);
+    TagEntity findByNameIgnoreCase(@Param("name") String name);
 
 }
