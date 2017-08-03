@@ -19,10 +19,10 @@ import java.util.UUID;
 @RequestMapping(value = "/register")
 class RegisterController {
 
-    @Autowired private RedisConfig redisConfig;
+    @Autowired private RedisConfig    redisConfig;
     @Autowired private UserRepository userRepository;
-    @Autowired private RedisUtil redisUtil;
-    @Autowired private JwtUtil jwtUtil;
+    @Autowired private RedisUtil      redisUtil;
+    @Autowired private JwtUtil        jwtUtil;
 
     // 检验表单参数是否合法
     private Map validate(RegisterForm registerForm, String sid, boolean is, HttpServletRequest request) {

@@ -25,12 +25,11 @@ import java.util.concurrent.TimeUnit;
 @RequestMapping(value = "/captcha")
 class CaptchaController {
 
-   @Autowired private RedisConfig redisConfig;
-   @Autowired private DefaultKaptcha defaultKaptcha;
-   @Autowired private UserRepository userRepository;
+   @Autowired private RedisConfig         redisConfig;
+   @Autowired private DefaultKaptcha      defaultKaptcha;
+   @Autowired private UserRepository      userRepository;
    @Autowired private PhoneMessageService phoneMessageService;
-   @Autowired private JwtUtil jwtUtil;
-   @Autowired private RedisUtil redisUtil;
+   @Autowired private RedisUtil           redisUtil;
 
    // 用来作为凭证使用的Sid
    @GetMapping(value = "/sid")

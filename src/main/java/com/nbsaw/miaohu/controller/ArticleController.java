@@ -5,6 +5,7 @@ import com.nbsaw.miaohu.entity.TagMapEntity;
 import com.nbsaw.miaohu.exception.ExJwtException;
 import com.nbsaw.miaohu.exception.InValidJwtException;
 import com.nbsaw.miaohu.repository.ArticleRepository;
+import com.nbsaw.miaohu.repository.ReplyRepository;
 import com.nbsaw.miaohu.repository.TagMapRepository;
 import com.nbsaw.miaohu.repository.TagRepository;
 import com.nbsaw.miaohu.type.ReplyStatusType;
@@ -23,9 +24,10 @@ import javax.servlet.http.HttpSession;
 public class ArticleController {
 
     @Autowired ArticleRepository articleRepository;
-    @Autowired JwtUtil jwtUtil;
-    @Autowired TagRepository tagRepository;
-    @Autowired TagMapRepository tagMapRepository;
+    @Autowired JwtUtil           jwtUtil;
+    @Autowired TagRepository     tagRepository;
+    @Autowired TagMapRepository  tagMapRepository;
+    @Autowired ReplyRepository   replyRepository;
 
     // 根据传过来的文章id获取对应的文章
     @GetMapping(value = "/{id}")
@@ -107,17 +109,18 @@ public class ArticleController {
         return messageVo;
     }
 
-    // 查找文章的评论
-    @GetMapping(value = "/answer/{id}")
-    public ResultVo selectAnswerById(@PathVariable("id") Long id) {
-        return null;
-    }
-
     // 回复文章
     @PostMapping(value = "/reply/add")
     public MessageVo answer(@RequestParam(value = "articleId") Long articleId,
                             @RequestParam(value = "content") String content,
                             HttpServletRequest request) {
+
+        return null;
+    }
+
+    // 查找文章的评论
+    @GetMapping(value = "/answer/{id}")
+    public ResultVo selectAnswerById(@PathVariable("id") Long id) {
         return null;
     }
 

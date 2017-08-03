@@ -20,10 +20,7 @@ import java.util.List;
 @RequestMapping("/tag")
 class TagController {
 
-    @Autowired private TagRepository tagRepository;
-    @Autowired private TagMapRepository tagMapRepository;
-    @Autowired private QuestionRepository questionRepository;
-    @Autowired private ArticleRepository articleRepository;
+    @Autowired private TagRepository      tagRepository;
 
     // 查找所有的标签
     @GetMapping

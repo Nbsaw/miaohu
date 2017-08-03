@@ -23,12 +23,12 @@ import java.util.*;
 @RequestMapping(value = "/question")
 class QuestionController {
 
-    @Autowired private QuestionRepository questionRepository;
-    @Autowired private TagRepository tagRepository;
-    @Autowired private TagMapRepository tagMapRepository;
-    @Autowired private AnswerRepository answerRepository;
+    @Autowired private QuestionRepository      questionRepository;
+    @Autowired private TagRepository           tagRepository;
+    @Autowired private TagMapRepository        tagMapRepository;
+    @Autowired private AnswerRepository        answerRepository;
     @Autowired private AnswerVoteMapRepository answerVoteMapRepository;
-    @Autowired private JwtUtil jwtUtil;
+    @Autowired private JwtUtil                 jwtUtil;
 
     // 查询近期发布的问题
     // TODO 用户资料

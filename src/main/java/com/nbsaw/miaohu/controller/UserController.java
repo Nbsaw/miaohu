@@ -23,11 +23,11 @@ import java.util.*;
 @RequestMapping(value = "/user")
 class UserController {
 
-    @Autowired private UserRepository userRepository;
+    @Autowired private UserRepository     userRepository;
     @Autowired private QuestionRepository questionRepository;
-    @Autowired private TagRepository tagRepository;
-    @Autowired private TagMapRepository tagMapRepository;
-    @Autowired private JwtUtil jwtUtil;
+    @Autowired private TagRepository      tagRepository;
+    @Autowired private TagMapRepository   tagMapRepository;
+    @Autowired private JwtUtil            jwtUtil;
 
 
     // TODO 第三方登录
