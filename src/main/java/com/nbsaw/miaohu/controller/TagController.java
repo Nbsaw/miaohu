@@ -1,16 +1,18 @@
 package com.nbsaw.miaohu.controller;
 
-import com.nbsaw.miaohu.repository.ArticleRepository;
-import com.nbsaw.miaohu.repository.QuestionRepository;
+import com.nbsaw.miaohu.repository.*;
 import com.nbsaw.miaohu.entity.TagEntity;
-import com.nbsaw.miaohu.repository.TagRepository;
-import com.nbsaw.miaohu.repository.TagMapRepository;
 import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.QAResultVo;
 import com.nbsaw.miaohu.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.math.BigInteger;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -63,6 +65,7 @@ class TagController {
         return result;
     }
 
+
     // TODO 对应名字标签不存在的处理
     // 根据名字查找标签下的所有问题以及文章
     @GetMapping(value = "/{tagName}")
@@ -75,7 +78,17 @@ class TagController {
             return messageVo;
         }else{
             ResultVo resultVo = new ResultVo();
-
+            List<QAResultVo> qaResultVos = new ArrayList<>();
+            tagRepository.findQA().forEach(l -> {
+                String id      = String.valueOf(l[0]);
+                String title   = String.valueOf(l[1]);
+                String content = String.valueOf(l[2]);
+                String uid     = String.valueOf(l[3]);
+                String date    = String.valueOf(l[4]);
+                String type    = String.valueOf(l[5]);
+                qaResultVos.add(new QAResultVo(id,title,content,uid,date,type));
+            });
+            resultVo.setResult(qaResultVos);
             return resultVo;
         }
     }

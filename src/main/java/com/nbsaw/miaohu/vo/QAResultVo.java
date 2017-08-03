@@ -6,6 +6,7 @@ import org.hibernate.annotations.NamedNativeQuery;
 import javax.persistence.ColumnResult;
 import javax.persistence.ConstructorResult;
 import javax.persistence.SqlResultSetMapping;
+import java.io.Serializable;
 import java.util.Date;
 
 @Data
@@ -26,8 +27,8 @@ import java.util.Date;
 //)
 //
 //@NamedNativeQuery(name="TagMapRepository.selectById", query="select r.id,r.title,r.content,r.uid,r.date as QAResultVo from (select id,title,content,uid,date from question union all select id,title,content,uid,date from article) r order by date DESC ", resultSetMapping="resultVo")
-public class QAResultVo {
-    private Long id;
+public class QAResultVo implements Serializable{
+    private String id;
 
     private String title;
 
@@ -35,13 +36,16 @@ public class QAResultVo {
 
     private String uid;
 
-    private Date date;
+    private String date;
 
-    public QAResultVo(Long id,String title,String content,String uid,Date date){
+    private String type;
+
+    public QAResultVo(String id,String title,String content,String uid,String date,String type){
         this.id = id;
         this.title = title;
         this.content = content;
         this.uid = uid;
         this.date = date;
+        this.type = type;
     }
 }

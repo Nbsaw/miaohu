@@ -1,6 +1,7 @@
 package com.nbsaw.miaohu.repository;
 
 import com.nbsaw.miaohu.entity.TagEntity;
+import com.nbsaw.miaohu.vo.QAResultVo;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.Repository;
@@ -29,5 +30,13 @@ public interface TagRepository extends CrudRepository<TagEntity,Long> {
 
     // 通过名字查找标签
     TagEntity findByNameIgnoreCase(@Param("name") String name);
+
+
+    // 问题文章表合并查询
+    // id,title,content,uid,date
+//    @Query("select new com.nbsaw.miaohu.vo.QAResultVo(q.id,q.title,q.content,q.uid,q.date,'question') from ArticleEntity q order by date")
+//    @Query(value = "select * from (select q.id,q.title,q.content,q.uid,q.date,'question' as 'type' from question q union all select a.id,a.title,a.content,a.uid,a.date,'article' as 'type' from article a) j;",nativeQuery = true)
+    @Query(value = "select r.id,r.title,r.content,r.uid,r.date,r.type from (select q.id,q.title,q.content,q.uid,q.date,'question' as 'type' from question q union all select a.id,a.title,a.content,a.uid,a.date,'article' as 'type' from article a) r order by date DESC ",nativeQuery = true)
+    List<Object[]> findQA();
 
 }
