@@ -3,6 +3,7 @@
 
 ## 使用之前
 
+### 数据库设置
 先确保数据库的字符集为utf8。如果不是的话前往my.cnf里面修改。
 
 ``` mysql
@@ -25,4 +26,5 @@ character-set-server = utf8
 CREATE DATABASE miaohu;
 ```
 
-之后再启动项目。
+### idea spring项目支持
+使用快捷键`Ctrl+Shift+Alt+S`点里面的`Facets`然后添加spring到项目里。就能得到支持。最明显的就是yml文件有了spring的图标，并且支持补全。
