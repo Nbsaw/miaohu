@@ -32,6 +32,9 @@ public class ArticleController {
     @Autowired TagMapRepository  tagMapRepository;
     @Autowired ReplyRepository   replyRepository;
 
+    // TODO 全部文章查询接口
+
+
     // 根据传过来的文章id获取对应的文章
     @GetMapping(value = "/{id}")
     public GenericVo getId(@PathVariable("id") Long id, HttpServletRequest request) throws ExJwtException, InValidJwtException {
@@ -72,7 +75,6 @@ public class ArticleController {
     }
 
     // 根据传过来的问题id删除对应的问题
-    // TODO 文章所有权鉴别
     @DeleteMapping(value = "/delete/{id}")
     public MessageVo delete(@PathVariable(value = "id") Long id, HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 获取uid
@@ -166,6 +168,13 @@ public class ArticleController {
         return null;
     }
 
+    // 文章点赞
+    @PostMapping(value = "/vote")
+    public GenericVo vote(@RequestParam(value = "replyId") Long replyId,
+                          HttpServletRequest request){
+        return null;
+    }
+
     // 查找文章的评论
     @GetMapping(value = "/answer/{id}")
     public ResultVo selectAnswerById(@PathVariable("id") Long id) {
@@ -179,22 +188,6 @@ public class ArticleController {
             HttpServletRequest request) {
         return null;
     }
-
-    // 撤销删除回复
-    @PostMapping(value = "/reply/revoke")
-    public MessageVo revokeAnswer(
-            @RequestParam(value = "articleId") Long articleId,
-            HttpServletRequest request) {
-        return null;
-    }
-
-    // 文章点赞
-    @PostMapping(value = "/vote")
-    public GenericVo vote(@RequestParam(value = "replyId") Long replyId,
-                          HttpServletRequest request){
-        return null;
-    }
-
 
     // 回复点赞
     @PostMapping(value = "/reply/vote")
