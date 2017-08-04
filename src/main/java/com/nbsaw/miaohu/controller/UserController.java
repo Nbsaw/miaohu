@@ -122,7 +122,7 @@ class UserController {
         questionEntities.forEach(q ->{
             // 创建一个映射
             Map map = new LinkedHashMap();
-            List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByTagIdAndType(q.getId(),"question");
+            List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByCorrelationAndType(q.getId(),"question");
             // 搜索标签
             List tagList = new LinkedList();
             tagMapEntities.forEach(m -> tagList.add(tagRepository.findById(m.getCorrelation())));

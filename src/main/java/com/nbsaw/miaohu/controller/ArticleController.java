@@ -1,6 +1,7 @@
 package com.nbsaw.miaohu.controller;
 
 import com.nbsaw.miaohu.entity.ArticleEntity;
+import com.nbsaw.miaohu.entity.QuestionEntity;
 import com.nbsaw.miaohu.entity.TagMapEntity;
 import com.nbsaw.miaohu.exception.ExJwtException;
 import com.nbsaw.miaohu.exception.InValidJwtException;
@@ -11,13 +12,15 @@ import com.nbsaw.miaohu.repository.TagRepository;
 import com.nbsaw.miaohu.type.ReplyStatusType;
 import com.nbsaw.miaohu.util.EnumUtil;
 import com.nbsaw.miaohu.util.JwtUtil;
-import com.nbsaw.miaohu.vo.GenericVo;
-import com.nbsaw.miaohu.vo.MessageVo;
-import com.nbsaw.miaohu.vo.ResultVo;
+import com.nbsaw.miaohu.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/article")
@@ -32,7 +35,40 @@ public class ArticleController {
     // 根据传过来的文章id获取对应的文章
     @GetMapping(value = "/{id}")
     public GenericVo getId(@PathVariable("id") Long id, HttpServletRequest request) throws ExJwtException, InValidJwtException {
-        return null;
+
+        // 判断问题是否存在
+        if (! articleRepository.exists(id)){
+            MessageVo messageVo = new MessageVo();
+            messageVo.setCode(400);
+            messageVo.setMessage("文章不存在");
+            return messageVo;
+        }
+
+        // 根据问题id查找问题
+        ArticleEntity articleEntity = articleRepository.findOne(id);
+        ArticleVo articleVo = new ArticleVo();
+
+        // 获取各个可以暴露出去的字段
+        articleVo.setId(articleEntity.getId());
+        articleVo.setTitle(articleEntity.getTitle());
+        articleVo.setTitle(articleEntity.getContent());
+        articleVo.setDate(articleEntity.getDate());
+
+        // 查找文章的标签映射
+        List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByCorrelationAndType(id,"article");
+        List tagList = new ArrayList();
+
+        // 查找问题所属的标签
+        tagMapEntities.forEach(map -> tagList.add(tagRepository.findById(map.getTagId())));
+        Map result = new LinkedHashMap();
+        result.put("article",articleVo);
+        result.put("tag",tagList);
+
+        // 封装结果
+        ResultVo resultVo = new ResultVo();
+        resultVo.setCode(200);
+        resultVo.setResult(result);
+        return resultVo;
     }
 
     // 验证文章标题是否合法

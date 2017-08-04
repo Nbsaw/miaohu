@@ -26,9 +26,6 @@ public interface QuestionRepository extends CrudRepository<QuestionEntity,Long> 
     // 通过Uid查找问题列表
     List<QuestionEntity> findAllByUid(String uid);
 
-    // 通过问题id查找某个问题
-    QuestionEntity findById(Long id);
-
     // 通过id判断问题是否存在
     @Query("select count(q) > 0 from QuestionEntity q where q.id = :id")
     boolean isExists(@Param("id") Long id);

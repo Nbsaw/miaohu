@@ -49,7 +49,7 @@ class QuestionController {
             vo.setContent(s.getContent());
             vo.setDate(s.getDate());
             // 查找问题
-            List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByTagIdAndType(vo.getId(),"question");
+            List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByCorrelationAndType(vo.getId(),"question");
             // 查找问题所属的标签
             List<TagEntity> tagList = new ArrayList<>();
             tagMapEntities.forEach(map -> tagList.add(tagRepository.findById(map.getCorrelation())));
@@ -64,31 +64,38 @@ class QuestionController {
         return resultVo;
     }
 
-    // TODO 对应Id的问题是否存在的判断
     // 根据传过来的问题id获取对应的问题
     @GetMapping(value = "/{id}")
     public GenericVo getId(@PathVariable("id") Long id,HttpServletRequest request) throws ExJwtException, InValidJwtException {
+        // 判断问题是否存在
+        if (! questionRepository.exists(id)){
+            MessageVo messageVo = new MessageVo();
+            messageVo.setCode(400);
+            messageVo.setMessage("问题不存在");
+            return messageVo;
+        }
+
         // 获取uid
         String uid = jwtUtil.getUid(request);
 
         // 根据问题id查找问题
-        QuestionEntity s = questionRepository.findById(id);
-        QuestionVo questionModel = new QuestionVo();
+        QuestionEntity questionEntity = questionRepository.findOne(id);
+        QuestionVo questionVo = new QuestionVo();
 
         // 获取各个可以暴露出去的字段
-        questionModel.setId(s.getId());
-        questionModel.setTitle(s.getTitle());
-        questionModel.setTitle(s.getContent());
-        questionModel.setDate(s.getDate());
+        questionVo.setId(questionEntity.getId());
+        questionVo.setTitle(questionEntity.getTitle());
+        questionVo.setTitle(questionEntity.getContent());
+        questionVo.setDate(questionEntity.getDate());
 
         // 查找问题的标签映射
-        List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByTagIdAndType(id,"question");
+        List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByCorrelationAndType(id,"question");
         List tagList = new ArrayList();
 
         // 查找问题所属的标签
-        tagMapEntities.forEach(map -> tagList.add(tagRepository.findById(map.getCorrelation())));
+        tagMapEntities.forEach(map -> tagList.add(tagRepository.findById(map.getTagId())));
         Map result = new LinkedHashMap();
-        result.put("question",questionModel);
+        result.put("question",questionVo);
         result.put("tag",tagList);
 
         // 判断是否回复过问题
