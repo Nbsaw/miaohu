@@ -140,21 +140,28 @@ class QuestionController {
     }
 
     // 根据传过来的问题id删除对应的问题
+    // TODO 判断问题所有权
     @DeleteMapping(value = "/delete/{id}")
     public MessageVo delete(@PathVariable(value = "id") Long id,HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 获取uid
         String uid = jwtUtil.getUid(request);
-
-        MessageVo result = new MessageVo();
-        if (questionRepository.deleteById(id) == 1){
-            result.setCode(200);
-            result.setMessage("删除问题成功");
+        MessageVo messageVo = new MessageVo();
+        // 判断问题是否存在
+        if (! questionRepository.exists(id)){
+            messageVo.setCode(400);
+            messageVo.setMessage("问题不存在");
+        }
+        // 判断问题是否属于用户
+        else if (! questionRepository.belong(id,uid)){
+            messageVo.setCode(400);
+            messageVo.setMessage("无法删除不属于你的问题");
         }
         else{
-            result.setCode(40);
-            result.setMessage("删除问题失败");
+            questionRepository.deleteById(id);
+            messageVo.setCode(200);
+            messageVo.setMessage("删除问题成功");
         }
-        return result;
+        return messageVo;
     }
 
      // TODO 加个问题修改理由表

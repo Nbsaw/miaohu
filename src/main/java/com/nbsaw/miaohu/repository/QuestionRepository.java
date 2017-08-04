@@ -30,6 +30,10 @@ public interface QuestionRepository extends CrudRepository<QuestionEntity,Long> 
     @Query("select count(q) > 0 from QuestionEntity q where q.id = :id")
     boolean isExists(@Param("id") Long id);
 
+    // 根据uid和帖子id查找问题归属
+    @Query("select count(q) > 0 from QuestionEntity q where q.id = :id and q.uid =:uid")
+    boolean belong(@Param("id")Long id,@Param("uid")String uid);
+
     // 判断问题是否已经存在
     @Query("select count(q) > 0 from QuestionEntity q where q.title = :title")
     boolean existsQuestion(@Param("title") String title);

@@ -72,9 +72,28 @@ public class ArticleController {
     }
 
     // 根据传过来的问题id删除对应的问题
+    // TODO 文章所有权鉴别
     @DeleteMapping(value = "/delete/{id}")
-    public MessageVo delete(@PathVariable(value = "id") Long id, HttpSession session) {
-        return null;
+    public MessageVo delete(@PathVariable(value = "id") Long id, HttpServletRequest request) throws ExJwtException, InValidJwtException {
+        // 获取uid
+        String uid = jwtUtil.getUid(request);
+        MessageVo messageVo = new MessageVo();
+        // 判断问题是否存在
+        if (! articleRepository.exists(id)){
+            messageVo.setCode(400);
+            messageVo.setMessage("文章不存在");
+        }
+        // 判断问题是否属于用户
+        else if (! articleRepository.belong(id,uid)){
+            messageVo.setCode(400);
+            messageVo.setMessage("无法删除不属于你的文章");
+        }
+        else{
+            articleRepository.delete(id);
+            messageVo.setCode(200);
+            messageVo.setMessage("删除成功");
+        }
+        return messageVo;
     }
 
     // 发布一个新的文章
