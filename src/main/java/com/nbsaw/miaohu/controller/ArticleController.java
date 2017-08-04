@@ -159,15 +159,6 @@ public class ArticleController {
         return messageVo;
     }
 
-    // 回复文章
-    @PostMapping(value = "/reply/add")
-    public MessageVo answer(@RequestParam(value = "articleId") Long articleId,
-                            @RequestParam(value = "content") String content,
-                            HttpServletRequest request) {
-
-        return null;
-    }
-
     // 文章点赞
     @PostMapping(value = "/vote")
     public GenericVo vote(@RequestParam(value = "replyId") Long replyId,
@@ -175,24 +166,4 @@ public class ArticleController {
         return null;
     }
 
-    // 查找文章的评论
-    @GetMapping(value = "/answer/{id}")
-    public ResultVo selectAnswerById(@PathVariable("id") Long id) {
-        return null;
-    }
-
-    // 回复删除
-    @DeleteMapping(value = "/reply/delete")
-    public MessageVo deleteAnswer(
-            @RequestParam(value = "articleId") Long articleId,
-            HttpServletRequest request) {
-        return null;
-    }
-
-    // 回复点赞
-    @PostMapping(value = "/reply/vote")
-    public GenericVo voteReply(@RequestParam(value = "replyId") Long replyId,
-                          HttpServletRequest request){
-        return null;
-    }
 }
