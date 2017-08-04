@@ -71,18 +71,11 @@ public class ArticleController {
         return resultVo;
     }
 
-    // 验证文章标题是否合法
-    @PostMapping(value = "/valid")
-    public MessageVo validTitle(@RequestParam("title") String title) {
-        return null;
-    }
-
     // 根据传过来的问题id删除对应的问题
     @DeleteMapping(value = "/delete/{id}")
     public MessageVo delete(@PathVariable(value = "id") Long id, HttpSession session) {
         return null;
     }
-
 
     // 发布一个新的文章
     @PostMapping(value = "/post")
