@@ -15,7 +15,7 @@ public interface ArticleRepository extends CrudRepository<ArticleEntity,Long> {
      * ---------------------------------------------------------------------------
      */
     // 根据uid和帖子id查找问题归属
-    @Query("select count(a) > 0 froma ArticleEntity a where a.id = :id and a.uid = :uid")
+    @Query("select count(a) > 0 from ArticleEntity a where a.id = :id and a.uid = :uid")
     boolean belong(@Param("id")Long id, @Param("uid")String uid);
 
     /**
