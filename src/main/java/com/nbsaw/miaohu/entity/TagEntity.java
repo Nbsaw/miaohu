@@ -10,19 +10,19 @@ import java.util.Date;
 public class TagEntity {
     @Id
     @GeneratedValue
-    private Long id;
+    Long id;
 
     @Column(nullable = false,unique = true)
-    private String name;
+    String name;
 
-    private String bio;
+    String bio;
 
-    private Long count = 0L;
+    Long count = 0L;
 
     @Column(nullable = false)
-    private String avatar;
+    String avatar;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date = new Date();
+    Date date = new Date();
 }

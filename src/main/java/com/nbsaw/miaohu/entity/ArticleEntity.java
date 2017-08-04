@@ -11,26 +11,26 @@ import java.util.Date;
 public class ArticleEntity {
     @Id
     @GeneratedValue
-    private long id;
+    Long id;
 
-    private String uid;
+    String uid;
 
     @Column(length = 51,nullable = false)
-    private String title;
+    String title;
 
     @Lob
     @Column(length = 1000000)
-    private String content;
+    String content;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date = new Date();
+    Date date = new Date();
 
     // 文章图片
-    private String pic;
+    String pic;
 
     // 权限设置
     // 开放评论，预览评论，关闭评论
     @Enumerated(EnumType.STRING)
-    private ReplyStatusType replyStatus;
+    ReplyStatusType replyStatus;
 }

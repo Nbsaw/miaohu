@@ -11,28 +11,28 @@ import java.util.Date;
 public class ReplyEntity {
     @Id
     @GeneratedValue
-    private Long id;
+    Long id;
 
     @Column(nullable = false)
-    private Long articleId;
+    Long articleId;
 
     @Column(nullable = false)
-    private String uid;
+    String uid;
 
     @Lob
     @Column(length = 1000000,nullable = false)
-    private String  content;
+    String  content;
 
     @Column(nullable = false)
-    private long vote = 0L;
+    long vote = 0L;
 
     @Column(nullable = false)
-    private boolean deleted = false;
+    boolean deleted = false;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date = new Date();
+    Date date = new Date();
 
     // 是否通过审核
-    private boolean pass;
+    boolean pass;
 }

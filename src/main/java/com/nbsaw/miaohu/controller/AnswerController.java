@@ -20,7 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/answer")
-public class AnswerController {
+class AnswerController {
     @Autowired private AnswerVoteMapRepository answerVoteMapRepository;
     @Autowired private JwtUtil jwtUtil;
     @Autowired private AnswerRepository answerRepository;
@@ -80,8 +80,8 @@ public class AnswerController {
             HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 获取uid
         String uid = jwtUtil.getUid(request);
-
         MessageVo result = new MessageVo();
+        // 回答鉴权
         boolean isReply = answerRepository.isExists(questionId, uid);
         if (isReply){
             boolean isDeleted = answerRepository.isDeleted(questionId, uid);

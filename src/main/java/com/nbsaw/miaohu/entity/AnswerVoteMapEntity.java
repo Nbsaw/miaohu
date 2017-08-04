@@ -10,15 +10,15 @@ import java.util.Date;
 public class AnswerVoteMapEntity {
     @Id
     @GeneratedValue
-    private Long id;
+    Long id;
 
-    private Long answerId;
+    Long answerId;
 
-    private Long questionId;
+    Long questionId;
 
-    private String uid;
+    String uid;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date = new Date();
+    Date date = new Date();
 }

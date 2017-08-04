@@ -24,16 +24,14 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/article")
-public class ArticleController {
+class ArticleController {
 
     @Autowired ArticleRepository articleRepository;
     @Autowired JwtUtil           jwtUtil;
     @Autowired TagRepository     tagRepository;
     @Autowired TagMapRepository  tagMapRepository;
-    @Autowired ReplyRepository   replyRepository;
 
     // TODO 全部文章查询接口
-
 
     // 根据传过来的文章id获取对应的文章
     @GetMapping(value = "/{id}")
@@ -163,6 +161,7 @@ public class ArticleController {
     @PostMapping(value = "/vote")
     public GenericVo vote(@RequestParam(value = "replyId") Long replyId,
                           HttpServletRequest request){
+        
         return null;
     }
 

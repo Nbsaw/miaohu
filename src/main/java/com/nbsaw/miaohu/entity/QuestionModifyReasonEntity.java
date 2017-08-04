@@ -10,15 +10,15 @@ import java.util.Date;
 public class QuestionModifyReasonEntity {
     @Id
     @GeneratedValue
-    private Long id;
+    Long id;
 
     @Column(nullable = false)
-    private Long questionId;
+    Long questionId;
 
     @Column(nullable = false)
-    private String reason;
+    String reason;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date = new Date();
+    Date date = new Date();
 }

@@ -10,14 +10,13 @@ import java.util.Date;
 public class TagMapEntity {
     @Id
     @GeneratedValue
-    private Long id;
+    Long id;
 
     @Column(nullable = false)
-    private Long correlation;
+    Long correlation;
 
     @Column(nullable = false)
-    private Long tagId;
+    Long tagId;
 
-    private String type;
-
+    String type;
 }

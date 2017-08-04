@@ -12,10 +12,8 @@ buildscript {
 
 
 apply plugin: 'java'
-apply plugin: 'idea'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
-apply plugin: 'io.spring.dependency-management'
 
 
 sourceCompatibility = 1.8
@@ -47,39 +45,18 @@ dependencies {
     // 添加本地jar包
     compile fileTree(dir:'libs',include:['*.jar'])
 
-    // spring boot 核心
+    // spring boot
     compile"org.springframework.boot:spring-boot-starter-web:$springboot"
-
-    // spring boot devtools
     compile "org.springframework.boot:spring-boot-devtools:$springboot"
-
-    // spring boot jpa 支持
     compile "org.springframework.boot:spring-boot-starter-data-jpa:$springboot"
-
-    // spring boot redis 支持
     compile "org.springframework.boot:spring-boot-starter-data-redis:$springboot"
-
-    // spring boot 测试
     testCompile "org.springframework.boot:spring-boot-starter-test:$springboot"
 
-    // kaptcha 验证码库
     compile "com.github.axet:kaptcha:$kaptcha"
-
-    // json object
     compile"org.json:json:$json"
-
-    // 七牛
     compile "com.qiniu:qiniu-java-sdk:$qiniu"
-
-    // jwt
     compile "io.jsonwebtoken:jjwt:$jwt"
-
-    // mysql 连接驱动
     compile "mysql:mysql-connector-java:$mysql"
-
-    // 单元测试
-    testCompile "junit:junit:$junit"
-
-    // lombok
     compile "org.projectlombok:lombok:$lombok"
+    testCompile "junit:junit:$junit"
 }

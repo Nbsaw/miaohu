@@ -10,27 +10,27 @@ import java.util.Date;
 public class AnswerEntity {
     @Id
     @GeneratedValue
-    private long id;
+    Long id;
 
     @Column(nullable = false)
-    private Long questionId;
+    Long questionId;
 
     @Column(nullable = false)
-    private String uid;
+    String uid;
 
     @Lob
     @Column(length = 1000000,nullable = false)
-    private String  content;
+    String  content;
 
     @Column(nullable = false)
-    private long vote = 0L;
+    long vote = 0L;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date = new Date();
+    Date date = new Date();
 
     @Column(nullable = false)
-    private boolean deleted = false;
+    boolean deleted = false;
 
-    private boolean anonymous = false;
+    boolean anonymous = false;
 }

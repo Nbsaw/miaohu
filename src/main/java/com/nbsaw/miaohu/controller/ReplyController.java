@@ -6,10 +6,11 @@ import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
 
-public class ReplyController {
+@RestController
+@RequestMapping(value = "/reply")
+class ReplyController {
     @Autowired ReplyRepository replyRepository;
 
     // 回复文章

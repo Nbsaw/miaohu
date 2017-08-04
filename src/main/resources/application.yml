@@ -2,6 +2,7 @@
 project:
       name : miaohu
       version : 0.1.6
+      author: nbsaw
 
 # 环境设置
 spring.profiles.active: dev

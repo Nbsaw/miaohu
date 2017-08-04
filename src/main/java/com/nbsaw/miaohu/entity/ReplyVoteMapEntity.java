@@ -11,13 +11,13 @@ import java.util.Date;
 public class ReplyVoteMapEntity {
     @Id
     @GeneratedValue
-    private Long id;
+    Long id;
 
-    private Long articleId;
+    Long articleId;
 
-    private String uid;
+    String uid;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date = new Date();
+    Date date = new Date();
 }

@@ -10,21 +10,21 @@ import java.util.Date;
 public class QuestionEntity {
     @Id
     @GeneratedValue
-    private Long id;
+    Long id;
 
     @Column(nullable = false)
-    private String uid;
+    String uid;
 
     @Column(nullable = false,unique = true)
-    private String title;
+    String title;
 
     @Lob
     @Column(length = 1000000)
-    private String content;
+    String content;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private Date date = new Date();
+    Date date = new Date();
 
-    private boolean anonymous;
+    boolean anonymous;
 }

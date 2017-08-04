@@ -12,9 +12,9 @@ import javax.persistence.Table;
 public class TagCorrelationEntity {
     @Id
     @GeneratedValue
-    private Long id;
+    Long id;
 
-    private String tagName;
+    String tagName;
 
-    private String correlation;
+    String correlation;
 }

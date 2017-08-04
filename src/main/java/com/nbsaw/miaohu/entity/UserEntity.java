@@ -14,40 +14,39 @@ import java.util.Date;
 @Data
 public class UserEntity implements Serializable {
     @Id
-    private String id;
+    String id;
 
     @Column(nullable = false, length = 16)
-    private String username;
+    String username;
 
     @Column(nullable = false)
     @ColumnTransformer(write = "md5(?)")
-    private String password;
+    String password;
 
     @Column(unique = true)
-    private String phone;
+    String phone;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)
-    private Date creationDate = new Date();
+    Date creationDate = new Date();
 
     @Enumerated(EnumType.STRING)
-    private UserType userType = UserType.USER;
+    UserType userType = UserType.USER;
 
     @Min(1)
     @Max(150)
-    private Integer age;
+    Integer age;
 
-    private String sex = "男";
+    String sex = "男";
 
     @Column(name = "avatar")
-    private String avatar = "http://7xqvgr.com1.z0.glb.clouddn.com/01.png";
+    String avatar = "http://7xqvgr.com1.z0.glb.clouddn.com/01.png";
 
-    private String bio = "这个人不懒但是什么也没留下";
+    String bio = "这个人不懒但是什么也没留下";
 
-    private String domain;
+    String domain;
 
-    private String education;
+    String education;
 
-    private String domicile;
-
+    String domicile;
 }
