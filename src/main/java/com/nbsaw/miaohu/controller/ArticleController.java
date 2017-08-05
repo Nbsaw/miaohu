@@ -44,7 +44,7 @@ class ArticleController {
         }
         ResultVo resultVo = new ResultVo();
         resultVo.setCode(200);
-        resultVo.setResult(replyRepository.findAllByArticleId(articleId));
+        resultVo.setResult(replyRepository.findAllByArticleIdAndPass(articleId,true));
         return resultVo;
     }
 

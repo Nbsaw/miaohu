@@ -16,7 +16,7 @@ public interface ReplyRepository extends CrudRepository<ReplyEntity,Long> {
      *
      * ---------------------------------------------------------------------------
      */
-    List<ReplyEntity> findAllByArticleId(Long articleId);
+    List<ReplyEntity> findAllByArticleIdAndPass(Long articleId,boolean pass);
 
     @Query("select count(r) > 0 from ReplyEntity r where r.id = :id and r.uid = :uid")
     boolean belong(@Param("id") Long id, @Param("uid") String uid);
