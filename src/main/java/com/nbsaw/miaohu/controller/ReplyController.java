@@ -1,5 +1,6 @@
 package com.nbsaw.miaohu.controller;
 
+import com.nbsaw.miaohu.repository.ArticleRepository;
 import com.nbsaw.miaohu.repository.ReplyRepository;
 import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
@@ -11,13 +12,14 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequestMapping(value = "/reply")
 class ReplyController {
-    @Autowired ReplyRepository replyRepository;
-
+    @Autowired ReplyRepository   replyRepository;
+    @Autowired ArticleRepository articleRepository;
     // 回复文章
     @PostMapping(value = "/add")
     public MessageVo answer(@RequestParam(value = "articleId") Long articleId,
                             @RequestParam(value = "content") String content,
                             HttpServletRequest request) {
+        // 判断文章的回复状态
 
         return null;
     }

@@ -63,10 +63,10 @@ class QuestionController {
     }
 
     // 根据传过来的问题id获取对应的问题
-    @GetMapping(value = "/{id}")
-    public GenericVo getId(@PathVariable("id") Long id,HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    @GetMapping(value = "/{questionId}")
+    public GenericVo getId(@PathVariable("questionId") Long questionId,HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 判断问题是否存在
-        if (! questionRepository.exists(id)){
+        if (! questionRepository.exists(questionId)){
             MessageVo messageVo = new MessageVo();
             messageVo.setCode(400);
             messageVo.setMessage("问题不存在");
@@ -77,7 +77,7 @@ class QuestionController {
         String uid = jwtUtil.getUid(request);
 
         // 根据问题id查找问题
-        QuestionEntity questionEntity = questionRepository.findOne(id);
+        QuestionEntity questionEntity = questionRepository.findOne(questionId);
         QuestionVo questionVo = new QuestionVo();
 
         // 获取各个可以暴露出去的字段
@@ -87,7 +87,7 @@ class QuestionController {
         questionVo.setDate(questionEntity.getDate());
 
         // 查找问题的标签映射
-        List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByCorrelationAndType(id,"question");
+        List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByCorrelationAndType(questionId,"question");
         List tagList = new ArrayList();
 
         // 查找问题所属的标签
@@ -97,7 +97,7 @@ class QuestionController {
         result.put("tag",tagList);
 
         // 判断是否回复过问题
-        result.put("answer",answerRepository.isExists(id,uid));
+        result.put("answer",answerRepository.isExists(questionId,uid));
 
         // 封装结果
         ResultVo resultVo = new ResultVo();
@@ -138,23 +138,23 @@ class QuestionController {
     }
 
     // 根据传过来的问题id删除对应的问题
-    @DeleteMapping(value = "/delete/{id}")
-    public MessageVo delete(@PathVariable(value = "id") Long id,HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    @DeleteMapping(value = "/delete/{questionId}")
+    public MessageVo delete(@PathVariable(value = "questionId") Long questionId,HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 获取uid
         String uid = jwtUtil.getUid(request);
         MessageVo messageVo = new MessageVo();
         // 判断问题是否存在
-        if (! questionRepository.exists(id)){
+        if (! questionRepository.exists(questionId)){
             messageVo.setCode(400);
             messageVo.setMessage("问题不存在");
         }
         // 判断问题是否属于用户
-        else if (! questionRepository.belong(id,uid)){
+        else if (! questionRepository.belong(questionId,uid)){
             messageVo.setCode(400);
             messageVo.setMessage("无法删除不属于你的问题");
         }
         else{
-            questionRepository.deleteById(id);
+            questionRepository.deleteById(questionId);
             messageVo.setCode(200);
             messageVo.setMessage("删除问题成功");
         }
@@ -167,7 +167,7 @@ class QuestionController {
      // TODO 问题修改历史
     // 根据id以及传过来的标题,内容修改对应的问题
     @PostMapping(value = "/modify")
-    public MessageVo modify(@RequestParam(value = "id") Long id,
+    public MessageVo modify(@RequestParam(value = "questionId") Long questionId,
                             @RequestParam(value = "title") String title,
                             @RequestParam(value = "content", defaultValue = "") String content,
                             @RequestParam(value = "anonymous",defaultValue = "false") boolean anonymous,
@@ -177,7 +177,7 @@ class QuestionController {
 
         // 结果设置
         MessageVo result = new MessageVo();
-        if (questionRepository.updateContentByIdAndUid(id, uid, title, content) == 1){
+        if (questionRepository.updateContentByIdAndUid(questionId, uid, title, content) == 1){
             result.setCode(200);
             result.setMessage("问题修改成功");
         }
@@ -289,8 +289,8 @@ class QuestionController {
         boolean isAnswerExists = answerRepository.isExists(questionId,uid);
         // 判断问题是否为匿名
         if (isAnswerExists){
-            boolean isnswerAnonymous = answerRepository.isAnonymous(questionId,uid);
-            if (isnswerAnonymous){
+            boolean isAnswerAnonymous = answerRepository.isAnonymous(questionId,uid);
+            if (isAnswerAnonymous){
                 answerRepository.setAnonymousFalse(questionId,uid);
                 status = true;
             }else {

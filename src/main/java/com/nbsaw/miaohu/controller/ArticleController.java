@@ -31,11 +31,11 @@ class ArticleController {
     // TODO 全部文章查询接口
 
     // 根据传过来的文章id获取对应的文章
-    @GetMapping(value = "/{id}")
-    public GenericVo getId(@PathVariable("id") Long id, HttpServletRequest request){
+    @GetMapping(value = "/{articleId}")
+    public GenericVo getId(@PathVariable("articleId") Long articleId, HttpServletRequest request){
 
         // 判断问题是否存在
-        if (! articleRepository.exists(id)){
+        if (! articleRepository.exists(articleId)){
             MessageVo messageVo = new MessageVo();
             messageVo.setCode(400);
             messageVo.setMessage("文章不存在");
@@ -43,7 +43,7 @@ class ArticleController {
         }
 
         // 根据问题id查找问题
-        ArticleEntity articleEntity = articleRepository.findOne(id);
+        ArticleEntity articleEntity = articleRepository.findOne(articleId);
         ArticleVo articleVo = new ArticleVo();
 
         // 获取各个可以暴露出去的字段
@@ -53,7 +53,7 @@ class ArticleController {
         articleVo.setDate(articleEntity.getDate());
 
         // 查找文章的标签映射
-        List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByCorrelationAndType(id,"article");
+        List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByCorrelationAndType(articleId,"article");
         List tagList = new ArrayList();
 
         // 查找问题所属的标签
@@ -71,22 +71,22 @@ class ArticleController {
 
     // 根据传过来的问题id删除对应的问题
     @DeleteMapping(value = "/delete/{id}")
-    public MessageVo delete(@PathVariable(value = "id") Long id, HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    public MessageVo delete(@PathVariable(value = "articleId") Long articleId, HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 获取uid
         String uid = jwtUtil.getUid(request);
         MessageVo messageVo = new MessageVo();
         // 判断问题是否存在
-        if (! articleRepository.exists(id)){
+        if (! articleRepository.exists(articleId)){
             messageVo.setCode(400);
             messageVo.setMessage("文章不存在");
         }
         // 判断问题是否属于用户
-        else if (! articleRepository.belong(id,uid)){
+        else if (! articleRepository.belong(articleId,uid)){
             messageVo.setCode(400);
             messageVo.setMessage("无法删除不属于你的文章");
         }
         else{
-            articleRepository.delete(id);
+            articleRepository.delete(articleId);
             messageVo.setCode(200);
             messageVo.setMessage("删除成功");
         }
@@ -156,25 +156,25 @@ class ArticleController {
 
     // 文章点赞
     @PostMapping(value = "/vote")
-    public GenericVo vote(@RequestParam(value = "id") Long id,
+    public GenericVo vote(@RequestParam(value = "articleId") Long articleId,
                           HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 获取uid
         String uid = jwtUtil.getUid(request);
         MessageVo messageVo = new MessageVo();
-        if (!articleRepository.exists(id)){
+        if (!articleRepository.exists(articleId)){
             messageVo.setCode(404);
             messageVo.setMessage("文章不存在");
         }
         // 如果已点赞
-        else if (articleVoteRepository.isVoted(id,uid)){
-            articleVoteRepository.deleteByArticleIdAndUid(id,uid);
+        else if (articleVoteRepository.isVoted(articleId,uid)){
+            articleVoteRepository.deleteByArticleIdAndUid(articleId,uid);
             messageVo.setCode(200);
             messageVo.setMessage("已取消点赞");
         }
         // 如果没有点赞
         else{
             ArticleVoteEntity articleVoteEntity = new ArticleVoteEntity();
-            articleVoteEntity.setArticleId(id);
+            articleVoteEntity.setArticleId(articleId);
             articleVoteEntity.setUid(uid);
             articleVoteRepository.save(articleVoteEntity);
             messageVo.setCode(200);
