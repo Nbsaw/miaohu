@@ -2,7 +2,6 @@ package com.nbsaw.miaohu.entity;
 
 import lombok.Data;
 import javax.persistence.*;
-import java.util.Date;
 
 @Entity
 @Table(name = "tag_map")

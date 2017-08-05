@@ -1,6 +1,7 @@
 package com.nbsaw.miaohu.entity;
 
 import lombok.Data;
+import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -21,13 +22,10 @@ public class ReplyEntity {
 
     @Lob
     @Column(length = 1000000,nullable = false)
-    String  content;
+    String content;
 
-    @Column(nullable = false)
-    long vote = 0L;
-
-    @Column(nullable = false)
-    boolean deleted = false;
+    @Formula("(select count(*) from reply_vote o where o.reply_id = id)")
+    long vote;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)

@@ -27,8 +27,26 @@ class ArticleController {
     @Autowired TagRepository         tagRepository;
     @Autowired TagMapRepository      tagMapRepository;
     @Autowired ArticleVoteRepository articleVoteRepository;
+    @Autowired ReplyRepository       replyRepository;
 
     // TODO 全部文章查询接口
+
+    // 获取文章下全部回复
+    // TODO 分页
+    @GetMapping(value = "{articleId}/reply")
+    public GenericVo getAllReply(@PathVariable("articleId") Long articleId){
+        // 判断问题是否存在
+        if (! articleRepository.exists(articleId)){
+            MessageVo messageVo = new MessageVo();
+            messageVo.setCode(400);
+            messageVo.setMessage("文章不存在");
+            return messageVo;
+        }
+        ResultVo resultVo = new ResultVo();
+        resultVo.setCode(200);
+        resultVo.setResult(replyRepository.findAllByArticleId(articleId));
+        return resultVo;
+    }
 
     // 根据传过来的文章id获取对应的文章
     @GetMapping(value = "/{articleId}")

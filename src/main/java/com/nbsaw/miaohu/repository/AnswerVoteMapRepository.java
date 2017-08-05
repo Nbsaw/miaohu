@@ -3,7 +3,6 @@ package com.nbsaw.miaohu.repository;
 import com.nbsaw.miaohu.entity.AnswerVoteMapEntity;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 import javax.transaction.Transactional;
 

@@ -1,7 +1,7 @@
 # 项目基本信息
 project:
       name : miaohu
-      version : 0.1.6
+      version : 0.1.7
       author: nbsaw
 
 # 环境设置
@@ -57,7 +57,6 @@ redis.constant.imageTimeOut: 5 # 图片验证码超时时间
 # 手机验证码
 redis.constant.phone: ":PHONE" # 手机验证码在redis的后缀
 redis.constant.phoneTimeOut: 1 # 手机验证码超时时间
-
 
 ---
 # 开发环境

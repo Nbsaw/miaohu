@@ -1,10 +1,8 @@
 package com.nbsaw.miaohu.repository;
 
 import com.nbsaw.miaohu.entity.TagEntity;
-import com.nbsaw.miaohu.vo.QAResultVo;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
-import org.springframework.data.repository.Repository;
 import org.springframework.data.repository.query.Param;
 import java.util.List;
 

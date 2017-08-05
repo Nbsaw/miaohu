@@ -6,14 +6,14 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "reply_vote_map")
+@Table(name = "reply_vote")
 @Data
-public class ReplyVoteMapEntity {
+public class ReplyVoteEntity {
     @Id
     @GeneratedValue
     Long id;
 
-    Long articleId;
+    Long replyId;
 
     String uid;
 
