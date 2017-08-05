@@ -1,14 +1,11 @@
 package com.nbsaw.miaohu.controller;
 
 import com.nbsaw.miaohu.entity.ArticleEntity;
-import com.nbsaw.miaohu.entity.QuestionEntity;
+import com.nbsaw.miaohu.entity.ArticleVoteEntity;
 import com.nbsaw.miaohu.entity.TagMapEntity;
 import com.nbsaw.miaohu.exception.ExJwtException;
 import com.nbsaw.miaohu.exception.InValidJwtException;
-import com.nbsaw.miaohu.repository.ArticleRepository;
-import com.nbsaw.miaohu.repository.ReplyRepository;
-import com.nbsaw.miaohu.repository.TagMapRepository;
-import com.nbsaw.miaohu.repository.TagRepository;
+import com.nbsaw.miaohu.repository.*;
 import com.nbsaw.miaohu.type.ReplyStatusType;
 import com.nbsaw.miaohu.util.EnumUtil;
 import com.nbsaw.miaohu.util.JwtUtil;
@@ -16,7 +13,6 @@ import com.nbsaw.miaohu.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -26,16 +22,17 @@ import java.util.Map;
 @RequestMapping(value = "/article")
 class ArticleController {
 
-    @Autowired ArticleRepository articleRepository;
-    @Autowired JwtUtil           jwtUtil;
-    @Autowired TagRepository     tagRepository;
-    @Autowired TagMapRepository  tagMapRepository;
+    @Autowired ArticleRepository     articleRepository;
+    @Autowired JwtUtil               jwtUtil;
+    @Autowired TagRepository         tagRepository;
+    @Autowired TagMapRepository      tagMapRepository;
+    @Autowired ArticleVoteRepository articleVoteRepository;
 
     // TODO 全部文章查询接口
 
     // 根据传过来的文章id获取对应的文章
     @GetMapping(value = "/{id}")
-    public GenericVo getId(@PathVariable("id") Long id, HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    public GenericVo getId(@PathVariable("id") Long id, HttpServletRequest request){
 
         // 判断问题是否存在
         if (! articleRepository.exists(id)){
@@ -159,10 +156,30 @@ class ArticleController {
 
     // 文章点赞
     @PostMapping(value = "/vote")
-    public GenericVo vote(@RequestParam(value = "replyId") Long replyId,
-                          HttpServletRequest request){
-        
-        return null;
+    public GenericVo vote(@RequestParam(value = "id") Long id,
+                          HttpServletRequest request) throws ExJwtException, InValidJwtException {
+        // 获取uid
+        String uid = jwtUtil.getUid(request);
+        MessageVo messageVo = new MessageVo();
+        if (!articleRepository.exists(id)){
+            messageVo.setCode(404);
+            messageVo.setMessage("文章不存在");
+        }
+        // 如果已点赞
+        else if (articleVoteRepository.isVoted(id,uid)){
+            articleVoteRepository.deleteByArticleIdAndUid(id,uid);
+            messageVo.setCode(200);
+            messageVo.setMessage("已取消点赞");
+        }
+        // 如果没有点赞
+        else{
+            ArticleVoteEntity articleVoteEntity = new ArticleVoteEntity();
+            articleVoteEntity.setArticleId(id);
+            articleVoteEntity.setUid(uid);
+            articleVoteRepository.save(articleVoteEntity);
+            messageVo.setCode(200);
+            messageVo.setMessage("点赞成功");
+        }
+        return messageVo;
     }
-
 }

@@ -7,7 +7,6 @@ import com.nbsaw.miaohu.vo.QuestionVo;
 import com.nbsaw.miaohu.repository.QuestionRepository;
 import com.nbsaw.miaohu.repository.TagRepository;
 import com.nbsaw.miaohu.repository.AnswerRepository;
-import com.nbsaw.miaohu.repository.AnswerVoteMapRepository;
 import com.nbsaw.miaohu.repository.TagMapRepository;
 import com.nbsaw.miaohu.util.JwtUtil;
 import com.nbsaw.miaohu.vo.GenericVo;
