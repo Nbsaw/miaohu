@@ -15,6 +15,7 @@ import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.ResultVo;
 import com.nbsaw.miaohu.vo.UserInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -111,13 +112,13 @@ class UserController {
     // TODO 分页
     // 获取用户发表过的问题
     @GetMapping(value = "/question")
-    public ResultVo question(HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    public ResultVo question(HttpServletRequest request,@RequestParam(value = "page",defaultValue = "0") int page) throws ExJwtException, InValidJwtException {
         // 获取uid
         String uid = jwtUtil.getUid(request);
 
         List result = new ArrayList();
         // 查找用户发表的问题
-        List<QuestionEntity> questionEntities =  questionRepository.findAllByUid(uid);
+        List<QuestionEntity> questionEntities =  questionRepository.findAllByUid(uid,new PageRequest(page,15));
         // 查找问题所属的标签
         questionEntities.forEach(q ->{
             // 创建一个映射

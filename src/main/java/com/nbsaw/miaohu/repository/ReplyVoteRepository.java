@@ -1,6 +1,5 @@
 package com.nbsaw.miaohu.repository;
 
-import com.nbsaw.miaohu.entity.ReplyEntity;
 import com.nbsaw.miaohu.entity.ReplyVoteEntity;
 import org.springframework.data.repository.CrudRepository;
 

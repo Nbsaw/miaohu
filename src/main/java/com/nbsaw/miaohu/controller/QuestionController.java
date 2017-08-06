@@ -13,7 +13,9 @@ import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -31,13 +33,11 @@ class QuestionController {
     // 查询近期发布的问题
     // TODO 用户资料
     // TODO 话题只显示一个
+    // TODO 查看问题是否匿名
     @GetMapping
-    public ResultVo all(@RequestParam(value = "page",defaultValue = "0") int page, HttpServletRequest request) throws ExJwtException, InValidJwtException {
-        // 获取uid
-        String uid = jwtUtil.getUid(request);
-
-        // TODO 查看问题是否匿名
-        List<QuestionEntity> list = questionRepository.findAll(new PageRequest(page,10));
+    public ResultVo all(@RequestParam(value = "page",defaultValue = "0") int page){
+        // 时间倒叙查找
+        Page<QuestionEntity> list = questionRepository.findAll(new PageRequest(page,10,new Sort(Sort.Direction.DESC,"date")));
         List<QuestionVo> result = new ArrayList<>();
         // 重新封装数据
         list.forEach(s -> {
@@ -52,8 +52,7 @@ class QuestionController {
             List<TagEntity> tagList = new ArrayList<>();
             tagMapEntities.forEach(map -> tagList.add(tagRepository.findById(map.getCorrelation())));
             vo.setTag(tagList);
-            // 查找问题相关的用户
-
+            // TODO 查找问题相关的用户
             result.add(vo);
         });
         ResultVo resultVo = new ResultVo();

@@ -1,6 +1,7 @@
 package com.nbsaw.miaohu.repository;
 
 import com.nbsaw.miaohu.entity.ReplyEntity;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -16,7 +17,7 @@ public interface ReplyRepository extends CrudRepository<ReplyEntity,Long> {
      *
      * ---------------------------------------------------------------------------
      */
-    List<ReplyEntity> findAllByArticleIdAndPass(Long articleId,boolean pass);
+    List<ReplyEntity> findAllByArticleIdAndPass(Long articleId,boolean pass,Pageable page);
 
     @Query("select count(r) > 0 from ReplyEntity r where r.id = :id and r.uid = :uid")
     boolean belong(@Param("id") Long id, @Param("uid") String uid);

@@ -11,6 +11,8 @@ import com.nbsaw.miaohu.util.EnumUtil;
 import com.nbsaw.miaohu.util.JwtUtil;
 import com.nbsaw.miaohu.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
@@ -30,11 +32,18 @@ class ArticleController {
     @Autowired ReplyRepository       replyRepository;
 
     // TODO 全部文章查询接口
+    @GetMapping
+    public ResultVo getAll(){
+        ResultVo resultVo = new ResultVo();
+        resultVo.setCode(200);
+        // 时间倒叙查找
+        resultVo.setResult(articleRepository.findAll(new PageRequest(0,15,new Sort(Sort.Direction.DESC,"date"))).getContent());
+        return resultVo;
+    }
 
     // 获取文章下全部回复
-    // TODO 分页
     @GetMapping(value = "{articleId}/reply")
-    public GenericVo getAllReply(@PathVariable("articleId") Long articleId){
+    public GenericVo getAllReply(@PathVariable("articleId") Long articleId,@RequestParam(value = "page",defaultValue = "0") int page){
         // 判断问题是否存在
         if (! articleRepository.exists(articleId)){
             MessageVo messageVo = new MessageVo();
@@ -44,14 +53,14 @@ class ArticleController {
         }
         ResultVo resultVo = new ResultVo();
         resultVo.setCode(200);
-        resultVo.setResult(replyRepository.findAllByArticleIdAndPass(articleId,true));
+        // 时间逆序查找回复
+        resultVo.setResult(replyRepository.findAllByArticleIdAndPass(articleId,true,new PageRequest(page,15,new Sort(Sort.Direction.DESC,"date"))));
         return resultVo;
     }
 
     // 根据传过来的文章id获取对应的文章
     @GetMapping(value = "/{articleId}")
-    public GenericVo getId(@PathVariable("articleId") Long articleId, HttpServletRequest request){
-
+    public GenericVo getId(@PathVariable("articleId") Long articleId){
         // 判断问题是否存在
         if (! articleRepository.exists(articleId)){
             MessageVo messageVo = new MessageVo();

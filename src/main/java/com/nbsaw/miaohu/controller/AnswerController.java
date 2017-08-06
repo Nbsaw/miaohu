@@ -12,6 +12,7 @@ import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -28,7 +29,8 @@ class AnswerController {
     // 查找问题的某个评论
     @GetMapping(value = "/{id}")
     public ResultVo selectAnswerById(@PathVariable("id") Long id) {
-        List<AnswerEntity> list = answerRepository.findAllByQuestionId(id,new PageRequest(0,5));
+        // 暂时根据逆序查找
+        List<AnswerEntity> list = answerRepository.findAllByQuestionId(id,new PageRequest(0,5,new Sort(Sort.Direction.DESC,"date")));
         ResultVo resultVo = new ResultVo();
         resultVo.setCode(200);
         resultVo.setResult(list);

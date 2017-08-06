@@ -1,11 +1,13 @@
 package com.nbsaw.miaohu.repository;
 
 import com.nbsaw.miaohu.entity.ArticleEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;
 
-public interface ArticleRepository extends CrudRepository<ArticleEntity,Long> {
+public interface ArticleRepository extends PagingAndSortingRepository<ArticleEntity,Long> {
 
     /**
      * ---------------------------------------------------------------------------
@@ -14,6 +16,7 @@ public interface ArticleRepository extends CrudRepository<ArticleEntity,Long> {
      *
      * ---------------------------------------------------------------------------
      */
+
     // 根据uid和帖子id查找问题归属
     @Query("select count(a) > 0 from ArticleEntity a where a.id = :id and a.uid = :uid")
     boolean belong(@Param("id")Long id, @Param("uid")String uid);

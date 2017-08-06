@@ -24,8 +24,8 @@ public class JwtUtil {
         this.key = key;
     }
 
-    // TODO 超时
-    // TODO 是否有效
+    // 验证超时
+    // 验证是否有效
     // TODO 详细的错误声明
     // 解析传过来的token
     public Claims parse(String token) throws InValidJwtException, ExJwtException {
