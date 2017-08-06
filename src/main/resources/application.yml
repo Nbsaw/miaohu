@@ -32,7 +32,7 @@ spring.datasource.driver-class-name: com.mysql.jdbc.Driver
 spring.jpa.show-sql: true
 spring.jpa.database: MYSQL
 spring.data.jpa.repositories.enabled: true
-spring.jpa.hibernate.ddl-auto: create
+spring.jpa.hibernate.ddl-auto: update
 
 # REDIS的相关配置
 spring.redis.database: 2 # Database index used by the connection factory.

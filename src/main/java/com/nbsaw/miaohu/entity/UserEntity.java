@@ -35,13 +35,9 @@ public class UserEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     UserType userType = UserType.USER;
 
-    @Min(1)
-    @Max(150)
-    Integer age;
-
     @Column(name = "sex")
     @Convert(converter = SexTypeConverter.class)
-    SexType sex;
+    SexType sex = SexType.male;
 
     @Column(name = "avatar")
     String avatar = "http://7xqvgr.com1.z0.glb.clouddn.com/01.png";

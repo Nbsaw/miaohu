@@ -68,16 +68,15 @@ class UserController {
         try {
             // 获取uid
             String uid = jwtUtil.getUid(request);
-
             // 查询
             UserEntity userEntity = userRepository.findAllById(uid);
             UserInfoVo userInfoVo = new UserInfoVo();
             userInfoVo.setUsername(userEntity.getUsername());
+            userInfoVo.setSex(userEntity.getSex().getValue());
             userInfoVo.setAvatar(userEntity.getAvatar());
             ResultVo resultVo = new ResultVo();
             resultVo.setCode(200);
             resultVo.setResult(userInfoVo);
-
             return resultVo;
         }catch (NullPointerException e){
             MessageVo messageVo = new MessageVo();
