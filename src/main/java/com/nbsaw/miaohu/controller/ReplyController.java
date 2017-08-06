@@ -26,6 +26,8 @@ class ReplyController {
     @Autowired JwtUtil             jwtUtil;
 
     // 回复文章
+    // TODO 作者可以直接回复
+    // TODO 推送
     @PostMapping(value = "/add")
     public MessageVo reply(@RequestParam(value = "articleId") Long articleId,
                             @RequestParam(value = "content") String content,
@@ -94,8 +96,7 @@ class ReplyController {
     // 回复删除
     // TODO 关联回复删除
     @DeleteMapping(value = "/delete")
-    public MessageVo deleteAnswer(
-            @RequestParam(value = "replyId") Long replyId,
+    public MessageVo deleteAnswer(@RequestParam(value = "replyId") Long replyId,
             HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 获取uid
         String uid = jwtUtil.getUid(request);
@@ -115,4 +116,44 @@ class ReplyController {
     }
 
     // TODO 回复审核
+    // TODO 两个操作 公开和删除
+    // 无论是公开还是删除都不推送
+    // 判断是否为作者。判断回复是否属于文章。
+    @PostMapping(value = "/judge")
+    public MessageVo judge(@RequestParam(value = "replyId") Long replyId,
+                           @RequestParam(value = "action") String action,
+                           HttpServletRequest request) throws ExJwtException, InValidJwtException {
+        String uid = jwtUtil.getUid(request);
+        action = action.toLowerCase();
+        ReplyEntity replyEntity =  replyRepository.findOne(replyId);
+        MessageVo messageVo = new MessageVo();
+        // 判断回答是否存在
+        if (replyEntity == null){
+            messageVo.setCode(404);
+            messageVo.setMessage("回复不存在");
+        }
+        // 判断是否为自己文章下的回答
+        else if (replyRepository.isAuthor(replyId,uid) == 0){
+            messageVo.setCode(400);
+            messageVo.setMessage("不能你的文章无法审核评论");
+        }
+        else{
+            if (action.equals("delete")){
+                replyRepository.delete(replyId);
+                messageVo.setCode(200);
+                messageVo.setMessage("删除成功");
+            }
+            else if(action.equals("pass")){
+                replyEntity.setPass(true);
+                replyRepository.save(replyEntity);
+                messageVo.setCode(200);
+                messageVo.setMessage("设置评论审核通过成功");
+            }
+            else{
+                messageVo.setCode(404);
+                messageVo.setMessage("不存在的操作");
+            }
+        }
+        return  messageVo;
+    }
 }

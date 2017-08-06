@@ -16,6 +16,7 @@ import com.nbsaw.miaohu.vo.ResultVo;
 import com.nbsaw.miaohu.vo.UserInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
@@ -109,7 +110,6 @@ class UserController {
         return messageVo;
     }
 
-    // TODO 分页
     // 获取用户发表过的问题
     @GetMapping(value = "/question")
     public ResultVo question(HttpServletRequest request,@RequestParam(value = "page",defaultValue = "0") int page) throws ExJwtException, InValidJwtException {
@@ -118,7 +118,7 @@ class UserController {
 
         List result = new ArrayList();
         // 查找用户发表的问题
-        List<QuestionEntity> questionEntities =  questionRepository.findAllByUid(uid,new PageRequest(page,15));
+        List<QuestionEntity> questionEntities =  questionRepository.findAllByUid(uid,new PageRequest(page,15,new Sort(Sort.Direction.DESC,"date")));
         // 查找问题所属的标签
         questionEntities.forEach(q ->{
             // 创建一个映射
@@ -141,6 +141,7 @@ class UserController {
     }
 
     // TODO 资料修改
+
 
     // TODO 注销登陆
     // 从redis删除token
