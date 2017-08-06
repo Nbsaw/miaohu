@@ -1,5 +1,7 @@
 package com.nbsaw.miaohu.entity;
 
+import com.nbsaw.miaohu.converter.SexTypeConverter;
+import com.nbsaw.miaohu.type.SexType;
 import com.nbsaw.miaohu.type.UserType;
 import lombok.Data;
 import org.hibernate.annotations.ColumnTransformer;
@@ -37,7 +39,9 @@ public class UserEntity implements Serializable {
     @Max(150)
     Integer age;
 
-    String sex = "男";
+    @Column(name = "sex")
+    @Convert(converter = SexTypeConverter.class)
+    SexType sex;
 
     @Column(name = "avatar")
     String avatar = "http://7xqvgr.com1.z0.glb.clouddn.com/01.png";

@@ -4,12 +4,13 @@ import lombok.Data;
 import org.hibernate.annotations.Formula;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "reply")
 @Data
-public class ReplyEntity {
+public class ReplyEntity implements Serializable {
     @Id
     @GeneratedValue
     Long id;

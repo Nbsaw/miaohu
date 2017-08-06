@@ -2,12 +2,13 @@ package com.nbsaw.miaohu.entity;
 
 import lombok.Data;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "tag")
 @Data
-public class TagEntity {
+public class TagEntity implements Serializable {
     @Id
     @GeneratedValue
     Long id;

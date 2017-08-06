@@ -3,12 +3,13 @@ package com.nbsaw.miaohu.entity;
 import com.nbsaw.miaohu.type.ReplyStatusType;
 import lombok.Data;
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "article")
 @Data
-public class ArticleEntity {
+public class ArticleEntity implements Serializable {
     @Id
     @GeneratedValue
     Long id;

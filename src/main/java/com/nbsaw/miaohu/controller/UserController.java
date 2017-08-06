@@ -140,9 +140,21 @@ class UserController {
         return resultVo;
     }
 
-    // TODO 资料修改
-
-
     // TODO 注销登陆
     // 从redis删除token
+
+
+    // 资料修改
+    // TODO 性别
+
+    // TODO 一句话介绍
+    // TODO 居住地
+    // TODO 所在行业
+    // TODO 职业经历
+    // TODO 教育经历
+    // TODO 个人简介
+    // TODO 头像修改
+
+
+
 }
