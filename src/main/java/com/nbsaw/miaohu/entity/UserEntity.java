@@ -4,7 +4,6 @@ import com.nbsaw.miaohu.type.SexType;
 import com.nbsaw.miaohu.type.UserType;
 import lombok.Data;
 import org.hibernate.annotations.ColumnTransformer;
-import org.hibernate.annotations.Formula;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;

@@ -1,6 +1,5 @@
 package com.nbsaw.miaohu.type;
 
-import java.util.Objects;
 
 public enum SexType {
     male("男"),
