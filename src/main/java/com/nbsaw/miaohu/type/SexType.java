@@ -17,12 +17,11 @@ public enum SexType {
     }
 
     public static SexType fromString(String value){
-        Objects.requireNonNull(value, "value can not be null");
         SexType sexType = null;
-        if("男".equals(value)){
+        if("male".equals(value)){
             sexType = male;
         }
-        else if("女".equals(value)){
+        else if("female".equals(value)){
             sexType = female;
         }
         return sexType;

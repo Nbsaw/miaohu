@@ -2,13 +2,10 @@ package com.nbsaw.miaohu.controller;
 
 import com.nbsaw.miaohu.exception.ExJwtException;
 import com.nbsaw.miaohu.exception.InValidJwtException;
-import com.nbsaw.miaohu.repository.QuestionRepository;
+import com.nbsaw.miaohu.repository.*;
 import com.nbsaw.miaohu.entity.TagMapEntity;
-import com.nbsaw.miaohu.repository.TagRepository;
 import com.nbsaw.miaohu.entity.QuestionEntity;
 import com.nbsaw.miaohu.entity.UserEntity;
-import com.nbsaw.miaohu.repository.UserRepository;
-import com.nbsaw.miaohu.repository.TagMapRepository;
 import com.nbsaw.miaohu.util.JwtUtil;
 import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
@@ -17,7 +14,10 @@ import com.nbsaw.miaohu.vo.UserInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
+import sun.plugin2.message.Message;
+
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
@@ -25,12 +25,13 @@ import java.util.*;
 @RequestMapping(value = "/user")
 class UserController {
 
-    @Autowired private UserRepository     userRepository;
-    @Autowired private QuestionRepository questionRepository;
-    @Autowired private TagRepository      tagRepository;
-    @Autowired private TagMapRepository   tagMapRepository;
-    @Autowired private JwtUtil            jwtUtil;
-
+    @Autowired private UserRepository        userRepository;
+    @Autowired private QuestionRepository    questionRepository;
+    @Autowired private TagRepository         tagRepository;
+    @Autowired private TagMapRepository      tagMapRepository;
+    @Autowired private JwtUtil               jwtUtil;
+    @Autowired private EducationRepository   educationRepository;
+    @Autowired private EmploymentsRepository employmentsRepository;
 
     // TODO 第三方登录
     // 登录验证
@@ -68,12 +69,16 @@ class UserController {
         try {
             // 获取uid
             String uid = jwtUtil.getUid(request);
-            // 查询
-            UserEntity userEntity = userRepository.findAllById(uid);
+            // 查询用户信息
+            UserEntity userEntity = userRepository.findOne(uid);
             UserInfoVo userInfoVo = new UserInfoVo();
             userInfoVo.setUsername(userEntity.getUsername());
             userInfoVo.setSex(userEntity.getSex().getValue());
             userInfoVo.setAvatar(userEntity.getAvatar());
+            // 查询教育经历
+            userInfoVo.setEducation(educationRepository.findAllByUid(uid));
+            // 查询工作经历
+            userInfoVo.setEmployments(employmentsRepository.findAllByUid(uid));
             ResultVo resultVo = new ResultVo();
             resultVo.setCode(200);
             resultVo.setResult(userInfoVo);
@@ -89,7 +94,7 @@ class UserController {
     // TODO 让token失效
     // 修改用户密码
     @PostMapping(value = "/changePassword")
-    public MessageVo changePassword(HttpServletRequest request, @RequestParam("password") String password) throws ExJwtException, InValidJwtException {
+    public MessageVo changePassword(@RequestParam("password") String password,HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 获取uid
         String uid = jwtUtil.getUid(request);
 
@@ -111,7 +116,7 @@ class UserController {
 
     // 获取用户发表过的问题
     @GetMapping(value = "/question")
-    public ResultVo question(HttpServletRequest request,@RequestParam(value = "page",defaultValue = "0") int page) throws ExJwtException, InValidJwtException {
+    public ResultVo question(@RequestParam(value = "page",defaultValue = "0") int page,HttpServletRequest request) throws ExJwtException, InValidJwtException {
         // 获取uid
         String uid = jwtUtil.getUid(request);
 
@@ -141,19 +146,4 @@ class UserController {
 
     // TODO 注销登陆
     // 从redis删除token
-
-
-    // 资料修改
-    // TODO 性别
-
-    // TODO 一句话介绍
-    // TODO 居住地
-    // TODO 所在行业
-    // TODO 职业经历
-    // TODO 教育经历
-    // TODO 个人简介
-    // TODO 头像修改
-
-
-
 }

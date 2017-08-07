@@ -20,9 +20,6 @@ public interface UserRepository extends CrudRepository<UserEntity,String> {
      * ---------------------------------------------------------------------------
      */
 
-    // 通过id查找用户
-    UserEntity findAllById(String id);
-
     // 判断手机号码用户是否存在
     @Query("select count(u) > 0 from UserEntity u where u.phone = :phone")
     boolean isUserExists(@Param("phone") String phone);

@@ -1,9 +1,10 @@
 package com.nbsaw.miaohu.converter;
 
 import com.nbsaw.miaohu.type.SexType;
-
 import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
+@Converter
 public class SexTypeConverter implements AttributeConverter<SexType,String> {
     @Override
     public String convertToDatabaseColumn(SexType attribute) {
