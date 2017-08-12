@@ -14,21 +14,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/answer")
+@RequestMapping("/answer")
 class AnswerController {
     @Autowired private AnswerVoteMapRepository answerVoteMapRepository;
     @Autowired private JwtUtil jwtUtil;
     @Autowired private AnswerRepository answerRepository;
 
     // 查找问题的某个评论
-    @GetMapping(value = "/{id}")
-    public ResultVo selectAnswerById(@PathVariable("id") Long id) {
+    @GetMapping("/{id}")
+    public ResultVo selectAnswerById(@PathVariable Long id) {
         // 暂时根据逆序查找
         List<AnswerEntity> list = answerRepository.findAllByQuestionId(id,new PageRequest(0,5,new Sort(Sort.Direction.DESC,"date")));
         ResultVo resultVo = new ResultVo();
@@ -38,12 +37,12 @@ class AnswerController {
     }
 
     // 回答问题
-    @PostMapping(value = "/add")
-    public MessageVo answer(@RequestParam(value = "questionId") Long questionId,
-                            @RequestParam(value = "content") String content,
-                            HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    @PostMapping("/add")
+    public MessageVo answer(@RequestParam Long questionId,
+                            @RequestParam String content,
+                            @RequestHeader String token) throws ExJwtException, InValidJwtException {
         // 获取uid
-        String uid = jwtUtil.getUid(request);
+        String uid = jwtUtil.getUid(token);
 
         MessageVo result = new MessageVo();
 
@@ -76,12 +75,11 @@ class AnswerController {
     }
 
     // 回答删除
-    @DeleteMapping(value = "/delete")
-    public MessageVo deleteAnswer(
-            @RequestParam(value = "questionId") Long questionId,
-            HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    @DeleteMapping("/delete")
+    public MessageVo deleteAnswer(@RequestParam Long questionId,
+                                  @RequestHeader String token) throws ExJwtException, InValidJwtException {
         // 获取uid
-        String uid = jwtUtil.getUid(request);
+        String uid = jwtUtil.getUid(token);
         MessageVo result = new MessageVo();
         // 回答鉴权
         boolean isReply = answerRepository.isExists(questionId, uid);
@@ -104,12 +102,11 @@ class AnswerController {
     }
 
     // 撤销删除回答
-    @PostMapping(value = "/revoke")
-    public MessageVo revokeAnswer(
-            @RequestParam(value = "questionId") Long questionId,
-            HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    @PostMapping("/revoke")
+    public MessageVo revokeAnswer(@RequestParam Long questionId,
+                                  @RequestHeader String token) throws ExJwtException, InValidJwtException {
         // 获取uid
-        String uid = jwtUtil.getUid(request);
+        String uid = jwtUtil.getUid(token);
 
         MessageVo result = new MessageVo();
         boolean isReply = answerRepository.isExists(questionId, uid);
@@ -132,11 +129,11 @@ class AnswerController {
 
     // TODO 推送点赞
     // 回答点赞
-    @PostMapping(value = "/vote")
-    public GenericVo vote(@RequestParam(value = "answerId") Long answerId,
-                          HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    @PostMapping("/vote")
+    public GenericVo vote(@RequestParam Long answerId,
+                          @RequestHeader String token) throws ExJwtException, InValidJwtException {
         // 获取uid
-        String uid = jwtUtil.getUid(request);
+        String uid = jwtUtil.getUid(token);
 
         Map map = new HashMap();
         // 通过回答的id找到问题的id

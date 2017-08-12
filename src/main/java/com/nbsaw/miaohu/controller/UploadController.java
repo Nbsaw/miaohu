@@ -12,24 +12,21 @@ import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @RestController
-@RequestMapping(value = "/upload")
+@RequestMapping("/upload")
 class UploadController {
 
     @Autowired private JwtUtil jwtUtil;
 
     @PostMapping(value = "/avatar")
-    public String uploadAvatar(@RequestParam("avatar") MultipartFile avatar, HttpServletRequest request) throws IOException, ExJwtException, InValidJwtException {
+    public String uploadAvatar(@RequestParam MultipartFile avatar,
+                               @RequestHeader String token) throws IOException, ExJwtException, InValidJwtException {
         // 获取uid
-        String uid = jwtUtil.getUid(request);
+        String uid = jwtUtil.getUid(token);
 
         // 凭证生成
         String accessKey = "QDmYg322MuVo4vmYAWk06I160-q9xiWKFXtZI7O3";

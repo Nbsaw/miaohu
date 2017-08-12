@@ -27,10 +27,10 @@ class TagController {
     }
 
     // 增加新的标签
-    @PostMapping(value = "/add")
-    public MessageVo add(@RequestParam(name = "tagName") String tagName,
-                         @RequestParam(name = "bio",defaultValue = "") String bio,
-                         @RequestParam(name = "avatar",defaultValue = "http://7xqvgr.com1.z0.glb.clouddn.com/defaultTag.png") String avatar){
+    @PostMapping("/add")
+    public MessageVo add(@RequestParam String tagName,
+                         @RequestParam(defaultValue = "") String bio,
+                         @RequestParam(defaultValue = "http://7xqvgr.com1.z0.glb.clouddn.com/defaultTag.png") String avatar){
         MessageVo result = new MessageVo();
 
         if (tagRepository.existsName(tagName)){
@@ -60,8 +60,8 @@ class TagController {
 
     // TODO 对应名字标签不存在的处理
     // 根据名字查找标签下的所有问题以及文章
-    @GetMapping(value = "/{tagName}")
-    public GenericVo findById(@PathVariable("tagName") String tagName){
+    @GetMapping("/{tagName}")
+    public GenericVo findById(@PathVariable String tagName){
         TagEntity tag = tagRepository.findByNameIgnoreCase(tagName);
         if (tag == null){
             MessageVo messageVo = new MessageVo();
@@ -86,8 +86,8 @@ class TagController {
     }
 
     // 根据名字查找标签
-    @GetMapping(value = "/search/{tagName}")
-    public ResultVo findByNameLike(@PathVariable("tagName") String tagName){
+    @GetMapping("/search/{tagName}")
+    public ResultVo findByNameLike(@PathVariable String tagName){
         ResultVo resultVo = new ResultVo();
         resultVo.setCode(200);
         resultVo.setResult(tagRepository.findAllByNameLike(tagName));

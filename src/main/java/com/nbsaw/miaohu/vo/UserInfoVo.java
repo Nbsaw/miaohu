@@ -1,5 +1,6 @@
 package com.nbsaw.miaohu.vo;
 
+import com.nbsaw.miaohu.entity.DomicileEntity;
 import com.nbsaw.miaohu.entity.EducationEntity;
 import com.nbsaw.miaohu.entity.EmploymentsEntity;
 import lombok.Data;
@@ -12,13 +13,17 @@ public class UserInfoVo implements Serializable {
 
     private String avatar;
 
-    private String location;
-
     private String sex;
 
     private String bio;
 
+    private String industry;
+
+    private String resume;
+
     private List<EmploymentsEntity> employments;
 
     private List<EducationEntity> education;
+
+    private List<DomicileEntity> domicile;
 }

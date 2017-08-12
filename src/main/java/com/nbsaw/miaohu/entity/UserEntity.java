@@ -11,7 +11,7 @@ import java.util.Date;
 @Entity
 @Table(name = "user")
 @Data
-// 教育经历,职业经历为列表已抽出
+// 教育经历,职业经历，居住地为列表已抽出
 public class UserEntity implements Serializable {
     @Id
     String id;
@@ -43,9 +43,6 @@ public class UserEntity implements Serializable {
     String banner;
 
     String bio = "这个人不懒但是什么也没留下";
-
-    // 居住地
-    String domicile;
 
     // 网站个人域名
     String domain;

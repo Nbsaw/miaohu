@@ -17,11 +17,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @RestController
-@RequestMapping(value = "/question")
+@RequestMapping("/question")
 class QuestionController {
 
     @Autowired private QuestionRepository      questionRepository;
@@ -35,7 +34,7 @@ class QuestionController {
     // TODO 话题只显示一个
     // TODO 查看问题是否匿名
     @GetMapping
-    public ResultVo all(@RequestParam(value = "page",defaultValue = "0") int page){
+    public ResultVo all(@RequestParam(defaultValue = "0") int page){
         // 时间倒叙查找
         Page<QuestionEntity> list = questionRepository.findAll(new PageRequest(page,10,new Sort(Sort.Direction.DESC,"date")));
         List<QuestionVo> result = new ArrayList<>();
@@ -62,8 +61,9 @@ class QuestionController {
     }
 
     // 根据传过来的问题id获取对应的问题
-    @GetMapping(value = "/{questionId}")
-    public GenericVo getId(@PathVariable("questionId") Long questionId,HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    @GetMapping("/{questionId}")
+    public GenericVo getId(@PathVariable Long questionId,
+                           @RequestHeader String token) throws ExJwtException, InValidJwtException {
         // 判断问题是否存在
         if (! questionRepository.exists(questionId)){
             MessageVo messageVo = new MessageVo();
@@ -73,7 +73,7 @@ class QuestionController {
         }
 
         // 获取uid
-        String uid = jwtUtil.getUid(request);
+        String uid = jwtUtil.getUid(token);
 
         // 根据问题id查找问题
         QuestionEntity questionEntity = questionRepository.findOne(questionId);
@@ -106,8 +106,8 @@ class QuestionController {
     }
 
     // 验证问题标题是否合法
-    @PostMapping(value = "/valid")
-    public MessageVo validTitle(@RequestParam("title") String title) {
+    @PostMapping("/valid")
+    public MessageVo validTitle(@RequestParam String title) {
         MessageVo result = new MessageVo();
         title = title.trim();
         String last = title.substring(title.length() - 1); // 最后一个字符
@@ -137,10 +137,11 @@ class QuestionController {
     }
 
     // 根据传过来的问题id删除对应的问题
-    @DeleteMapping(value = "/delete/{questionId}")
-    public MessageVo delete(@PathVariable(value = "questionId") Long questionId,HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    @DeleteMapping("/delete/{questionId}")
+    public MessageVo delete(@PathVariable Long questionId,
+                            @RequestHeader String token) throws ExJwtException, InValidJwtException {
         // 获取uid
-        String uid = jwtUtil.getUid(request);
+        String uid = jwtUtil.getUid(token);
         MessageVo messageVo = new MessageVo();
         // 判断问题是否存在
         if (! questionRepository.exists(questionId)){
@@ -165,14 +166,14 @@ class QuestionController {
      // TODO 加上标签字段
      // TODO 问题修改历史
     // 根据id以及传过来的标题,内容修改对应的问题
-    @PostMapping(value = "/modify")
-    public MessageVo modify(@RequestParam(value = "questionId") Long questionId,
-                            @RequestParam(value = "title") String title,
-                            @RequestParam(value = "content", defaultValue = "") String content,
-                            @RequestParam(value = "anonymous",defaultValue = "false") boolean anonymous,
-                            HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    @PostMapping("/modify")
+    public MessageVo modify(@RequestParam Long questionId,
+                            @RequestParam String title,
+                            @RequestParam(defaultValue = "") String content,
+                            @RequestParam boolean anonymous,
+                            @RequestHeader String token) throws ExJwtException, InValidJwtException {
         // 获取uid
-        String uid = jwtUtil.getUid(request);
+        String uid = jwtUtil.getUid(token);
 
         // 结果设置
         MessageVo result = new MessageVo();
@@ -188,13 +189,13 @@ class QuestionController {
     }
 
     // 发布一个新的问题
-    @PostMapping(value = "/post")
-    public MessageVo post(@RequestParam(value = "title") String title,
-                       @RequestParam(value = "content") String content,
-                       @RequestParam(value = "tags") String[] tags,
-                          HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    @PostMapping("/post")
+    public MessageVo post(@RequestParam String title,
+                          @RequestParam String content,
+                          @RequestParam String[] tags,
+                          @RequestHeader String token) throws ExJwtException, InValidJwtException {
         // 获取uid
-        String uid = jwtUtil.getUid(request);
+        String uid = jwtUtil.getUid(token);
 
         QuestionEntity questionEntity = new QuestionEntity();
         boolean isExists = questionRepository.existsQuestion(title);
@@ -256,12 +257,11 @@ class QuestionController {
     }
 
     // 设置(问题,回答)都为匿名 / 取消匿名
-    @PostMapping(value = "/anonymous")
-    public MessageVo setAnonymous(
-            @RequestParam(value = "questionId") Long questionId,
-            HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    @PostMapping("/anonymous")
+    public MessageVo setAnonymous(@RequestParam Long questionId,
+                                  @RequestHeader String token) throws ExJwtException, InValidJwtException {
         // 获取uid
-        String uid = jwtUtil.getUid(request);
+        String uid = jwtUtil.getUid(token);
 
         MessageVo result = new MessageVo();
         boolean status = false;

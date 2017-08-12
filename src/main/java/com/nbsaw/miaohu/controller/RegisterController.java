@@ -10,13 +10,12 @@ import com.nbsaw.miaohu.util.RegisterValidUtil;
 import com.nbsaw.miaohu.config.RedisConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(value = "/register")
+@RequestMapping("/register")
 class RegisterController {
 
     @Autowired private RedisConfig    redisConfig;
@@ -25,7 +24,9 @@ class RegisterController {
     @Autowired private JwtUtil        jwtUtil;
 
     // 检验表单参数是否合法
-    private Map validate(RegisterForm registerForm, String sid, boolean is, HttpServletRequest request) {
+    private Map validate(RegisterForm registerForm,
+                         String sid,
+                         boolean is) {
         Map result = new LinkedHashMap();
         Map errors = new LinkedHashMap();
 
@@ -72,16 +73,16 @@ class RegisterController {
     }
 
     // 预检测路由
-    @PostMapping(value = "/valid")
-    public Map valid(@ModelAttribute RegisterForm registerForm, String sid, HttpServletRequest request) {
-        return validate(registerForm, sid,false,request);
+    @PostMapping("/valid")
+    public Map valid(@ModelAttribute RegisterForm registerForm, String sid) {
+        return validate(registerForm, sid,false);
     }
 
     // 正式注册路由
     @PostMapping
-    public Map register(RegisterForm registerForm, String sid,HttpServletRequest request) {
+    public Map register(RegisterForm registerForm, String sid) {
         // 校对用户信息
-        Map result = validate(registerForm, sid,true,request);
+        Map result = validate(registerForm, sid,true);
         // 验证不通过的情况
         if ((int) result.get("code") == 200){
             // 初始化信息

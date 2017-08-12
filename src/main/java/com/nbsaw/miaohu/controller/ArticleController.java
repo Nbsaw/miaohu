@@ -14,14 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/article")
+@RequestMapping("/article")
 class ArticleController {
 
     @Autowired ArticleRepository     articleRepository;
@@ -42,8 +41,8 @@ class ArticleController {
     }
 
     // 获取文章下全部回复
-    @GetMapping(value = "{articleId}/reply")
-    public GenericVo getAllReply(@PathVariable("articleId") Long articleId,@RequestParam(value = "page",defaultValue = "0") int page){
+    @GetMapping("{articleId}/reply")
+    public GenericVo getAllReply(@PathVariable Long articleId,@RequestParam(defaultValue = "0") int page){
         // 判断问题是否存在
         if (! articleRepository.exists(articleId)){
             MessageVo messageVo = new MessageVo();
@@ -59,8 +58,8 @@ class ArticleController {
     }
 
     // 根据传过来的文章id获取对应的文章
-    @GetMapping(value = "/{articleId}")
-    public GenericVo getId(@PathVariable("articleId") Long articleId){
+    @GetMapping("/{articleId}")
+    public GenericVo getId(@PathVariable Long articleId){
         // 判断问题是否存在
         if (! articleRepository.exists(articleId)){
             MessageVo messageVo = new MessageVo();
@@ -97,10 +96,10 @@ class ArticleController {
     }
 
     // 根据传过来的问题id删除对应的问题
-    @DeleteMapping(value = "/delete/{id}")
-    public MessageVo delete(@PathVariable(value = "articleId") Long articleId, HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    @DeleteMapping("/delete/{id}")
+    public MessageVo delete(@PathVariable Long articleId, @RequestHeader String token) throws ExJwtException, InValidJwtException {
         // 获取uid
-        String uid = jwtUtil.getUid(request);
+        String uid = jwtUtil.getUid(token);
         MessageVo messageVo = new MessageVo();
         // 判断问题是否存在
         if (! articleRepository.exists(articleId)){
@@ -121,14 +120,14 @@ class ArticleController {
     }
 
     // 发布一个新的文章
-    @PostMapping(value = "/post")
-    public MessageVo post(@RequestParam(value = "title") String title,
-                          @RequestParam(value = "content") String content,
-                          @RequestParam(value = "tags") String[] tags,
-                          @RequestParam(value = "replyStatus") String replyStatus,
-                          HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    @PostMapping("/post")
+    public MessageVo post(@RequestParam String title,
+                          @RequestParam String content,
+                          @RequestParam String[] tags,
+                          @RequestParam String replyStatus,
+                          @RequestHeader String token) throws ExJwtException, InValidJwtException {
         // 获取uid
-        String uid = jwtUtil.getUid(request);
+        String uid = jwtUtil.getUid(token);
 
         // 结果设置
         MessageVo messageVo = new MessageVo();
@@ -182,11 +181,11 @@ class ArticleController {
     }
 
     // 文章点赞
-    @PostMapping(value = "/vote")
-    public GenericVo vote(@RequestParam(value = "articleId") Long articleId,
-                          HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    @PostMapping("/vote")
+    public GenericVo vote(@RequestParam Long articleId,
+                          @RequestHeader String token) throws ExJwtException, InValidJwtException {
         // 获取uid
-        String uid = jwtUtil.getUid(request);
+        String uid = jwtUtil.getUid(token);
         MessageVo messageVo = new MessageVo();
         if (!articleRepository.exists(articleId)){
             messageVo.setCode(404);

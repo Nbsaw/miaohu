@@ -22,7 +22,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @RestController
-@RequestMapping(value = "/captcha")
+@RequestMapping("/captcha")
 class CaptchaController {
 
    @Autowired private RedisConfig         redisConfig;
@@ -32,7 +32,7 @@ class CaptchaController {
    @Autowired private RedisUtil           redisUtil;
 
    // 用来作为凭证使用的Sid
-   @GetMapping(value = "/sid")
+   @GetMapping("/sid")
    public ResultVo getSid(){
       ResultVo<String> sidVo = new ResultVo();
       sidVo.setCode(200);
@@ -42,7 +42,8 @@ class CaptchaController {
 
    // 返回一张图片验证码
    @GetMapping
-   public ModelAndView getCaptcha(@RequestParam String sid, HttpServletResponse response) throws IOException {
+   public ModelAndView getCaptcha(@RequestParam String sid,
+                                  HttpServletResponse response) throws IOException {
       // 设置响应
       response.setDateHeader("Expires", 0);
       response.setHeader("Cache-Control",
@@ -72,7 +73,8 @@ class CaptchaController {
 
    // 发送一条手机验证码
    @GetMapping("/phoneCaptcha")
-   public Map code(@RequestParam String sid ,String phone) {
+   public Map code(@RequestParam String sid ,
+                   @RequestParam String phone) {
       // 结果集与错误列表初始化
       Map result = new LinkedHashMap();
       Map errors = new LinkedHashMap();

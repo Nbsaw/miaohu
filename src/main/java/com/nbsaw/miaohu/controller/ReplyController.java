@@ -15,10 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
-import javax.servlet.http.HttpServletRequest;
-
 @RestController
-@RequestMapping(value = "/reply")
+@RequestMapping("/reply")
 class ReplyController {
     @Autowired ReplyRepository     replyRepository;
     @Autowired ReplyVoteRepository replyVoteRepository;
@@ -28,12 +26,12 @@ class ReplyController {
     // 回复文章
     // TODO 作者可以直接回复
     // TODO 推送
-    @PostMapping(value = "/add")
-    public MessageVo reply(@RequestParam(value = "articleId") Long articleId,
-                            @RequestParam(value = "content") String content,
-                            HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    @PostMapping("/add")
+    public MessageVo reply(@RequestParam Long articleId,
+                           @RequestParam String content,
+                           @RequestHeader String token) throws ExJwtException, InValidJwtException {
         // 获取uid
-        String uid = jwtUtil.getUid(request);
+        String uid = jwtUtil.getUid(token);
         MessageVo messageVo = new MessageVo();
         if (!articleRepository.exists(articleId)){
             messageVo.setCode(404);
@@ -66,11 +64,11 @@ class ReplyController {
     }
 
     // 回复点赞
-    @PostMapping(value = "/vote")
-    public MessageVo voteReply(@RequestParam(value = "replyId") Long replyId,
-                               HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    @PostMapping("/vote")
+    public MessageVo voteReply(@RequestParam Long replyId,
+                               @RequestHeader String token) throws ExJwtException, InValidJwtException {
         // 获取uid
-        String uid = jwtUtil.getUid(request);
+        String uid = jwtUtil.getUid(token);
         MessageVo messageVo = new MessageVo();
         if (!replyRepository.exists(replyId)){
             messageVo.setCode(404);
@@ -95,11 +93,11 @@ class ReplyController {
 
     // 回复删除
     // TODO 关联回复删除
-    @DeleteMapping(value = "/delete")
-    public MessageVo deleteAnswer(@RequestParam(value = "replyId") Long replyId,
-            HttpServletRequest request) throws ExJwtException, InValidJwtException {
+    @DeleteMapping("/delete")
+    public MessageVo deleteAnswer(@RequestParam Long replyId,
+                                  @RequestHeader String token) throws ExJwtException, InValidJwtException {
         // 获取uid
-        String uid = jwtUtil.getUid(request);
+        String uid = jwtUtil.getUid(token);
         MessageVo messageVo = new MessageVo();
         if (!replyRepository.exists(replyId)) {
             messageVo.setCode(404);
@@ -119,11 +117,11 @@ class ReplyController {
     // TODO 两个操作 公开和删除
     // 无论是公开还是删除都不推送
     // 判断是否为作者。判断回复是否属于文章。
-    @PostMapping(value = "/judge")
+    @PostMapping("/judge")
     public MessageVo judge(@RequestParam(value = "replyId") Long replyId,
                            @RequestParam(value = "action") String action,
-                           HttpServletRequest request) throws ExJwtException, InValidJwtException {
-        String uid = jwtUtil.getUid(request);
+                           @RequestHeader String token) throws ExJwtException, InValidJwtException {
+        String uid = jwtUtil.getUid(token);
         action = action.toLowerCase();
         ReplyEntity replyEntity =  replyRepository.findOne(replyId);
         MessageVo messageVo = new MessageVo();
