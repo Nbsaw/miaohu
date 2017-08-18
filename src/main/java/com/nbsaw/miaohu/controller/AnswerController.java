@@ -40,7 +40,7 @@ class AnswerController {
     @PostMapping("/add")
     public MessageVo answer(@RequestParam Long questionId,
                             @RequestParam String content,
-                            @RequestHeader String token) throws ExJwtException, InValidJwtException {
+                            @RequestHeader String token) {
         // 获取uid
         String uid = jwtUtil.getUid(token);
 
@@ -77,7 +77,7 @@ class AnswerController {
     // 回答删除
     @DeleteMapping("/delete")
     public MessageVo deleteAnswer(@RequestParam Long questionId,
-                                  @RequestHeader String token) throws ExJwtException, InValidJwtException {
+                                  @RequestHeader String token) {
         // 获取uid
         String uid = jwtUtil.getUid(token);
         MessageVo result = new MessageVo();
@@ -104,7 +104,7 @@ class AnswerController {
     // 撤销删除回答
     @PostMapping("/revoke")
     public MessageVo revokeAnswer(@RequestParam Long questionId,
-                                  @RequestHeader String token) throws ExJwtException, InValidJwtException {
+                                  @RequestHeader String token) {
         // 获取uid
         String uid = jwtUtil.getUid(token);
 
@@ -131,7 +131,7 @@ class AnswerController {
     // 回答点赞
     @PostMapping("/vote")
     public GenericVo vote(@RequestParam Long answerId,
-                          @RequestHeader String token) throws ExJwtException, InValidJwtException {
+                          @RequestHeader String token) {
         // 获取uid
         String uid = jwtUtil.getUid(token);
 

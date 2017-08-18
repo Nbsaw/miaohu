@@ -16,9 +16,21 @@ class GlobalExceptionHandler{
     private String maxSize;
 
     // 参数缺少无效错误处理
-    @ExceptionHandler(value = {MissingServletRequestParameterException.class,IllegalArgumentException.class})
+    // TODO 这里要改
+    @ExceptionHandler(MissingServletRequestParameterException.class)
     @ResponseBody
-    public MessageVo jsonErrorHandler(Exception e) throws Exception {
+    public MessageVo missParamErrorHandler(MissingServletRequestParameterException e) throws Exception {
+        MessageVo error = new MessageVo();
+        error.setCode(400);
+        error.setMessage(e.getMessage());
+        return error;
+    }
+
+    // 参数错误处理
+    // TODO 这里要改
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseBody
+    public MessageVo illegalArgumentErrorHandler(IllegalArgumentException e) throws Exception {
         MessageVo error = new MessageVo();
         error.setCode(400);
         error.setMessage(e.getMessage());
@@ -26,7 +38,7 @@ class GlobalExceptionHandler{
     }
 
     // 文件大小限制
-    @ExceptionHandler(value = MultipartException.class)
+    @ExceptionHandler(MultipartException.class)
     @ResponseBody
     public MessageVo uploadErrorHandler(MultipartException e) throws Exception {
         MessageVo error = new MessageVo();
@@ -50,7 +62,7 @@ class GlobalExceptionHandler{
         return error;
     }
 
-    // 404 错误处理
+    // 404 错误处理 -> 主要针对路由不存在的处理
     @ExceptionHandler(NoHandlerFoundException.class)
     @ResponseBody
     public MessageVo requestHandlingNoHandlerFound() {

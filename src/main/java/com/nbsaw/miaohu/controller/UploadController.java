@@ -24,7 +24,7 @@ class UploadController {
 
     @PostMapping(value = "/avatar")
     public String uploadAvatar(@RequestParam MultipartFile avatar,
-                               @RequestHeader String token) throws IOException, ExJwtException, InValidJwtException {
+                               @RequestHeader String token) throws IOException {
         // 获取uid
         String uid = jwtUtil.getUid(token);
 

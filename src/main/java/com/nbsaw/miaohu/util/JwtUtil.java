@@ -11,13 +11,12 @@ import java.util.Date;
 
 @Component
 public class JwtUtil {
-
     private final int timeout;
     private final String key;
 
     // 初始化
     @Autowired
-    private JwtUtil(@Value("${jwt.timeout}") int timeout,@Value("${jwt.key}") String key) {
+    public JwtUtil(@Value("${jwt.timeout}") int timeout, @Value("${jwt.key}") String key) {
         this.timeout = timeout;
         this.key = key;
     }
@@ -26,16 +25,21 @@ public class JwtUtil {
     // 验证是否有效
     // TODO 详细的错误声明
     // 解析传过来的token
-    public Claims parse(String token) throws InValidJwtException, ExJwtException {
-        Claims claims;
+    public boolean valid(String token) throws InValidJwtException, ExJwtException {
+        boolean flag;
         try{
-            claims = Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+            Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
+            flag = true;
         }catch (MalformedJwtException e){
             throw new InValidJwtException();
         }catch (ExpiredJwtException e){
             throw new ExJwtException();
         }
-        return claims;
+        return flag;
+    }
+
+    public Claims parse(String token){
+        return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
     }
 
     // 获取jwt的超时时间
@@ -54,7 +58,7 @@ public class JwtUtil {
     }
 
     // 获取用户uid
-    public String getUid(String token) throws ExJwtException, InValidJwtException {
+    public String getUid(String token) {
         return (String) parse(token).get("uid");
     }
 }

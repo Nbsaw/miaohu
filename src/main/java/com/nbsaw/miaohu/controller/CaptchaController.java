@@ -73,8 +73,7 @@ class CaptchaController {
 
    // 发送一条手机验证码
    @GetMapping("/phoneCaptcha")
-   public Map code(@RequestParam String sid ,
-                   @RequestParam String phone) {
+   public Map code(@RequestParam String phone) {
       // 结果集与错误列表初始化
       Map result = new LinkedHashMap();
       Map errors = new LinkedHashMap();
