@@ -1,6 +1,7 @@
 package com.nbsaw.miaohu.config;
 
 import com.nbsaw.miaohu.interceptor.UserInterceptor;
+import com.nbsaw.miaohu.util.GetUrlUtil;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -19,10 +20,9 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-        // TODO 写个工具类获取所有包含token参数的url。
+        // 用户登录控制
         registry.addWebRequestInterceptor(new UserInterceptor())
-                .addPathPatterns("/question/delete/{questionId}")
-                .excludePathPatterns("/user/login");
+                .addPathPatterns(GetUrlUtil.getUrl("com.nbsaw.miaohu.controller"));
     }
 
     @Override
