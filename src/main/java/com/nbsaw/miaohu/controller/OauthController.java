@@ -7,7 +7,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/oauth")
-class OauthController {
+public class OauthController {
 
     private final String CLIENT_ID="9d37c9f54b2009868da8";
     private final String CLIENT_SECRET = "148992f6ac84b23d720c7e828ccd1a66af4da197";

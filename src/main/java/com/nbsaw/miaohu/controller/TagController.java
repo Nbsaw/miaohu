@@ -13,9 +13,9 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tag")
-class TagController {
+public class TagController {
 
-    @Autowired private TagRepository      tagRepository;
+    @Autowired private TagRepository  tagRepository;
 
     // 查找所有的标签
     @GetMapping

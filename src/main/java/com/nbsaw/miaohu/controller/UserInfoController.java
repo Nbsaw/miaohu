@@ -33,7 +33,7 @@ public class UserInfoController {
 
     // 获取用户信息
     @GetMapping("/info")
-    public GenericVo information(@RequestHeader String token) {
+    public GenericVo information(@RequestHeader("token") String token) {
         // TODO 从Redis获取id，再从数据库查信息 -> 主要是判断用户是否注销了
         try {
             // 获取uid
@@ -69,7 +69,7 @@ public class UserInfoController {
     // 修改用户密码
     @PostMapping("/changePassword")
     public MessageVo changePassword(@RequestParam String password,
-                                    @RequestHeader String token) {
+                                    @RequestHeader("token") String token) {
         // 获取uid
         String uid = jwtUtil.getUid(token);
 
@@ -92,7 +92,7 @@ public class UserInfoController {
     // 获取用户发表过的问题
     @GetMapping(value = "/question")
     public ResultVo question(@RequestParam(defaultValue = "0") int page,
-                             @RequestHeader String token) {
+                             @RequestHeader("token") String token) {
         // 获取uid
         String uid = jwtUtil.getUid(token);
 
@@ -123,7 +123,7 @@ public class UserInfoController {
     // 性别修改
     @PutMapping("/sex")
     public MessageVo changeSex(@RequestBody Map<String,String> obj,
-                               @RequestHeader String token) {
+                               @RequestHeader("token") String token) {
         String sex = obj.get("sex");
         // 获取uid
         String uid = jwtUtil.getUid(token);
@@ -149,7 +149,7 @@ public class UserInfoController {
     // 一句话介绍
     @PutMapping("/bio")
     public MessageVo changeBio(@RequestBody Map<String,String> obj,
-                               @RequestHeader String token) {
+                               @RequestHeader("token") String token) {
         String bio = obj.get("bio");
         // 获取uid
         String uid = jwtUtil.getUid(token);
@@ -175,7 +175,7 @@ public class UserInfoController {
     // 所在行业
     @PutMapping("/industry")
     public MessageVo changeIndustry(@RequestBody Map<String,String> obj,
-                                    @RequestHeader String token) {
+                                    @RequestHeader("token") String token) {
         String industry = obj.get("industry");
         // 获取uid
         String uid = jwtUtil.getUid(token);
@@ -196,7 +196,7 @@ public class UserInfoController {
     // 个人简介
     @PutMapping("/resume")
     public MessageVo changeResume(@RequestBody Map<String,String> obj,
-                                  @RequestHeader String token) {
+                                  @RequestHeader("token") String token) {
         String resume = obj.get("resume");
         // 获取uid
         String uid = jwtUtil.getUid(token);
@@ -223,7 +223,7 @@ public class UserInfoController {
     // TODO 居住地,包含多个
     @PutMapping("/domicile")
     public MessageVo changeDomicile(@RequestParam("domicile") String domicile,
-                                    @RequestHeader String token) {
+                                    @RequestHeader("token") String token) {
         // 获取uid
         String uid = jwtUtil.getUid(token);
         MessageVo messageVo = new MessageVo();
@@ -250,7 +250,7 @@ public class UserInfoController {
     // TODO 教育经历,包含多个
     @PutMapping("/education")
     public MessageVo changeEducation(@RequestBody String education,
-                                     @RequestHeader String token) {
+                                     @RequestHeader("token") String token) {
         // 获取uid
         String uid = jwtUtil.getUid(token);
         MessageVo messageVo = new MessageVo();

@@ -20,7 +20,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/answer")
-class AnswerController {
+public class AnswerController {
     @Autowired private AnswerVoteMapRepository answerVoteMapRepository;
     @Autowired private JwtUtil jwtUtil;
     @Autowired private AnswerRepository answerRepository;

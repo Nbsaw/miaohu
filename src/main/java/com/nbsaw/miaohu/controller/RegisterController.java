@@ -16,7 +16,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/register")
-class RegisterController {
+public class RegisterController {
 
     @Autowired private RedisConfig    redisConfig;
     @Autowired private UserRepository userRepository;

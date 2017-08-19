@@ -21,7 +21,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/article")
-class ArticleController {
+public class ArticleController {
 
     @Autowired ArticleRepository     articleRepository;
     @Autowired JwtUtil               jwtUtil;
@@ -97,7 +97,7 @@ class ArticleController {
 
     // 根据传过来的问题id删除对应的问题
     @DeleteMapping("/delete/{id}")
-    public MessageVo delete(@PathVariable Long articleId, @RequestHeader String token) {
+    public MessageVo delete(@PathVariable Long articleId, @RequestHeader("token") String token) {
         // 获取uid
         String uid = jwtUtil.getUid(token);
         MessageVo messageVo = new MessageVo();
@@ -125,7 +125,7 @@ class ArticleController {
                           @RequestParam String content,
                           @RequestParam String[] tags,
                           @RequestParam String replyStatus,
-                          @RequestHeader String token) {
+                          @RequestHeader("token") String token) {
         // 获取uid
         String uid = jwtUtil.getUid(token);
 
@@ -183,7 +183,7 @@ class ArticleController {
     // 文章点赞
     @PostMapping("/vote")
     public GenericVo vote(@RequestParam Long articleId,
-                          @RequestHeader String token) {
+                          @RequestHeader("token") String token) {
         // 获取uid
         String uid = jwtUtil.getUid(token);
         MessageVo messageVo = new MessageVo();

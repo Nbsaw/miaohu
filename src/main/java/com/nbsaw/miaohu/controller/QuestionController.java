@@ -19,7 +19,7 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/question")
-class QuestionController {
+public class QuestionController {
 
     @Autowired private QuestionRepository      questionRepository;
     @Autowired private TagRepository           tagRepository;
@@ -61,7 +61,7 @@ class QuestionController {
     // 根据传过来的问题id获取对应的问题
     @GetMapping("/{questionId}")
     public GenericVo getId(@PathVariable Long questionId,
-                           @RequestHeader String token) {
+                           @RequestHeader("token") String token) {
         // 判断问题是否存在
         if (! questionRepository.exists(questionId)){
             MessageVo messageVo = new MessageVo();
@@ -137,7 +137,7 @@ class QuestionController {
     // 根据传过来的问题id删除对应的问题
     @DeleteMapping("/delete/{questionId}")
     public MessageVo delete(@PathVariable Long questionId,
-                            @RequestHeader String token) {
+                            @RequestHeader("token") String token) {
         // 获取uid
         String uid = jwtUtil.getUid(token);
         MessageVo messageVo = new MessageVo();
@@ -169,7 +169,7 @@ class QuestionController {
                             @RequestParam String title,
                             @RequestParam(defaultValue = "") String content,
                             @RequestParam boolean anonymous,
-                            @RequestHeader String token) {
+                            @RequestHeader("token") String token) {
         // 获取uid
         String uid = jwtUtil.getUid(token);
 
@@ -191,7 +191,7 @@ class QuestionController {
     public MessageVo post(@RequestParam String title,
                           @RequestParam String content,
                           @RequestParam String[] tags,
-                          @RequestHeader String token) {
+                          @RequestHeader("token") String token) {
         // 获取uid
         String uid = jwtUtil.getUid(token);
 
@@ -257,7 +257,7 @@ class QuestionController {
     // 设置(问题,回答)都为匿名 / 取消匿名
     @PostMapping("/anonymous")
     public MessageVo setAnonymous(@RequestParam Long questionId,
-                                  @RequestHeader String token) {
+                                  @RequestHeader("token") String token) {
         // 获取uid
         String uid = jwtUtil.getUid(token);
 

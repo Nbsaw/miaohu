@@ -23,7 +23,7 @@ import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/captcha")
-class CaptchaController {
+public class CaptchaController {
 
    @Autowired private RedisConfig         redisConfig;
    @Autowired private DefaultKaptcha      defaultKaptcha;

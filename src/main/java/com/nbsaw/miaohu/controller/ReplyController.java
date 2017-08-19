@@ -17,7 +17,7 @@ import org.springframework.web.util.HtmlUtils;
 
 @RestController
 @RequestMapping("/reply")
-class ReplyController {
+public class ReplyController {
     @Autowired ReplyRepository     replyRepository;
     @Autowired ReplyVoteRepository replyVoteRepository;
     @Autowired ArticleRepository   articleRepository;
@@ -29,7 +29,7 @@ class ReplyController {
     @PostMapping("/add")
     public MessageVo reply(@RequestParam Long articleId,
                            @RequestParam String content,
-                           @RequestHeader String token) {
+                           @RequestHeader("token") String token) {
         // 获取uid
         String uid = jwtUtil.getUid(token);
         MessageVo messageVo = new MessageVo();
@@ -66,7 +66,7 @@ class ReplyController {
     // 回复点赞
     @PostMapping("/vote")
     public MessageVo voteReply(@RequestParam Long replyId,
-                               @RequestHeader String token) {
+                               @RequestHeader("token") String token) {
         // 获取uid
         String uid = jwtUtil.getUid(token);
         MessageVo messageVo = new MessageVo();
@@ -95,7 +95,7 @@ class ReplyController {
     // TODO 关联回复删除
     @DeleteMapping("/delete")
     public MessageVo deleteAnswer(@RequestParam Long replyId,
-                                  @RequestHeader String token) {
+                                  @RequestHeader("token") String token) {
         // 获取uid
         String uid = jwtUtil.getUid(token);
         MessageVo messageVo = new MessageVo();
@@ -120,7 +120,7 @@ class ReplyController {
     @PostMapping("/judge")
     public MessageVo judge(@RequestParam(value = "replyId") Long replyId,
                            @RequestParam(value = "action") String action,
-                           @RequestHeader String token) {
+                           @RequestHeader("token") String token) {
         String uid = jwtUtil.getUid(token);
         action = action.toLowerCase();
         ReplyEntity replyEntity =  replyRepository.findOne(replyId);
