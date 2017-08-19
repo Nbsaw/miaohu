@@ -6,6 +6,8 @@ buildscript {
         mavenCentral()
     }
     dependencies {
+        classpath "net.saliman:gradle-cobertura-plugin:2.5.0"
+        classpath "org.kt3k.gradle.plugin:coveralls-gradle-plugin:2.8.1"
         classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
     }
 }
@@ -14,10 +16,14 @@ buildscript {
 apply plugin: 'java'
 apply plugin: 'eclipse'
 apply plugin: 'org.springframework.boot'
-
+apply plugin: "com.github.kt3k.coveralls"
+apply plugin: "net.saliman.cobertura"
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
+
+// coveralls plugin depends on xml format report
+cobertura.coverageFormats = ['html', 'xml']
 
 jar {
     baseName = 'miaohu'
