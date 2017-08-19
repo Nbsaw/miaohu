@@ -3,8 +3,6 @@ package com.nbsaw.miaohu.controller;
 import com.nbsaw.miaohu.entity.QuestionEntity;
 import com.nbsaw.miaohu.entity.TagMapEntity;
 import com.nbsaw.miaohu.entity.UserEntity;
-import com.nbsaw.miaohu.exception.ExJwtException;
-import com.nbsaw.miaohu.exception.InValidJwtException;
 import com.nbsaw.miaohu.repository.*;
 import com.nbsaw.miaohu.type.SexType;
 import com.nbsaw.miaohu.util.JwtUtil;

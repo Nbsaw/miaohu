@@ -3,8 +3,6 @@ package com.nbsaw.miaohu.controller;
 import com.nbsaw.miaohu.entity.ArticleEntity;
 import com.nbsaw.miaohu.entity.ReplyEntity;
 import com.nbsaw.miaohu.entity.ReplyVoteEntity;
-import com.nbsaw.miaohu.exception.ExJwtException;
-import com.nbsaw.miaohu.exception.InValidJwtException;
 import com.nbsaw.miaohu.repository.ArticleRepository;
 import com.nbsaw.miaohu.repository.ReplyRepository;
 import com.nbsaw.miaohu.repository.ReplyVoteRepository;
@@ -136,20 +134,22 @@ public class ReplyController {
             messageVo.setMessage("不能你的文章无法审核评论");
         }
         else{
-            if (action.equals("delete")){
-                replyRepository.delete(replyId);
-                messageVo.setCode(200);
-                messageVo.setMessage("删除成功");
-            }
-            else if(action.equals("pass")){
-                replyEntity.setPass(true);
-                replyRepository.save(replyEntity);
-                messageVo.setCode(200);
-                messageVo.setMessage("设置评论审核通过成功");
-            }
-            else{
-                messageVo.setCode(404);
-                messageVo.setMessage("不存在的操作");
+            switch (action) {
+                case "delete":
+                    replyRepository.delete(replyId);
+                    messageVo.setCode(200);
+                    messageVo.setMessage("删除成功");
+                    break;
+                case "pass":
+                    replyEntity.setPass(true);
+                    replyRepository.save(replyEntity);
+                    messageVo.setCode(200);
+                    messageVo.setMessage("设置评论审核通过成功");
+                    break;
+                default:
+                    messageVo.setCode(404);
+                    messageVo.setMessage("不存在的操作");
+                    break;
             }
         }
         return  messageVo;

@@ -1,11 +1,10 @@
 package com.nbsaw.miaohu.util;
 
-import com.nbsaw.miaohu.controller.QuestionController;
 import org.springframework.web.bind.annotation.*;
-
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,9 +12,7 @@ public class GetUrlUtil {
     private static List<String> result = null;
 
     private static void addInfix(List list,String[] urls){
-        for (String url : urls){
-            list.add(url);
-        }
+        Collections.addAll(list,urls);
     }
 
     // 扫描类

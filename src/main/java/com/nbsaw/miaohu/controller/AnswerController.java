@@ -2,8 +2,6 @@ package com.nbsaw.miaohu.controller;
 
 import com.nbsaw.miaohu.entity.AnswerEntity;
 import com.nbsaw.miaohu.entity.AnswerVoteMapEntity;
-import com.nbsaw.miaohu.exception.ExJwtException;
-import com.nbsaw.miaohu.exception.InValidJwtException;
 import com.nbsaw.miaohu.repository.AnswerRepository;
 import com.nbsaw.miaohu.repository.AnswerVoteMapRepository;
 import com.nbsaw.miaohu.util.JwtUtil;

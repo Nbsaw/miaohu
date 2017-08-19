@@ -1,6 +1,5 @@
 package com.nbsaw.miaohu.entity;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import com.nbsaw.miaohu.type.SexType;
 import com.nbsaw.miaohu.type.UserType;
 import lombok.Data;

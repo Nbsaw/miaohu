@@ -1,8 +1,6 @@
 package com.nbsaw.miaohu.controller;
 
 import com.google.gson.Gson;
-import com.nbsaw.miaohu.exception.ExJwtException;
-import com.nbsaw.miaohu.exception.InValidJwtException;
 import com.nbsaw.miaohu.util.JwtUtil;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
