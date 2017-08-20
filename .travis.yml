@@ -1,6 +1,10 @@
 language: java
 jdk:
   - oraclejdk8
+services:
+  - mysql
+before_install:
+  - mysql -e 'CREATE DATABASE miaohu;'
 script:
   - gradle check --debug
 after_success:
