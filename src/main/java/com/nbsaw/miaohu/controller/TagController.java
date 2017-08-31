@@ -15,7 +15,12 @@ import java.util.List;
 @RequestMapping("/tag")
 public class TagController {
 
-    @Autowired private TagRepository  tagRepository;
+    private final TagRepository  tagRepository;
+
+    @Autowired
+    public TagController(TagRepository tagRepository) {
+        this.tagRepository = tagRepository;
+    }
 
     // 查找所有的标签
     @GetMapping
@@ -90,7 +95,7 @@ public class TagController {
     public ResultVo findByNameLike(@PathVariable String tagName){
         ResultVo resultVo = new ResultVo();
         resultVo.setCode(200);
-        resultVo.setResult(tagRepository.findAllByNameLike(tagName));
+        resultVo.setResult(tagRepository.findAllByNameContains(tagName));
         return resultVo;
     }
 

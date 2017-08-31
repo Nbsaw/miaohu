@@ -24,12 +24,24 @@ import java.util.concurrent.TimeUnit;
 @RestController
 @RequestMapping("/captcha")
 public class CaptchaController {
+   private final RedisConfig         redisConfig;
+   private final DefaultKaptcha      defaultKaptcha;
+   private final UserRepository      userRepository;
+   private final PhoneMessageService phoneMessageService;
+   private final RedisUtil           redisUtil;
 
-   @Autowired private RedisConfig         redisConfig;
-   @Autowired private DefaultKaptcha      defaultKaptcha;
-   @Autowired private UserRepository      userRepository;
-   @Autowired private PhoneMessageService phoneMessageService;
-   @Autowired private RedisUtil           redisUtil;
+   @Autowired
+   public CaptchaController(RedisConfig redisConfig,
+                            DefaultKaptcha defaultKaptcha,
+                            UserRepository userRepository,
+                            PhoneMessageService phoneMessageService,
+                            RedisUtil redisUtil) {
+      this.redisConfig         = redisConfig;
+      this.defaultKaptcha      = defaultKaptcha;
+      this.userRepository      = userRepository;
+      this.phoneMessageService = phoneMessageService;
+      this.redisUtil           = redisUtil;
+   }
 
    // 用来作为凭证使用的Sid
    @GetMapping("/sid")

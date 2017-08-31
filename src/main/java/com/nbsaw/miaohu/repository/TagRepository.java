@@ -23,14 +23,14 @@ public interface TagRepository extends CrudRepository<TagEntity,Long> {
     TagEntity findById(Long id);
 
     // 通过相似的关键字查找标签
-    @Query("select t from TagEntity t where t.name like CONCAT('%',:name,'%')")
-    List<TagEntity> findAllByNameLike(@Param("name") String name);
+    List<TagEntity> findAllByNameContains(@Param("name") String name);
 
     // 通过名字查找标签
-    TagEntity findByNameIgnoreCase(@Param("name") String name);
+    TagEntity findByNameIgnoreCase(String name);
 
 
     // 问题文章表合并查询
+    // TODO 非常不好的实现。需要更改
     // id,title,content,uid,date
 //    @Query("select new com.nbsaw.miaohu.vo.QAResultVo(q.id,q.title,q.content,q.uid,q.date,'question') from ArticleEntity q order by date")
 //    @Query(value = "select * from (select q.id,q.title,q.content,q.uid,q.date,'question' as 'type' from question q union all select a.id,a.title,a.content,a.uid,a.date,'article' as 'type' from article a) j;",nativeQuery = true)

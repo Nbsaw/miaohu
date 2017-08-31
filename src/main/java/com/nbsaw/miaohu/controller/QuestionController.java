@@ -21,11 +21,24 @@ import java.util.*;
 @RequestMapping("/question")
 public class QuestionController {
 
-    @Autowired private QuestionRepository      questionRepository;
-    @Autowired private TagRepository           tagRepository;
-    @Autowired private TagMapRepository        tagMapRepository;
-    @Autowired private AnswerRepository        answerRepository;
-    @Autowired private JwtUtil                 jwtUtil;
+    private final QuestionRepository      questionRepository;
+    private final TagRepository           tagRepository;
+    private final TagMapRepository        tagMapRepository;
+    private final AnswerRepository        answerRepository;
+    private final JwtUtil                 jwtUtil;
+
+    @Autowired
+    public QuestionController(QuestionRepository questionRepository,
+                              TagRepository tagRepository,
+                              TagMapRepository tagMapRepository,
+                              AnswerRepository answerRepository,
+                              JwtUtil jwtUtil) {
+        this.questionRepository = questionRepository;
+        this.tagRepository      = tagRepository;
+        this.tagMapRepository   = tagMapRepository;
+        this.answerRepository   = answerRepository;
+        this.jwtUtil            = jwtUtil;
+    }
 
     // 查询近期发布的问题
     // TODO 用户资料

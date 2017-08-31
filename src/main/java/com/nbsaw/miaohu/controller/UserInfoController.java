@@ -20,14 +20,34 @@ import java.util.*;
 @RequestMapping("/user")
 // 主要防止注入。
 public class UserInfoController {
-    @Autowired private UserRepository        userRepository;
-    @Autowired private QuestionRepository    questionRepository;
-    @Autowired private TagRepository         tagRepository;
-    @Autowired private TagMapRepository      tagMapRepository;
-    @Autowired private JwtUtil               jwtUtil;
-    @Autowired private EducationRepository   educationRepository;
-    @Autowired private EmploymentsRepository employmentsRepository;
-    @Autowired private DomicileRepository    domicileRepository;
+    private final UserRepository        userRepository;
+    private final QuestionRepository    questionRepository;
+    private final TagRepository         tagRepository;
+    private final TagMapRepository      tagMapRepository;
+    private final JwtUtil               jwtUtil;
+    private final EducationRepository   educationRepository;
+    private final EmploymentsRepository employmentsRepository;
+    private final DomicileRepository    domicileRepository;
+
+    @Autowired
+    public UserInfoController(UserRepository userRepository,
+                              QuestionRepository questionRepository,
+                              TagRepository tagRepository,
+                              TagMapRepository tagMapRepository,
+                              JwtUtil jwtUtil,
+                              EducationRepository educationRepository,
+                              EmploymentsRepository employmentsRepository,
+                              DomicileRepository domicileRepository) {
+        this.userRepository = userRepository;
+        this.questionRepository = questionRepository;
+        this.tagRepository = tagRepository;
+        this.tagMapRepository = tagMapRepository;
+        this.jwtUtil = jwtUtil;
+        this.educationRepository = educationRepository;
+        this.employmentsRepository = employmentsRepository;
+        this.domicileRepository = domicileRepository;
+
+    }
 
     // 获取用户信息
     @GetMapping("/info")

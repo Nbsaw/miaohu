@@ -18,10 +18,21 @@ import java.util.UUID;
 @RequestMapping("/register")
 public class RegisterController {
 
-    @Autowired private RedisConfig    redisConfig;
-    @Autowired private UserRepository userRepository;
-    @Autowired private RedisUtil      redisUtil;
-    @Autowired private JwtUtil        jwtUtil;
+    private final RedisConfig    redisConfig;
+    private final UserRepository userRepository;
+    private final RedisUtil      redisUtil;
+    private final JwtUtil        jwtUtil;
+
+    @Autowired
+    public RegisterController(RedisConfig redisConfig,
+                              UserRepository userRepository,
+                              RedisUtil redisUtil,
+                              JwtUtil jwtUtil) {
+        this.redisConfig    = redisConfig;
+        this.userRepository = userRepository;
+        this.redisUtil      = redisUtil;
+        this.jwtUtil        = jwtUtil;
+    }
 
     // 检验表单参数是否合法
     private Map validate(RegisterForm registerForm,

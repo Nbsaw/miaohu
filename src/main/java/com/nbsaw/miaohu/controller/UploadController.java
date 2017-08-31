@@ -18,7 +18,12 @@ import java.io.IOException;
 @RequestMapping("/upload")
 public class UploadController {
 
-    @Autowired private JwtUtil jwtUtil;
+    private final JwtUtil jwtUtil;
+
+    @Autowired
+    public UploadController(JwtUtil jwtUtil) {
+        this.jwtUtil = jwtUtil;
+    }
 
     @PostMapping(value = "/avatar")
     public String uploadAvatar(@RequestParam MultipartFile avatar,

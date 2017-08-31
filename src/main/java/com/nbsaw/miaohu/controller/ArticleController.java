@@ -21,12 +21,27 @@ import java.util.Map;
 @RequestMapping("/article")
 public class ArticleController {
 
-    @Autowired ArticleRepository     articleRepository;
-    @Autowired JwtUtil               jwtUtil;
-    @Autowired TagRepository         tagRepository;
-    @Autowired TagMapRepository      tagMapRepository;
-    @Autowired ArticleVoteRepository articleVoteRepository;
-    @Autowired ReplyRepository       replyRepository;
+    private final ArticleRepository     articleRepository;
+    private final JwtUtil               jwtUtil;
+    private final TagRepository         tagRepository;
+    private final TagMapRepository      tagMapRepository;
+    private final ArticleVoteRepository articleVoteRepository;
+    private final ReplyRepository       replyRepository;
+
+    @Autowired
+    public ArticleController(ArticleRepository articleRepository,
+                             JwtUtil jwtUtil,
+                             TagRepository tagRepository,
+                             TagMapRepository tagMapRepository,
+                             ArticleVoteRepository articleVoteRepository,
+                             ReplyRepository replyRepository) {
+        this.articleRepository      = articleRepository;
+        this.jwtUtil                = jwtUtil;
+        this.tagRepository          = tagRepository;
+        this.tagMapRepository       = tagMapRepository;
+        this.articleVoteRepository  = articleVoteRepository;
+        this.replyRepository        = replyRepository;
+    }
 
     // TODO 全部文章查询接口
     @GetMapping

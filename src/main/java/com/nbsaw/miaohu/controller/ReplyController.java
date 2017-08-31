@@ -16,10 +16,21 @@ import org.springframework.web.util.HtmlUtils;
 @RestController
 @RequestMapping("/reply")
 public class ReplyController {
-    @Autowired ReplyRepository     replyRepository;
-    @Autowired ReplyVoteRepository replyVoteRepository;
-    @Autowired ArticleRepository   articleRepository;
-    @Autowired JwtUtil             jwtUtil;
+    private final ReplyRepository     replyRepository;
+    private final ReplyVoteRepository replyVoteRepository;
+    private final ArticleRepository   articleRepository;
+    private final JwtUtil             jwtUtil;
+
+    @Autowired
+    public ReplyController(ReplyRepository replyRepository,
+                           ReplyVoteRepository replyVoteRepository,
+                           ArticleRepository articleRepository,
+                           JwtUtil jwtUtil) {
+        this.replyRepository = replyRepository;
+        this.replyVoteRepository = replyVoteRepository;
+        this.articleRepository = articleRepository;
+        this.jwtUtil = jwtUtil;
+    }
 
     // 回复文章
     // TODO 作者可以直接回复

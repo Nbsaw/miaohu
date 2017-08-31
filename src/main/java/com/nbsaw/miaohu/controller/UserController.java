@@ -13,8 +13,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired private UserRepository        userRepository;
-    @Autowired private JwtUtil               jwtUtil;
+    private final UserRepository userRepository;
+    private final JwtUtil        jwtUtil;
+
+    @Autowired
+    public UserController(UserRepository userRepository,
+                          JwtUtil jwtUtil) {
+        this.userRepository = userRepository;
+        this.jwtUtil        = jwtUtil;
+
+    }
 
     // TODO 第三方登录
     // 登录验证

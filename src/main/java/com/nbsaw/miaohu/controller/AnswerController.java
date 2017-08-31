@@ -19,9 +19,18 @@ import java.util.Map;
 @RestController
 @RequestMapping("/answer")
 public class AnswerController {
-    @Autowired private AnswerVoteMapRepository answerVoteMapRepository;
-    @Autowired private JwtUtil jwtUtil;
-    @Autowired private AnswerRepository answerRepository;
+    private final AnswerVoteMapRepository answerVoteMapRepository;
+    private final JwtUtil jwtUtil;
+    private final AnswerRepository answerRepository;
+
+    @Autowired
+    public AnswerController(AnswerVoteMapRepository answerVoteMapRepository,
+                            JwtUtil jwtUtil,
+                            AnswerRepository answerRepository) {
+        this.answerVoteMapRepository = answerVoteMapRepository;
+        this.jwtUtil                 = jwtUtil;
+        this.answerRepository        = answerRepository;
+    }
 
     // 查找问题的某个评论
     @GetMapping("/{id}")
