@@ -7,7 +7,7 @@ public class HtmlUtil{
     private static String filter(String html,String regex , int enums){
         Pattern p_script = Pattern.compile(regex,enums);
         Matcher m_script = p_script.matcher(html);
-        return m_script.replaceAll("");
+        return  m_script.replaceAll("");
     }
 
     public static String getInnerText(String html){
