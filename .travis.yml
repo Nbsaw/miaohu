@@ -4,7 +4,7 @@ jdk:
 services:
   - mysql
 before_install:
-  - mysql -e 'CREATE DATABASE miaohu;'
+  - mysql -e 'CREATE DATABASE test;'
 script:
   - gradle check --debug
 after_success:
