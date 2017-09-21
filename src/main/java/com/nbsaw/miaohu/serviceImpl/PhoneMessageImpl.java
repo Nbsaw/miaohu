@@ -26,7 +26,7 @@ public class PhoneMessageImpl implements PhoneMessageService {
         TaobaoClient client = new DefaultTaobaoClient(URL, APPKEY, SECRET);
         AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
         req.setSmsType("normal"); // 消息类型默认
-        req.setSmsFreeSignName("彭佳文"); // 签名
+        req.setSmsFreeSignName("***"); // 签名
         req.setSmsParamString("{number:'"+random+"'}"); // 六位随机验证码
         req.setRecNum(phone); // 发送到号码
         req.setSmsTemplateCode("SMS_60000851"); // 短信验证模板ID
