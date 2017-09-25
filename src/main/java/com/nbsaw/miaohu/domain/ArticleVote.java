@@ -1,4 +1,4 @@
-package com.nbsaw.miaohu.entity;
+package com.nbsaw.miaohu.domain;
 
 import lombok.Data;
 
@@ -7,9 +7,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "article_vote")
 @Data
-public class ArticleVoteEntity implements Serializable {
+public class ArticleVote implements Serializable {
     @Id
     @GeneratedValue
     Long id;

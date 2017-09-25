@@ -38,7 +38,7 @@ public class JwtUtil {
         return flag;
     }
 
-    public Claims parse(String token){
+    private Claims parse(String token){
         return Jwts.parser().setSigningKey(key).parseClaimsJws(token).getBody();
     }
 

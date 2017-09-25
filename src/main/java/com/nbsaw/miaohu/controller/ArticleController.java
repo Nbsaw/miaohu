@@ -1,8 +1,8 @@
 package com.nbsaw.miaohu.controller;
 
-import com.nbsaw.miaohu.entity.ArticleEntity;
-import com.nbsaw.miaohu.entity.ArticleVoteEntity;
-import com.nbsaw.miaohu.entity.TagMapEntity;
+import com.nbsaw.miaohu.domain.Article;
+import com.nbsaw.miaohu.domain.ArticleVote;
+import com.nbsaw.miaohu.domain.TagMap;
 import com.nbsaw.miaohu.repository.*;
 import com.nbsaw.miaohu.type.ReplyStatusType;
 import com.nbsaw.miaohu.util.EnumUtil;
@@ -82,17 +82,17 @@ public class ArticleController {
         }
 
         // 根据问题id查找问题
-        ArticleEntity articleEntity = articleRepository.findOne(articleId);
+        Article article = articleRepository.findOne(articleId);
         ArticleVo articleVo = new ArticleVo();
 
         // 获取各个可以暴露出去的字段
-        articleVo.setId(articleEntity.getId());
-        articleVo.setTitle(articleEntity.getTitle());
-        articleVo.setTitle(articleEntity.getContent());
-        articleVo.setDate(articleEntity.getDate());
+        articleVo.setId(article.getId());
+        articleVo.setTitle(article.getTitle());
+        articleVo.setTitle(article.getContent());
+        articleVo.setDate(article.getDate());
 
         // 查找文章的标签映射
-        List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByCorrelationAndType(articleId,"article");
+        List<TagMap> tagMapEntities = tagMapRepository.findAllByCorrelationAndType(articleId,"article");
         List tagList = new ArrayList();
 
         // 查找问题所属的标签
@@ -172,19 +172,19 @@ public class ArticleController {
                 return messageVo;
             }
             // 保存文章
-            ArticleEntity articleEntity = new ArticleEntity();
-            articleEntity.setUid(uid);
-            articleEntity.setTitle(title);
-            articleEntity.setContent(content);
-            articleEntity.setReplyStatus(ReplyStatusType.valueOf(replyStatus));
-            articleRepository.save(articleEntity);
+            Article article = new Article();
+            article.setUid(uid);
+            article.setTitle(title);
+            article.setContent(content);
+            article.setReplyStatus(ReplyStatusType.valueOf(replyStatus));
+            articleRepository.save(article);
             // 标签都合法保存下来
             for (String tagName : tags) {
-                TagMapEntity tagMapEntity = new TagMapEntity();
-                tagMapEntity.setCorrelation(articleEntity.getId());
-                tagMapEntity.setTagId(tagRepository.findByNameIgnoreCase(tagName).getId());
-                tagMapEntity.setType("article");
-                tagMapRepository.save(tagMapEntity);
+                TagMap tagMap = new TagMap();
+                tagMap.setCorrelation(article.getId());
+                tagMap.setTagId(tagRepository.findByNameIgnoreCase(tagName).getId());
+                tagMap.setType("article");
+                tagMapRepository.save(tagMap);
             }
             // 设置返回信息
             messageVo.setCode(200);
@@ -212,10 +212,10 @@ public class ArticleController {
         }
         // 如果没有点赞
         else{
-            ArticleVoteEntity articleVoteEntity = new ArticleVoteEntity();
-            articleVoteEntity.setArticleId(articleId);
-            articleVoteEntity.setUid(uid);
-            articleVoteRepository.save(articleVoteEntity);
+            ArticleVote articleVote = new ArticleVote();
+            articleVote.setArticleId(articleId);
+            articleVote.setUid(uid);
+            articleVoteRepository.save(articleVote);
             messageVo.setCode(200);
             messageVo.setMessage("点赞成功");
         }

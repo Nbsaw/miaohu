@@ -1,11 +1,11 @@
 package com.nbsaw.miaohu.repository;
 
-import com.nbsaw.miaohu.entity.TagMapEntity;
+import com.nbsaw.miaohu.domain.TagMap;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
 
-public interface TagMapRepository extends CrudRepository<TagMapEntity,Long> {
+public interface TagMapRepository extends CrudRepository<TagMap,Long> {
 
     /**
      * ---------------------------------------------------------------------------
@@ -16,7 +16,7 @@ public interface TagMapRepository extends CrudRepository<TagMapEntity,Long> {
      */
 
     // 根据帖子id和类型找标签
-    List<TagMapEntity> findAllByCorrelationAndType(Long correlation,String type);
+    List<TagMap> findAllByCorrelationAndType(Long correlation,String type);
 
 
 

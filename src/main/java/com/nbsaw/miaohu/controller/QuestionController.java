@@ -1,6 +1,6 @@
 package com.nbsaw.miaohu.controller;
 
-import com.nbsaw.miaohu.entity.*;
+import com.nbsaw.miaohu.domain.*;
 import com.nbsaw.miaohu.vo.QuestionVo;
 import com.nbsaw.miaohu.repository.QuestionRepository;
 import com.nbsaw.miaohu.repository.TagRepository;
@@ -47,7 +47,7 @@ public class QuestionController {
     @GetMapping
     public ResultVo all(@RequestParam(defaultValue = "0") int page){
         // 时间倒叙查找
-        Page<QuestionEntity> list = questionRepository.findAll(new PageRequest(page,10,new Sort(Sort.Direction.DESC,"date")));
+        Page<Question> list = questionRepository.findAll(new PageRequest(page,10,new Sort(Sort.Direction.DESC,"date")));
         List<QuestionVo> result = new ArrayList<>();
         // 重新封装数据
         list.forEach(s -> {
@@ -57,9 +57,9 @@ public class QuestionController {
             vo.setContent(s.getContent());
             vo.setDate(s.getDate());
             // 查找问题
-            List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByCorrelationAndType(vo.getId(),"question");
+            List<TagMap> tagMapEntities = tagMapRepository.findAllByCorrelationAndType(vo.getId(),"question");
             // 查找问题所属的标签
-            List<TagEntity> tagList = new ArrayList<>();
+            List<Tag> tagList = new ArrayList<>();
             tagMapEntities.forEach(map -> tagList.add(tagRepository.findById(map.getCorrelation())));
             vo.setTag(tagList);
             // TODO 查找问题相关的用户
@@ -87,17 +87,17 @@ public class QuestionController {
         String uid = jwtUtil.getUid(token);
 
         // 根据问题id查找问题
-        QuestionEntity questionEntity = questionRepository.findOne(questionId);
+        Question question = questionRepository.findOne(questionId);
         QuestionVo questionVo = new QuestionVo();
 
         // 获取各个可以暴露出去的字段
-        questionVo.setId(questionEntity.getId());
-        questionVo.setTitle(questionEntity.getTitle());
-        questionVo.setTitle(questionEntity.getContent());
-        questionVo.setDate(questionEntity.getDate());
+        questionVo.setId(question.getId());
+        questionVo.setTitle(question.getTitle());
+        questionVo.setTitle(question.getContent());
+        questionVo.setDate(question.getDate());
 
         // 查找问题的标签映射
-        List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByCorrelationAndType(questionId,"question");
+        List<TagMap> tagMapEntities = tagMapRepository.findAllByCorrelationAndType(questionId,"question");
         List tagList = new ArrayList();
 
         // 查找问题所属的标签
@@ -208,7 +208,7 @@ public class QuestionController {
         // 获取uid
         String uid = jwtUtil.getUid(token);
 
-        QuestionEntity questionEntity = new QuestionEntity();
+        Question question = new Question();
         boolean isExists = questionRepository.existsQuestion(title);
         title = title.trim();
         String last = title.substring(title.length() - 1); // 最后一个字符
@@ -249,17 +249,17 @@ public class QuestionController {
             // 保存问题
             // NOTE 关于这个问题什么放在前面,
             // 因为如果不放在前面getId会获取不到值 ...
-            questionEntity.setUid(uid);
-            questionEntity.setTitle(title);
-            questionEntity.setContent(content);
-            questionRepository.save(questionEntity);
+            question.setUid(uid);
+            question.setTitle(title);
+            question.setContent(content);
+            questionRepository.save(question);
             // 标签都合法保存下来
             for (String tagName : tags) {
-                TagMapEntity tagMapEntity = new TagMapEntity();
-                tagMapEntity.setCorrelation(questionEntity.getId());
-                tagMapEntity.setTagId(tagRepository.findByNameIgnoreCase(tagName).getId());
-                tagMapEntity.setType("question");
-                tagMapRepository.save(tagMapEntity);
+                TagMap tagMap = new TagMap();
+                tagMap.setCorrelation(question.getId());
+                tagMap.setTagId(tagRepository.findByNameIgnoreCase(tagName).getId());
+                tagMap.setType("question");
+                tagMapRepository.save(tagMap);
             }
             messageVo.setCode(200);
             messageVo.setMessage("问题发布成功");

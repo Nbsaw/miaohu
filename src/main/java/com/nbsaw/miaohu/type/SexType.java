@@ -5,7 +5,7 @@ public enum SexType {
     male("男"),
     female("女");
 
-    private String value;
+    private final String value;
 
     SexType(String value){
         this.value = value;

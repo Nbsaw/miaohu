@@ -1,8 +1,8 @@
 package com.nbsaw.miaohu.vo;
 
-import com.nbsaw.miaohu.entity.DomicileEntity;
-import com.nbsaw.miaohu.entity.EducationEntity;
-import com.nbsaw.miaohu.entity.EmploymentsEntity;
+import com.nbsaw.miaohu.domain.Domicile;
+import com.nbsaw.miaohu.domain.Education;
+import com.nbsaw.miaohu.domain.Employments;
 import lombok.Data;
 import java.io.Serializable;
 import java.util.List;
@@ -21,9 +21,9 @@ public class UserInfoVo implements Serializable {
 
     private String resume;
 
-    private List<EmploymentsEntity> employments;
+    private List<Employments> employments;
 
-    private List<EducationEntity> education;
+    private List<Education> education;
 
-    private List<DomicileEntity> domicile;
+    private List<Domicile> domicile;
 }

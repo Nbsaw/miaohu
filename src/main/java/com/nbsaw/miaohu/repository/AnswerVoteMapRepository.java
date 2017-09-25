@@ -1,12 +1,12 @@
 package com.nbsaw.miaohu.repository;
 
-import com.nbsaw.miaohu.entity.AnswerVoteMapEntity;
+import com.nbsaw.miaohu.domain.AnswerVoteMap;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import javax.transaction.Transactional;
 
-public interface AnswerVoteMapRepository extends CrudRepository<AnswerVoteMapEntity,Long> {
+public interface AnswerVoteMapRepository extends CrudRepository<AnswerVoteMap,Long> {
     /**
      * ---------------------------------------------------------------------------
      *
@@ -16,11 +16,11 @@ public interface AnswerVoteMapRepository extends CrudRepository<AnswerVoteMapEnt
      */
 
     // 查看是否点赞
-    @Query("select count(a) > 0 from AnswerVoteMapEntity a where a.answerId = :answerId and a.uid = :uid")
+    @Query("select count(a) > 0 from AnswerVoteMap a where a.answerId = :answerId and a.uid = :uid")
     boolean isVote(@Param("answerId") Long answerId , @Param("uid") String uid);
 
     // 查找questionId
-    @Query("select v.questionId from AnswerVoteMapEntity v where v.answerId = :answerId")
+    @Query("select v.questionId from AnswerVoteMap v where v.answerId = :answerId")
     Long findQuestionId(@Param("answerId") Long answerId);
 
     // 点赞的总数

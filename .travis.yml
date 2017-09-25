@@ -6,6 +6,6 @@ services:
 before_install:
   - mysql -e 'CREATE DATABASE test;'
 script:
-  - gradle check --debug
+  - gradle check
 after_success:
   - gradle cobertura coveralls

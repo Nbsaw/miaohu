@@ -1,7 +1,7 @@
 package com.nbsaw.miaohu.controller;
 
 import com.nbsaw.miaohu.form.RegisterForm;
-import com.nbsaw.miaohu.entity.UserEntity;
+import com.nbsaw.miaohu.domain.User;
 import com.nbsaw.miaohu.repository.UserRepository;
 import com.nbsaw.miaohu.type.UserType;
 import com.nbsaw.miaohu.util.JwtUtil;
@@ -100,13 +100,13 @@ public class RegisterController {
             String userId = UUID.randomUUID().toString();
             UserType userType = UserType.USER;
             // 把注册信息写入到数据库
-            UserEntity userEntity = new UserEntity();
-            userEntity.setId(userId);
-            userEntity.setUsername(registerForm.getUsername());
-            userEntity.setPassword(registerForm.getPassword());
-            userEntity.setPhone(registerForm.getPhone());
-            userEntity.setUserType(userType);
-            userRepository.save(userEntity);
+            User user = new User();
+            user.setId(userId);
+            user.setUsername(registerForm.getUsername());
+            user.setPassword(registerForm.getPassword());
+            user.setPhone(registerForm.getPhone());
+            user.setUserType(userType);
+            userRepository.save(user);
             // 设置token
             String token = jwtUtil.createJWT(userId,userType);
             result.put("result",token);

@@ -1,9 +1,9 @@
 package com.nbsaw.miaohu.repository;
 
-import com.nbsaw.miaohu.entity.ReplyVoteEntity;
+import com.nbsaw.miaohu.domain.ReplyVote;
 import org.springframework.data.repository.CrudRepository;
 
-public interface ReplyVoteRepository extends CrudRepository<ReplyVoteEntity,Long> {
+public interface ReplyVoteRepository extends CrudRepository<ReplyVote,Long> {
 
     /**
      * ---------------------------------------------------------------------------
@@ -12,7 +12,7 @@ public interface ReplyVoteRepository extends CrudRepository<ReplyVoteEntity,Long
      *
      * ---------------------------------------------------------------------------
      */
-    ReplyVoteEntity findByReplyIdAndUid(Long replyId, String uid);
+    ReplyVote findByReplyIdAndUid(Long replyId, String uid);
 
     /**
      * ---------------------------------------------------------------------------

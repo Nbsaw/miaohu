@@ -1,13 +1,12 @@
-package com.nbsaw.miaohu.entity;
+package com.nbsaw.miaohu.domain;
 
 import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "tag_map")
 @Data
-public class TagMapEntity implements Serializable {
+public class TagMap implements Serializable {
     @Id
     @GeneratedValue
     Long id;

@@ -1,8 +1,8 @@
 package com.nbsaw.miaohu.controller;
 
-import com.nbsaw.miaohu.entity.QuestionEntity;
-import com.nbsaw.miaohu.entity.TagMapEntity;
-import com.nbsaw.miaohu.entity.UserEntity;
+import com.nbsaw.miaohu.domain.Question;
+import com.nbsaw.miaohu.domain.TagMap;
+import com.nbsaw.miaohu.domain.User;
 import com.nbsaw.miaohu.repository.*;
 import com.nbsaw.miaohu.type.SexType;
 import com.nbsaw.miaohu.util.JwtUtil;
@@ -57,14 +57,14 @@ public class UserInfoController {
             // 获取uid
             String uid = jwtUtil.getUid(token);
             // 查询用户信息
-            UserEntity userEntity = userRepository.findOne(uid);
+            User user = userRepository.findOne(uid);
             UserInfoVo userInfoVo = new UserInfoVo();
-            userInfoVo.setUsername(userEntity.getUsername());
-            userInfoVo.setSex(userEntity.getSex().getValue());
-            userInfoVo.setAvatar(userEntity.getAvatar());
-            userInfoVo.setBio(userEntity.getBio());
-            userInfoVo.setIndustry(userEntity.getIndustry());
-            userInfoVo.setResume(userEntity.getResume());
+            userInfoVo.setUsername(user.getUsername());
+            userInfoVo.setSex(user.getSex().getValue());
+            userInfoVo.setAvatar(user.getAvatar());
+            userInfoVo.setBio(user.getBio());
+            userInfoVo.setIndustry(user.getIndustry());
+            userInfoVo.setResume(user.getResume());
             // 查询教育经历
             userInfoVo.setEducation(educationRepository.findAllByUid(uid));
             // 查询工作经历
@@ -116,12 +116,12 @@ public class UserInfoController {
 
         List result = new ArrayList();
         // 查找用户发表的问题
-        List<QuestionEntity> questionEntities =  questionRepository.findAllByUid(uid,new PageRequest(page,15,new Sort(Sort.Direction.DESC,"date")));
+        List<Question> questionEntities =  questionRepository.findAllByUid(uid,new PageRequest(page,15,new Sort(Sort.Direction.DESC,"date")));
         // 查找问题所属的标签
         questionEntities.forEach(q ->{
             // 创建一个映射
             Map map = new LinkedHashMap();
-            List<TagMapEntity> tagMapEntities = tagMapRepository.findAllByCorrelationAndType(q.getId(),"question");
+            List<TagMap> tagMapEntities = tagMapRepository.findAllByCorrelationAndType(q.getId(),"question");
             // 搜索标签
             List tagList = new LinkedList();
             tagMapEntities.forEach(m -> tagList.add(tagRepository.findById(m.getCorrelation())));
@@ -146,14 +146,14 @@ public class UserInfoController {
         // 获取uid
         String uid = jwtUtil.getUid(token);
         MessageVo messageVo = new MessageVo();
-        UserEntity userEntity = userRepository.findOne(uid);
-        if (userEntity == null){
+        User user = userRepository.findOne(uid);
+        if (user == null){
             messageVo.setCode(400);
             messageVo.setMessage("用户不存在");
         }else{
             if (SexType.fromString(sex) != null){
-                userEntity.setSex(SexType.valueOf(sex));
-                userRepository.save(userEntity);
+                user.setSex(SexType.valueOf(sex));
+                userRepository.save(user);
                 messageVo.setCode(200);
                 messageVo.setMessage("性别更改成功");
             }else{
@@ -172,8 +172,8 @@ public class UserInfoController {
         // 获取uid
         String uid = jwtUtil.getUid(token);
         MessageVo messageVo = new MessageVo();
-        UserEntity userEntity = userRepository.findOne(uid);
-        if (userEntity == null){
+        User user = userRepository.findOne(uid);
+        if (user == null){
             messageVo.setCode(400);
             messageVo.setMessage("用户不存在");
         }
@@ -182,8 +182,8 @@ public class UserInfoController {
             messageVo.setMessage("请在40个字以内描述自己");
         }
         else{
-            userEntity.setBio(bio);
-            userRepository.save(userEntity);
+            user.setBio(bio);
+            userRepository.save(user);
             messageVo.setCode(200);
             messageVo.setMessage("一句话介绍自己更改成功");
         }
@@ -198,13 +198,13 @@ public class UserInfoController {
         // 获取uid
         String uid = jwtUtil.getUid(token);
         MessageVo messageVo = new MessageVo();
-        UserEntity userEntity = userRepository.findOne(uid);
-        if (userEntity == null){
+        User user = userRepository.findOne(uid);
+        if (user == null){
             messageVo.setCode(400);
             messageVo.setMessage("用户不存在");
         }else{
-            userEntity.setIndustry(industry);
-            userRepository.save(userEntity);
+            user.setIndustry(industry);
+            userRepository.save(user);
             messageVo.setCode(200);
             messageVo.setMessage("行业更改成功");
         }
@@ -219,8 +219,8 @@ public class UserInfoController {
         // 获取uid
         String uid = jwtUtil.getUid(token);
         MessageVo messageVo = new MessageVo();
-        UserEntity userEntity = userRepository.findOne(uid);
-        if (userEntity == null){
+        User user = userRepository.findOne(uid);
+        if (user == null){
             messageVo.setCode(400);
             messageVo.setMessage("用户不存在");
         }
@@ -229,8 +229,8 @@ public class UserInfoController {
             messageVo.setMessage("不能超过550字");
         }
         else{
-            userEntity.setResume(resume);
-            userRepository.save(userEntity);
+            user.setResume(resume);
+            userRepository.save(user);
             messageVo.setCode(200);
             messageVo.setMessage("简介更改成功");
         }
@@ -245,8 +245,8 @@ public class UserInfoController {
         // 获取uid
         String uid = jwtUtil.getUid(token);
         MessageVo messageVo = new MessageVo();
-        UserEntity userEntity = userRepository.findOne(uid);
-        if (userEntity == null){
+        User user = userRepository.findOne(uid);
+        if (user == null){
             messageVo.setCode(400);
             messageVo.setMessage("用户不存在");
         }else{

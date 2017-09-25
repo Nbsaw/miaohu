@@ -1,4 +1,4 @@
-package com.nbsaw.miaohu.entity;
+package com.nbsaw.miaohu.domain;
 
 import lombok.Data;
 import org.hibernate.annotations.Formula;
@@ -8,9 +8,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "reply")
 @Data
-public class ReplyEntity implements Serializable {
+public class Reply implements Serializable {
     @Id
     @GeneratedValue
     Long id;

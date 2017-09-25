@@ -1,14 +1,14 @@
-package com.nbsaw.miaohu.entity;
+package com.nbsaw.miaohu.domain;
 
 import lombok.Data;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "answer")
 @Data
-public class AnswerEntity implements Serializable {
+public class Answer implements Serializable {
     @Id
     @GeneratedValue
     Long id;

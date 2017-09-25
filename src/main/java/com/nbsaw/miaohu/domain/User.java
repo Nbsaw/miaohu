@@ -1,18 +1,18 @@
-package com.nbsaw.miaohu.entity;
+package com.nbsaw.miaohu.domain;
 
 import com.nbsaw.miaohu.type.SexType;
 import com.nbsaw.miaohu.type.UserType;
 import lombok.Data;
 import org.hibernate.annotations.ColumnTransformer;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "user")
 @Data
 // 教育经历,职业经历，居住地为列表已抽出
-public class UserEntity implements Serializable {
+public class User implements Serializable {
     @Id
     String id;
 

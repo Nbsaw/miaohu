@@ -1,7 +1,7 @@
 package com.nbsaw.miaohu.controller;
 
 import com.nbsaw.miaohu.repository.*;
-import com.nbsaw.miaohu.entity.TagEntity;
+import com.nbsaw.miaohu.domain.Tag;
 import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.QAResultVo;
@@ -51,11 +51,11 @@ public class TagController {
             result.setMessage("标签不能包含空格!");
         }
         else{
-            TagEntity tagEntity = new TagEntity();
-            tagEntity.setName(tagName);
-            tagEntity.setAvatar(avatar);
-            tagEntity.setBio(bio);
-            tagRepository.save(tagEntity);
+            Tag tag = new Tag();
+            tag.setName(tagName);
+            tag.setAvatar(avatar);
+            tag.setBio(bio);
+            tagRepository.save(tag);
             result.setCode(200);
             result.setMessage("创建标签成功!");
         }
@@ -67,7 +67,7 @@ public class TagController {
     // 根据名字查找标签下的所有问题以及文章
     @GetMapping("/{tagName}")
     public GenericVo findById(@PathVariable String tagName){
-        TagEntity tag = tagRepository.findByNameIgnoreCase(tagName);
+        Tag tag = tagRepository.findByNameIgnoreCase(tagName);
         if (tag == null){
             MessageVo messageVo = new MessageVo();
             messageVo.setCode(404);

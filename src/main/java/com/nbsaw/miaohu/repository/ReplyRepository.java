@@ -1,6 +1,6 @@
 package com.nbsaw.miaohu.repository;
 
-import com.nbsaw.miaohu.entity.ReplyEntity;
+import com.nbsaw.miaohu.domain.Reply;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface ReplyRepository extends CrudRepository<ReplyEntity,Long> {
+public interface ReplyRepository extends CrudRepository<Reply,Long> {
 
     /**
      * ---------------------------------------------------------------------------
@@ -17,9 +17,9 @@ public interface ReplyRepository extends CrudRepository<ReplyEntity,Long> {
      *
      * ---------------------------------------------------------------------------
      */
-    List<ReplyEntity> findAllByArticleIdAndPass(Long articleId,boolean pass,Pageable page);
+    List<Reply> findAllByArticleIdAndPass(Long articleId,boolean pass,Pageable page);
 
-    @Query("select count(r) > 0 from ReplyEntity r where r.id = :id and r.uid = :uid")
+    @Query("select count(r) > 0 from Reply r where r.id = :id and r.uid = :uid")
     boolean belong(@Param("id") Long id, @Param("uid") String uid);
 
     // 判断是否是作者

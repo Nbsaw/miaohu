@@ -1,22 +1,22 @@
-package com.nbsaw.miaohu.entity;
+package com.nbsaw.miaohu.domain;
 
 import lombok.Data;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "reply_vote")
 @Data
-public class ReplyVoteEntity implements Serializable {
+public class QuestionModifyReason implements Serializable {
     @Id
     @GeneratedValue
     Long id;
 
-    Long replyId;
+    @Column(nullable = false)
+    Long questionId;
 
-    String uid;
+    @Column(nullable = false)
+    String reason;
 
     @Column
     @Temporal(TemporalType.TIMESTAMP)

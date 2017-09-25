@@ -1,6 +1,6 @@
 package com.nbsaw.miaohu.vo;
 
-import com.nbsaw.miaohu.entity.TagEntity;
+import com.nbsaw.miaohu.domain.Tag;
 import lombok.Data;
 import java.io.Serializable;
 import java.util.Date;
@@ -16,7 +16,7 @@ public class QuestionVo implements Serializable {
 
     private Date date;
 
-    private List<TagEntity> tag;
+    private List<Tag> tag;
 
     private UserInfoVo userInfoVo;
 

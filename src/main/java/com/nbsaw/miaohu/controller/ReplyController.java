@@ -1,8 +1,8 @@
 package com.nbsaw.miaohu.controller;
 
-import com.nbsaw.miaohu.entity.ArticleEntity;
-import com.nbsaw.miaohu.entity.ReplyEntity;
-import com.nbsaw.miaohu.entity.ReplyVoteEntity;
+import com.nbsaw.miaohu.domain.Article;
+import com.nbsaw.miaohu.domain.Reply;
+import com.nbsaw.miaohu.domain.ReplyVote;
 import com.nbsaw.miaohu.repository.ArticleRepository;
 import com.nbsaw.miaohu.repository.ReplyRepository;
 import com.nbsaw.miaohu.repository.ReplyVoteRepository;
@@ -48,8 +48,8 @@ public class ReplyController {
         }
         else{
             // 检查文章的回复状态
-            ArticleEntity   articleEntity  =  articleRepository.findOne(articleId);
-            ReplyStatusType replyStatus    =  articleEntity.getReplyStatus();
+            Article article  =  articleRepository.findOne(articleId);
+            ReplyStatusType replyStatus    =  article.getReplyStatus();
             String escape = HtmlUtils.htmlEscape(content);
             System.out.println(escape);
             if(replyStatus == ReplyStatusType.NO){
@@ -57,15 +57,15 @@ public class ReplyController {
                 messageVo.setMessage("该文章不允许回复");
                 return messageVo;
             }
-            ReplyEntity replyEntity = new ReplyEntity();
-            replyEntity.setArticleId(articleId);
-            replyEntity.setContent(escape);
-            replyEntity.setUid(uid);
+            Reply reply = new Reply();
+            reply.setArticleId(articleId);
+            reply.setContent(escape);
+            reply.setUid(uid);
             if (replyStatus == ReplyStatusType.EXAMINE)
-                replyEntity.setPass(false);
+                reply.setPass(false);
             else if(replyStatus == ReplyStatusType.YES)
-                replyEntity.setPass(true);
-            replyRepository.save(replyEntity);
+                reply.setPass(true);
+            replyRepository.save(reply);
             messageVo.setCode(200);
             messageVo.setMessage("回复成功");
         }
@@ -83,16 +83,16 @@ public class ReplyController {
             messageVo.setCode(404);
             messageVo.setMessage("回复不存在");
         }else{
-            ReplyVoteEntity replyVoteEntity = replyVoteRepository.findByReplyIdAndUid(replyId,uid);
-            if (replyVoteEntity == null){
-                replyVoteEntity = new ReplyVoteEntity();
-                replyVoteEntity.setReplyId(replyId);
-                replyVoteEntity.setUid(uid);
-                replyVoteRepository.save(replyVoteEntity);
+            ReplyVote replyVote = replyVoteRepository.findByReplyIdAndUid(replyId,uid);
+            if (replyVote == null){
+                replyVote = new ReplyVote();
+                replyVote.setReplyId(replyId);
+                replyVote.setUid(uid);
+                replyVoteRepository.save(replyVote);
                 messageVo.setCode(200);
                 messageVo.setMessage("回复点赞成功");
             }else{
-                replyVoteRepository.delete(replyVoteEntity);
+                replyVoteRepository.delete(replyVote);
                 messageVo.setCode(200);
                 messageVo.setMessage("取消点赞成功");
             }
@@ -132,10 +132,10 @@ public class ReplyController {
                            @RequestHeader("token") String token) {
         String uid = jwtUtil.getUid(token);
         action = action.toLowerCase();
-        ReplyEntity replyEntity =  replyRepository.findOne(replyId);
+        Reply reply =  replyRepository.findOne(replyId);
         MessageVo messageVo = new MessageVo();
         // 判断回答是否存在
-        if (replyEntity == null){
+        if (reply == null){
             messageVo.setCode(404);
             messageVo.setMessage("回复不存在");
         }
@@ -152,8 +152,8 @@ public class ReplyController {
                     messageVo.setMessage("删除成功");
                     break;
                 case "pass":
-                    replyEntity.setPass(true);
-                    replyRepository.save(replyEntity);
+                    reply.setPass(true);
+                    replyRepository.save(reply);
                     messageVo.setCode(200);
                     messageVo.setMessage("设置评论审核通过成功");
                     break;

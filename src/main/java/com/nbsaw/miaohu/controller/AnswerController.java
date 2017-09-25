@@ -1,7 +1,7 @@
 package com.nbsaw.miaohu.controller;
 
-import com.nbsaw.miaohu.entity.AnswerEntity;
-import com.nbsaw.miaohu.entity.AnswerVoteMapEntity;
+import com.nbsaw.miaohu.domain.Answer;
+import com.nbsaw.miaohu.domain.AnswerVoteMap;
 import com.nbsaw.miaohu.repository.AnswerRepository;
 import com.nbsaw.miaohu.repository.AnswerVoteMapRepository;
 import com.nbsaw.miaohu.util.JwtUtil;
@@ -36,7 +36,7 @@ public class AnswerController {
     @GetMapping("/{id}")
     public ResultVo selectAnswerById(@PathVariable Long id) {
         // 暂时根据逆序查找
-        List<AnswerEntity> list = answerRepository.findAllByQuestionId(id,new PageRequest(0,5,new Sort(Sort.Direction.DESC,"date")));
+        List<Answer> list = answerRepository.findAllByQuestionId(id,new PageRequest(0,5,new Sort(Sort.Direction.DESC,"date")));
         ResultVo resultVo = new ResultVo();
         resultVo.setCode(200);
         resultVo.setResult(list);
@@ -70,11 +70,11 @@ public class AnswerController {
         }
         // 验证通过提交
         else {
-            AnswerEntity answerEntity = new AnswerEntity();
-            answerEntity.setQuestionId(questionId);
-            answerEntity.setContent(content);
-            answerEntity.setUid(uid);
-            answerRepository.save(answerEntity);
+            Answer answer = new Answer();
+            answer.setQuestionId(questionId);
+            answer.setContent(content);
+            answer.setUid(uid);
+            answerRepository.save(answer);
             result.setCode(200);
             result.setMessage("评论成功");
         }
@@ -158,11 +158,11 @@ public class AnswerController {
             // 判断是否点赞过了
             boolean isVote = answerVoteMapRepository.isVote(answerId,uid);
             if (!isVote){
-                AnswerVoteMapEntity answerVoteMapEntity = new AnswerVoteMapEntity();
-                answerVoteMapEntity.setUid(uid);
-                answerVoteMapEntity.setAnswerId(answerId);
-                answerVoteMapEntity.setQuestionId(questionId);
-                answerVoteMapRepository.save(answerVoteMapEntity);
+                AnswerVoteMap answerVoteMap = new AnswerVoteMap();
+                answerVoteMap.setUid(uid);
+                answerVoteMap.setAnswerId(answerId);
+                answerVoteMap.setQuestionId(questionId);
+                answerVoteMapRepository.save(answerVoteMap);
                 map.put("vote",1);
             }
             else{

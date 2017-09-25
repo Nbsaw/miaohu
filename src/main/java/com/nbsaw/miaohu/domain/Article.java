@@ -1,4 +1,4 @@
-package com.nbsaw.miaohu.entity;
+package com.nbsaw.miaohu.domain;
 
 import com.nbsaw.miaohu.type.ReplyStatusType;
 import lombok.Data;
@@ -7,9 +7,8 @@ import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "article")
 @Data
-public class ArticleEntity implements Serializable {
+public class Article implements Serializable {
     @Id
     @GeneratedValue
     Long id;

@@ -1,7 +1,7 @@
 package com.nbsaw.miaohu.controller;
 
 import com.nbsaw.miaohu.repository.*;
-import com.nbsaw.miaohu.entity.UserEntity;
+import com.nbsaw.miaohu.domain.User;
 import com.nbsaw.miaohu.util.JwtUtil;
 import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
@@ -33,10 +33,10 @@ public class UserController {
         if (userRepository.isUserExists(phone)){
             try{
                 // 校对用户手机号码密码
-                UserEntity userEntity = userRepository.login(phone,password);
+                User user = userRepository.login(phone,password);
                 ResultVo resultVo = new ResultVo();
                 resultVo.setCode(200);
-                String token = jwtUtil.createJWT(userEntity.getId(),userEntity.getUserType());
+                String token = jwtUtil.createJWT(user.getId(),user.getUserType());
                 resultVo.setResult(token);
             return resultVo;}
             catch (Exception e){

@@ -1,14 +1,13 @@
-package com.nbsaw.miaohu.entity;
+package com.nbsaw.miaohu.domain;
 
 import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-@Entity
-@Table(name = "answer_vote_map")
 @Data
-public class AnswerVoteMapEntity implements Serializable {
+@Entity
+public class AnswerVoteMap implements Serializable {
     @Id
     @GeneratedValue
     Long id;

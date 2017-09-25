@@ -2,15 +2,20 @@ package com.nbsaw.miaohu.controller;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.nbsaw.miaohu.config.RedisConfig;
-import com.nbsaw.miaohu.service.PhoneMessageService;
 import com.nbsaw.miaohu.repository.UserRepository;
-import com.nbsaw.miaohu.util.*;
+import com.nbsaw.miaohu.service.PhoneMessageService;
+import com.nbsaw.miaohu.util.RedisUtil;
+import com.nbsaw.miaohu.util.RegisterValidUtil;
 import com.nbsaw.miaohu.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
+
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
