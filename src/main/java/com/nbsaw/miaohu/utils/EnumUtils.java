@@ -1,6 +1,6 @@
-package com.nbsaw.miaohu.util;
+package com.nbsaw.miaohu.utils;
 
-public class EnumUtil {
+public class EnumUtils {
     public static  <T extends Enum<T>> boolean equalsOf(Class<T> clazz, String value){
         for (T t : clazz.getEnumConstants()) {
             if (t.toString().equals(value)) return true;

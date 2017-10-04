@@ -1,10 +1,14 @@
-package com.nbsaw.miaohu.util;
+package com.nbsaw.miaohu.utils;
 
+import com.nbsaw.miaohu.config.RedisConfig;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RedisUtil {
+public class RedisUtils {
+    @Autowired RedisConfig redisConfig;
 
     // 图片验证码
     @Value("${redis.constant.image}")
@@ -36,5 +40,10 @@ public class RedisUtil {
     // 获取手机验证码超时时间
     public int getPhoneTimeOut(){
         return phoneTimeOut;
+    }
+
+    // 获取Redis模板
+    public StringRedisTemplate getTemplate(){
+        return redisConfig.getTemplate();
     }
 }

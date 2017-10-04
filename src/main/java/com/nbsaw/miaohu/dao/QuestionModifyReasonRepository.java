@@ -1,4 +1,4 @@
-package com.nbsaw.miaohu.repository;
+package com.nbsaw.miaohu.dao;
 
 public interface QuestionModifyReasonRepository {
 

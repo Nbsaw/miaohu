@@ -1,7 +1,7 @@
 package com.nbsaw.miaohu.controller;
 
 import com.google.gson.Gson;
-import com.nbsaw.miaohu.util.JwtUtil;
+import com.nbsaw.miaohu.utils.JwtUtils;
 import com.qiniu.common.Zone;
 import com.qiniu.http.Response;
 import com.qiniu.storage.Configuration;
@@ -18,18 +18,13 @@ import java.io.IOException;
 @RequestMapping("/upload")
 public class UploadController {
 
-    private final JwtUtil jwtUtil;
-
-    @Autowired
-    public UploadController(JwtUtil jwtUtil) {
-        this.jwtUtil = jwtUtil;
-    }
+    @Autowired private JwtUtils jwtUtils;
 
     @PostMapping(value = "/avatar")
     public String uploadAvatar(@RequestParam MultipartFile avatar,
                                @RequestHeader String token) throws IOException {
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
 
         // 凭证生成
         String accessKey = "QDmYg322MuVo4vmYAWk06I160-q9xiWKFXtZI7O3";

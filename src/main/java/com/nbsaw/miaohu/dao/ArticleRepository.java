@@ -1,9 +1,11 @@
-package com.nbsaw.miaohu.repository;
+package com.nbsaw.miaohu.dao;
 
-import com.nbsaw.miaohu.domain.ReplyVote;
-import org.springframework.data.repository.CrudRepository;
+import com.nbsaw.miaohu.domain.Article;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.repository.query.Param;
 
-public interface ReplyVoteRepository extends CrudRepository<ReplyVote,Long> {
+public interface ArticleRepository extends PagingAndSortingRepository<Article,Long> {
 
     /**
      * ---------------------------------------------------------------------------
@@ -12,15 +14,19 @@ public interface ReplyVoteRepository extends CrudRepository<ReplyVote,Long> {
      *
      * ---------------------------------------------------------------------------
      */
-    ReplyVote findByReplyIdAndUid(Long replyId, String uid);
+
+    // 根据uid和帖子id查找问题归属
+    @Query("select count(a) > 0 from Article a where a.id = :id and a.uid = :uid")
+    boolean belong(@Param("id")Long id, @Param("uid")String uid);
 
     /**
      * ---------------------------------------------------------------------------
      *
-     *                                 增 加
+     *                                 修 改
      *
      * ---------------------------------------------------------------------------
      */
+
 
     /**
      * ---------------------------------------------------------------------------

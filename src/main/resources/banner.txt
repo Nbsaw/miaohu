@@ -4,4 +4,4 @@
 /__/</<//_)_  /__/(_/|/ (/ <_  (_/  (_/|(_<_(_) (/ (_/_
        /                                            /
       '                                            '
-${AnsiColor.BRIGHT_GREEN}::${project.name} - ${project.version}::  ${AnsiColor.DEFAULT}Made by ${AnsiColor.BRIGHT_BLUE} ${project.author},and ${AnsiColor.DEFAULT} now the env  is ${AnsiColor.CYAN}${spring.profiles.active}
+${AnsiColor.BRIGHT_GREEN}::${project.name} - ${project.version}::  ${AnsiColor.DEFAULT}Made by ${AnsiColor.BRIGHT_BLUE} ${project.author} ${AnsiColor.DEFAULT},and now the env is ${AnsiColor.CYAN}${spring.profiles.active}

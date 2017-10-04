@@ -1,4 +1,4 @@
-package com.nbsaw.miaohu.repository;
+package com.nbsaw.miaohu.dao;
 
 import com.nbsaw.miaohu.domain.Tag;
 import org.springframework.data.jpa.repository.Query;

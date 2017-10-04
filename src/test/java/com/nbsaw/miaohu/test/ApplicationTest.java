@@ -6,12 +6,17 @@ import com.nbsaw.miaohu.service.PhoneMessageService;
 import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.ResultVo;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 @RunWith(SpringRunner.class)
@@ -23,10 +28,32 @@ public class ApplicationTest {
     @Autowired
     private WebApplicationContext context;
 
+    private MockMvc mvc;
+
+    @Before
+    public void setUp(){
+        mvc = MockMvcBuilders.webAppContextSetup(context).build();
+    }
+
     @Test
     public void test(){
         ResultVo vo = context.getBean(TagController.class).findAll();
         Assert.assertEquals(vo.getCode(),200);
     }
+
+    @Test
+    public void testNotFound() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/ffff"))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    public void testParamMiss() throws Exception {
+        mvc.perform(MockMvcRequestBuilders.get("/answer/1"))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.content().string("无效的token"));
+    }
+
+
 
 }

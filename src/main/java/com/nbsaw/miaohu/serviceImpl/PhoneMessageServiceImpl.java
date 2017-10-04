@@ -7,12 +7,12 @@ import com.taobao.api.TaobaoClient;
 import com.taobao.api.request.AlibabaAliqinFcSmsNumSendRequest;
 import com.taobao.api.response.AlibabaAliqinFcSmsNumSendResponse;
 import org.apache.log4j.Logger;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
-@Component
-public class PhoneMessageImpl implements PhoneMessageService {
+@Service
+public class PhoneMessageServiceImpl implements PhoneMessageService {
     // 日志设置
-    private final static Logger logger = Logger.getLogger(PhoneMessageImpl.class);
+    private final static Logger logger = Logger.getLogger(PhoneMessageServiceImpl.class);
 
     // 验证码的配置
     private final String URL = "http://gw.api.taobao.com/router/rest"; // api地址
@@ -21,7 +21,7 @@ public class PhoneMessageImpl implements PhoneMessageService {
 
     // 将生成的验证码发送到手机，并且返回验证码的结果
     @Override
-    public String sendRegisterCode(String phone) {
+    public String sendRegisterCode(String phone) throws ApiException {
         String random = String.valueOf((int)((Math.random()*9+1)*100000)); //随机数生成
         TaobaoClient client = new DefaultTaobaoClient(URL, APPKEY, SECRET);
         AlibabaAliqinFcSmsNumSendRequest req = new AlibabaAliqinFcSmsNumSendRequest();
@@ -31,12 +31,8 @@ public class PhoneMessageImpl implements PhoneMessageService {
         req.setRecNum(phone); // 发送到号码
         req.setSmsTemplateCode("SMS_60000851"); // 短信验证模板ID
         AlibabaAliqinFcSmsNumSendResponse rsp;
-        try {
-            rsp = client.execute(req);
-            logger.info(rsp.getBody());
-        } catch (ApiException e) {
-            logger.error(e.getMessage());
-        }
+        rsp = client.execute(req);
+        logger.info(rsp.getBody());
         return random;
     }
 }

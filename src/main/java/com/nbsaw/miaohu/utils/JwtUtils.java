@@ -1,4 +1,4 @@
-package com.nbsaw.miaohu.util;
+package com.nbsaw.miaohu.utils;
 
 import com.nbsaw.miaohu.exception.ExJwtException;
 import com.nbsaw.miaohu.exception.InValidJwtException;
@@ -10,13 +10,13 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 
 @Component
-public class JwtUtil {
+public class JwtUtils {
     private final int timeout;
     private final String key;
 
     // 初始化
     @Autowired
-    public JwtUtil(@Value("${jwt.timeout}") int timeout, @Value("${jwt.key}") String key) {
+    public JwtUtils(@Value("${jwt.timeout}") int timeout, @Value("${jwt.key}") String key) {
         this.timeout = timeout;
         this.key = key;
     }

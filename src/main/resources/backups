@@ -94,7 +94,7 @@ spring.main.web-environment= # Run the application in a web environment (auto-de
 spring.mandatory-file-encoding= # Expected character encoding the application must use.
 
 # INTERNATIONALIZATION (MessageSourceAutoConfiguration)
-spring.messages.always-use-message-format=false # Set whether to always apply the MessageFormat rules, parsing even messages without arguments.
+spring.messages.always-use-i18n-format=false # Set whether to always apply the MessageFormat rules, parsing even messages without arguments.
 spring.messages.basename=messages # Comma-separated list of basenames, each following the ResourceBundle convention.
 spring.messages.cache-seconds=-1 # Loaded resource bundle files cache expiration, in seconds. When set to -1, bundles are cached forever.
 spring.messages.encoding=UTF-8 # Message bundles encoding.
@@ -133,7 +133,7 @@ server.connection-timeout= # Time in milliseconds that connectors will wait for 
 server.context-parameters.*= # Servlet context init parameters. For instance `server.context-parameters.a=alpha`
 server.context-path= # Context path of the application.
 server.display-name=application # Display name of the application.
-server.max-http-header-size=0 # Maximum size in bytes of the HTTP message header.
+server.max-http-header-size=0 # Maximum size in bytes of the HTTP i18n header.
 server.error.include-stacktrace=never # When to include a "stacktrace" attribute.
 server.error.path=/error # Path of the error controller.
 server.error.whitelabel.enabled=true # Enable the default error page displayed in browsers in case of a server error.
@@ -256,8 +256,8 @@ spring.groovy.template.view-names= # White list of view names that can be resolv
 # SPRING HATEOAS (HateoasProperties)
 spring.hateoas.use-hal-as-default-json-media-type=true # Specify if application/hal+json responses should be sent to requests that accept application/json.
 
-# HTTP message conversion
-spring.http.converters.preferred-json-mapper=jackson # Preferred JSON mapper to use for HTTP message conversion. Set to "gson" to force the use of Gson when both it and Jackson are on the classpath.
+# HTTP i18n conversion
+spring.http.converters.preferred-json-mapper=jackson # Preferred JSON mapper to use for HTTP i18n conversion. Set to "gson" to force the use of Gson when both it and Jackson are on the classpath.
 
 # HTTP encoding (HttpEncodingProperties)
 spring.http.encoding.charset=UTF-8 # Charset of HTTP requests and responses. Added to the "Content-Type" header if not set explicitly.
@@ -352,7 +352,7 @@ spring.mvc.locale= # Locale to use. By default, this locale is overridden by the
 spring.mvc.locale-resolver=accept-header # Define how the locale should be resolved.
 spring.mvc.log-resolved-exception=false # Enable warn logging of exceptions resolved by a "HandlerExceptionResolver".
 spring.mvc.media-types.*= # Maps file extensions to media types for content negotiation.
-spring.mvc.message-codes-resolver-format= # Formatting strategy for message codes. For instance `PREFIX_ERROR_CODE`.
+spring.mvc.i18n-codes-resolver-format= # Formatting strategy for i18n codes. For instance `PREFIX_ERROR_CODE`.
 spring.mvc.servlet.load-on-startup=-1 # Load on startup priority of the Spring Web Services servlet.
 spring.mvc.static-path-pattern=/** # Path pattern used for static resources.
 spring.mvc.throw-exception-if-no-handler-found=false # If a "NoHandlerFoundException" should be thrown if no Handler was found to process a request.
@@ -863,10 +863,10 @@ spring.jms.pub-sub-domain=false # Specify if the default destination type is top
 spring.jms.template.default-destination= # Default destination to use on send/receive operations that do not have a destination parameter.
 spring.jms.template.delivery-delay= # Delivery delay to use for send calls in milliseconds.
 spring.jms.template.delivery-mode= # Delivery mode. Enable QoS when set.
-spring.jms.template.priority= # Priority of a message when sending. Enable QoS when set.
-spring.jms.template.qos-enabled= # Enable explicit QoS when sending a message.
+spring.jms.template.priority= # Priority of a i18n when sending. Enable QoS when set.
+spring.jms.template.qos-enabled= # Enable explicit QoS when sending a i18n.
 spring.jms.template.receive-timeout= # Timeout to use for receive calls in milliseconds.
-spring.jms.template.time-to-live= # Time-to-live of a message when sending in milliseconds. Enable QoS when set.
+spring.jms.template.time-to-live= # Time-to-live of a i18n when sending in milliseconds. Enable QoS when set.
 
 # APACHE KAFKA (KafkaProperties)
 spring.kafka.bootstrap-servers= # Comma-delimited list of host:port pairs to use for establishing the initial connection to the Kafka cluster.
@@ -922,8 +922,8 @@ spring.rabbitmq.listener.idle-event-interval= # How often idle container events 
 spring.rabbitmq.listener.max-concurrency= # Maximum number of consumers.
 spring.rabbitmq.listener.prefetch= # Number of messages to be handled in a single request. It should be greater than or equal to the transaction size (if used).
 spring.rabbitmq.listener.retry.enabled=false # Whether or not publishing retries are enabled.
-spring.rabbitmq.listener.retry.initial-interval=1000 # Interval between the first and second attempt to deliver a message.
-spring.rabbitmq.listener.retry.max-attempts=3 # Maximum number of attempts to deliver a message.
+spring.rabbitmq.listener.retry.initial-interval=1000 # Interval between the first and second attempt to deliver a i18n.
+spring.rabbitmq.listener.retry.max-attempts=3 # Maximum number of attempts to deliver a i18n.
 spring.rabbitmq.listener.retry.max-interval=10000 # Maximum interval between attempts.
 spring.rabbitmq.listener.retry.multiplier=1.0 # A multiplier to apply to the previous delivery retry interval.
 spring.rabbitmq.listener.retry.stateless=true # Whether or not retry is stateless or stateful.
@@ -943,9 +943,9 @@ spring.rabbitmq.template.mandatory=false # Enable mandatory messages.
 spring.rabbitmq.template.receive-timeout=0 # Timeout for `receive()` methods.
 spring.rabbitmq.template.reply-timeout=5000 # Timeout for `sendAndReceive()` methods.
 spring.rabbitmq.template.retry.enabled=false # Set to true to enable retries in the `RabbitTemplate`.
-spring.rabbitmq.template.retry.initial-interval=1000 # Interval between the first and second attempt to publish a message.
-spring.rabbitmq.template.retry.max-attempts=3 # Maximum number of attempts to publish a message.
-spring.rabbitmq.template.retry.max-interval=10000 # Maximum number of attempts to publish a message.
+spring.rabbitmq.template.retry.initial-interval=1000 # Interval between the first and second attempt to publish a i18n.
+spring.rabbitmq.template.retry.max-attempts=3 # Maximum number of attempts to publish a i18n.
+spring.rabbitmq.template.retry.max-interval=10000 # Maximum number of attempts to publish a i18n.
 spring.rabbitmq.template.retry.multiplier=1.0 # A multiplier to apply to the previous publishing retry interval.
 spring.rabbitmq.username= # Login userInfo to authenticate to the broker.
 spring.rabbitmq.virtual-host= # Virtual host to use when connecting to the broker.

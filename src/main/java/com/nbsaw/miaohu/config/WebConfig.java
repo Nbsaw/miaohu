@@ -1,7 +1,7 @@
 package com.nbsaw.miaohu.config;
 
 import com.nbsaw.miaohu.interceptor.UserInterceptor;
-import com.nbsaw.miaohu.util.GetUrlUtil;
+import com.nbsaw.miaohu.utils.GetUrlUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -19,10 +19,28 @@ import java.util.List;
 public class WebConfig implements WebMvcConfigurer {
 
     @Override
+    // 用户登录过滤
     public void addInterceptors(InterceptorRegistry registry) {
-        // 用户登录控制
         registry.addWebRequestInterceptor(new UserInterceptor())
-                .addPathPatterns(GetUrlUtil.getUrl("com.nbsaw.miaohu.controller"));
+                .addPathPatterns(GetUrlUtils.getUrl("com.nbsaw.miaohu.controller"));
+    }
+
+    @Override
+    // 跨域设置
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**").allowedOrigins("*")
+                                               .allowedHeaders("*")
+                                               .allowedHeaders("*");
+    }
+
+    @Override
+    public Validator getValidator() {
+        return null;
+    }
+
+    @Override
+    public MessageCodesResolver getMessageCodesResolver() {
+        return null;
     }
 
     @Override
@@ -52,11 +70,6 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-
-    }
-
-    @Override
-    public void addCorsMappings(CorsRegistry registry) {
 
     }
 
@@ -98,15 +111,5 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void extendHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
 
-    }
-
-    @Override
-    public Validator getValidator() {
-        return null;
-    }
-
-    @Override
-    public MessageCodesResolver getMessageCodesResolver() {
-        return null;
     }
 }

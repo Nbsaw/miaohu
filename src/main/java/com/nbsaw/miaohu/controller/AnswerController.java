@@ -2,15 +2,16 @@ package com.nbsaw.miaohu.controller;
 
 import com.nbsaw.miaohu.domain.Answer;
 import com.nbsaw.miaohu.domain.AnswerVoteMap;
-import com.nbsaw.miaohu.repository.AnswerRepository;
-import com.nbsaw.miaohu.repository.AnswerVoteMapRepository;
-import com.nbsaw.miaohu.util.JwtUtil;
+import com.nbsaw.miaohu.dao.AnswerRepository;
+import com.nbsaw.miaohu.dao.AnswerVoteMapRepository;
+import com.nbsaw.miaohu.exception.ValidParamException;
+import com.nbsaw.miaohu.service.AnswerService;
+import com.nbsaw.miaohu.utils.JwtUtils;
 import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
@@ -19,108 +20,52 @@ import java.util.Map;
 @RestController
 @RequestMapping("/answer")
 public class AnswerController {
-    private final AnswerVoteMapRepository answerVoteMapRepository;
-    private final JwtUtil jwtUtil;
-    private final AnswerRepository answerRepository;
+    @Autowired private AnswerVoteMapRepository answerVoteMapRepository;
+    @Autowired private JwtUtils jwtUtils;
+    @Autowired private AnswerRepository answerRepository;
+    @Autowired private AnswerService answerService;
 
-    @Autowired
-    public AnswerController(AnswerVoteMapRepository answerVoteMapRepository,
-                            JwtUtil jwtUtil,
-                            AnswerRepository answerRepository) {
-        this.answerVoteMapRepository = answerVoteMapRepository;
-        this.jwtUtil                 = jwtUtil;
-        this.answerRepository        = answerRepository;
-    }
-
-    // 查找问题的某个评论
-    @GetMapping("/{id}")
-    public ResultVo selectAnswerById(@PathVariable Long id) {
-        // 暂时根据逆序查找
-        List<Answer> list = answerRepository.findAllByQuestionId(id,new PageRequest(0,5,new Sort(Sort.Direction.DESC,"date")));
-        ResultVo resultVo = new ResultVo();
-        resultVo.setCode(200);
-        resultVo.setResult(list);
-        return resultVo;
+    // 查找某个问题下的前5个回答
+    @GetMapping("/{questionId}")
+    public ResponseEntity selectAnswerById(@PathVariable Long questionId) {
+        List<Answer> list = answerService.getAnswerList(questionId);
+        return ResponseEntity.ok().body(list);
     }
 
     // 回答问题
     @PostMapping("/add")
-    public MessageVo answer(@RequestParam Long questionId,
+    public ResponseEntity answer(@RequestParam Long questionId,
                             @RequestParam String content,
-                            @RequestHeader String token) {
-        // 获取uid
-        String uid = jwtUtil.getUid(token);
-
-        MessageVo result = new MessageVo();
-
-        // 检测id是否为空
-        if (questionId == null) {
-            result.setCode(403);
-            result.setMessage("帖子id不应该为空");
-        }
-        // 检测是不是已经回答过的问题
-        else if (answerRepository.isExists(questionId, uid)) {
-            result.setCode(403);
-            result.setMessage("不可以重复回答问题:(");
-        }
-        // 检验回复是否为空
-        else if (content.trim().length() == 0) {
-            result.setCode(400);
-            result.setMessage("评论不能为空");
-        }
-        // 验证通过提交
-        else {
-            Answer answer = new Answer();
-            answer.setQuestionId(questionId);
-            answer.setContent(content);
-            answer.setUid(uid);
-            answerRepository.save(answer);
-            result.setCode(200);
-            result.setMessage("评论成功");
-        }
-        return result;
+                            @RequestHeader String token) throws ValidParamException {
+        String uid = jwtUtils.getUid(token);
+        answerService.save(questionId,content,uid);
+        return ResponseEntity.ok().body(uid);
     }
 
     // 回答删除
     @DeleteMapping("/delete")
-    public MessageVo deleteAnswer(@RequestParam Long questionId,
+    public MessageVo deleteAnswer(@RequestParam Long answerId,
                                   @RequestHeader String token) {
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
         MessageVo result = new MessageVo();
-        // 回答鉴权
-        boolean isReply = answerRepository.isExists(questionId, uid);
-        if (isReply){
-            boolean isDeleted = answerRepository.isDeleted(questionId, uid);
-            if (isDeleted) {
-                result.setCode(400);
-                result.setMessage("已经是删除状态了！");
-            } else {
-                answerRepository.setDeletedTrue(questionId, uid);
-                result.setCode(200);
-                result.setMessage("回答已删除");
-            }
-        }
-        else{
-            result.setCode(400);
-            result.setMessage("无法删除没有回答的过问题");
-        }
+
         return result;
     }
 
     // 撤销删除回答
     @PostMapping("/revoke")
-    public MessageVo revokeAnswer(@RequestParam Long questionId,
+    public MessageVo revokeAnswer(@RequestParam Long answerId,
                                   @RequestHeader String token) {
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
 
         MessageVo result = new MessageVo();
-        boolean isReply = answerRepository.isExists(questionId, uid);
+        boolean isReply = answerRepository.isExists(answerId, uid);
         if (isReply) {
-            boolean isDeleted = answerRepository.isDeleted(questionId, uid);
+            boolean isDeleted = answerRepository.isDeleted(answerId, uid);
             if (isDeleted) {
-                answerRepository.setDeletedFalse(questionId, uid);
+                answerRepository.setDeletedFalse(answerId, uid);
                 result.setCode(200);
                 result.setMessage("撤销成功");
             } else {
@@ -140,7 +85,7 @@ public class AnswerController {
     public GenericVo vote(@RequestParam Long answerId,
                           @RequestHeader String token) {
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
 
         Map map = new HashMap();
         // 通过回答的id找到问题的id

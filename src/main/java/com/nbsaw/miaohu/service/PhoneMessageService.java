@@ -1,11 +1,8 @@
 package com.nbsaw.miaohu.service;
 
-import org.springframework.stereotype.Service;
+import com.taobao.api.ApiException;
 
-@Service
 public interface PhoneMessageService {
-
     // 发送注册验证码到手机,并返回验证码
-    String sendRegisterCode(String phone);
-
+    String sendRegisterCode(String phone) throws ApiException;
 }

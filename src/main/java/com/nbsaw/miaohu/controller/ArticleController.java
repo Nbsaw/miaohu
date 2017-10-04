@@ -3,10 +3,10 @@ package com.nbsaw.miaohu.controller;
 import com.nbsaw.miaohu.domain.Article;
 import com.nbsaw.miaohu.domain.ArticleVote;
 import com.nbsaw.miaohu.domain.TagMap;
-import com.nbsaw.miaohu.repository.*;
+import com.nbsaw.miaohu.dao.*;
 import com.nbsaw.miaohu.type.ReplyStatusType;
-import com.nbsaw.miaohu.util.EnumUtil;
-import com.nbsaw.miaohu.util.JwtUtil;
+import com.nbsaw.miaohu.utils.EnumUtils;
+import com.nbsaw.miaohu.utils.JwtUtils;
 import com.nbsaw.miaohu.vo.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -20,28 +20,12 @@ import java.util.Map;
 @RestController
 @RequestMapping("/article")
 public class ArticleController {
-
-    private final ArticleRepository     articleRepository;
-    private final JwtUtil               jwtUtil;
-    private final TagRepository         tagRepository;
-    private final TagMapRepository      tagMapRepository;
-    private final ArticleVoteRepository articleVoteRepository;
-    private final ReplyRepository       replyRepository;
-
-    @Autowired
-    public ArticleController(ArticleRepository articleRepository,
-                             JwtUtil jwtUtil,
-                             TagRepository tagRepository,
-                             TagMapRepository tagMapRepository,
-                             ArticleVoteRepository articleVoteRepository,
-                             ReplyRepository replyRepository) {
-        this.articleRepository      = articleRepository;
-        this.jwtUtil                = jwtUtil;
-        this.tagRepository          = tagRepository;
-        this.tagMapRepository       = tagMapRepository;
-        this.articleVoteRepository  = articleVoteRepository;
-        this.replyRepository        = replyRepository;
-    }
+    @Autowired private ArticleRepository     articleRepository;
+    @Autowired private JwtUtils jwtUtils;
+    @Autowired private TagRepository         tagRepository;
+    @Autowired private TagMapRepository      tagMapRepository;
+    @Autowired private ArticleVoteRepository articleVoteRepository;
+    @Autowired private ReplyRepository       replyRepository;
 
     // TODO 全部文章查询接口
     @GetMapping
@@ -112,7 +96,7 @@ public class ArticleController {
     @DeleteMapping("/delete/{id}")
     public MessageVo delete(@PathVariable Long articleId, @RequestHeader("token") String token) {
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
         // 判断问题是否存在
         if (! articleRepository.exists(articleId)){
@@ -140,7 +124,7 @@ public class ArticleController {
                           @RequestParam String replyStatus,
                           @RequestHeader("token") String token) {
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
 
         // 结果设置
         MessageVo messageVo = new MessageVo();
@@ -167,7 +151,7 @@ public class ArticleController {
                 }
             }
             // 回复权限检查
-            if (!EnumUtil.equalsOf(ReplyStatusType.class,replyStatus)){
+            if (!EnumUtils.equalsOf(ReplyStatusType.class,replyStatus)){
                 messageVo.setMessage("无效的文章状态");
                 return messageVo;
             }
@@ -198,7 +182,7 @@ public class ArticleController {
     public GenericVo vote(@RequestParam Long articleId,
                           @RequestHeader("token") String token) {
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
         if (!articleRepository.exists(articleId)){
             messageVo.setCode(404);

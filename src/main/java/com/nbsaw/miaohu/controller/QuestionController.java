@@ -2,11 +2,11 @@ package com.nbsaw.miaohu.controller;
 
 import com.nbsaw.miaohu.domain.*;
 import com.nbsaw.miaohu.vo.QuestionVo;
-import com.nbsaw.miaohu.repository.QuestionRepository;
-import com.nbsaw.miaohu.repository.TagRepository;
-import com.nbsaw.miaohu.repository.AnswerRepository;
-import com.nbsaw.miaohu.repository.TagMapRepository;
-import com.nbsaw.miaohu.util.JwtUtil;
+import com.nbsaw.miaohu.dao.QuestionRepository;
+import com.nbsaw.miaohu.dao.TagRepository;
+import com.nbsaw.miaohu.dao.AnswerRepository;
+import com.nbsaw.miaohu.dao.TagMapRepository;
+import com.nbsaw.miaohu.utils.JwtUtils;
 import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.ResultVo;
@@ -21,24 +21,12 @@ import java.util.*;
 @RequestMapping("/question")
 public class QuestionController {
 
-    private final QuestionRepository      questionRepository;
-    private final TagRepository           tagRepository;
-    private final TagMapRepository        tagMapRepository;
-    private final AnswerRepository        answerRepository;
-    private final JwtUtil                 jwtUtil;
+    @Autowired private QuestionRepository      questionRepository;
+    @Autowired private TagRepository           tagRepository;
+    @Autowired private TagMapRepository        tagMapRepository;
+    @Autowired private AnswerRepository        answerRepository;
+    @Autowired private JwtUtils jwtUtils;
 
-    @Autowired
-    public QuestionController(QuestionRepository questionRepository,
-                              TagRepository tagRepository,
-                              TagMapRepository tagMapRepository,
-                              AnswerRepository answerRepository,
-                              JwtUtil jwtUtil) {
-        this.questionRepository = questionRepository;
-        this.tagRepository      = tagRepository;
-        this.tagMapRepository   = tagMapRepository;
-        this.answerRepository   = answerRepository;
-        this.jwtUtil            = jwtUtil;
-    }
 
     // 查询近期发布的问题
     // TODO 用户资料
@@ -84,7 +72,7 @@ public class QuestionController {
         }
 
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
 
         // 根据问题id查找问题
         Question question = questionRepository.findOne(questionId);
@@ -152,7 +140,7 @@ public class QuestionController {
     public MessageVo delete(@PathVariable Long questionId,
                             @RequestHeader("token") String token) {
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
         // 判断问题是否存在
         if (! questionRepository.exists(questionId)){
@@ -184,7 +172,7 @@ public class QuestionController {
                             @RequestParam boolean anonymous,
                             @RequestHeader("token") String token) {
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
 
         // 结果设置
         MessageVo result = new MessageVo();
@@ -206,7 +194,7 @@ public class QuestionController {
                           @RequestParam String[] tags,
                           @RequestHeader("token") String token) {
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
 
         Question question = new Question();
         boolean isExists = questionRepository.existsQuestion(title);
@@ -272,7 +260,7 @@ public class QuestionController {
     public MessageVo setAnonymous(@RequestParam Long questionId,
                                   @RequestHeader("token") String token) {
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
 
         MessageVo result = new MessageVo();
         boolean status = false;

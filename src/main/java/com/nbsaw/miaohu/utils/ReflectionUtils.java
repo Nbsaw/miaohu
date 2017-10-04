@@ -1,4 +1,4 @@
-package com.nbsaw.miaohu.util;
+package com.nbsaw.miaohu.utils;
 
 import java.io.File;
 import java.io.IOException;
@@ -7,7 +7,7 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ReflectionUtil {
+public class ReflectionUtils {
     // 扫描包
     public static List<String> scanPackage(String path){
         List<String> clazzs = new LinkedList<>();

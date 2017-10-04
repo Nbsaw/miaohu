@@ -1,4 +1,4 @@
-package com.nbsaw.miaohu.util;
+package com.nbsaw.miaohu.utils;
 
 import org.springframework.web.bind.annotation.*;
 import java.lang.annotation.Annotation;
@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class GetUrlUtil {
+public class GetUrlUtils {
     private static List<String> result = null;
 
     private static void addInfix(List list,String[] urls){
@@ -70,7 +70,7 @@ public class GetUrlUtil {
         if (result != null) return result.toArray(new String[result.size()]);
         result = new LinkedList<>();
         // 获取包下的类
-        List<String> clazzs = ReflectionUtil.scanPackage(path);
+        List<String> clazzs = ReflectionUtils.scanPackage(path);
         // 扫描类
         for (String className : clazzs){
             try {

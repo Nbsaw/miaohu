@@ -3,15 +3,9 @@ package com.nbsaw.miaohu.test;
 import lombok.Data;
 import lombok.ToString;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Test {
-    @Data
-    @ToString
-    class Fk{
-        private String name;
-        private int s;
-    }
 
-    public static void main(String[] args) {
-
-    }
 }

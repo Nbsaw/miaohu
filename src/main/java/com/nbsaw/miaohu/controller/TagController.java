@@ -1,12 +1,13 @@
 package com.nbsaw.miaohu.controller;
 
-import com.nbsaw.miaohu.repository.*;
+import com.nbsaw.miaohu.dao.*;
 import com.nbsaw.miaohu.domain.Tag;
 import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.QAResultVo;
 import com.nbsaw.miaohu.vo.ResultVo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,12 +16,7 @@ import java.util.List;
 @RequestMapping("/tag")
 public class TagController {
 
-    private final TagRepository  tagRepository;
-
-    @Autowired
-    public TagController(TagRepository tagRepository) {
-        this.tagRepository = tagRepository;
-    }
+    @Autowired private TagRepository  tagRepository;
 
     // 查找所有的标签
     @GetMapping
@@ -68,7 +64,7 @@ public class TagController {
     @GetMapping("/{tagName}")
     public GenericVo findById(@PathVariable String tagName){
         Tag tag = tagRepository.findByNameIgnoreCase(tagName);
-        if (tag == null){
+        if (StringUtils.isEmpty(tagName)){
             MessageVo messageVo = new MessageVo();
             messageVo.setCode(404);
             messageVo.setMessage("标签不存在");

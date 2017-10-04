@@ -1,9 +1,9 @@
-package com.nbsaw.miaohu.util;
+package com.nbsaw.miaohu.utils;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class HtmlUtil{
+public class HtmlUtils {
     private static String filter(String html,String regex , int enums){
         Pattern p_script = Pattern.compile(regex,enums);
         Matcher m_script = p_script.matcher(html);

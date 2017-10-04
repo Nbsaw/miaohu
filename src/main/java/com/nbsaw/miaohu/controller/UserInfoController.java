@@ -3,9 +3,9 @@ package com.nbsaw.miaohu.controller;
 import com.nbsaw.miaohu.domain.Question;
 import com.nbsaw.miaohu.domain.TagMap;
 import com.nbsaw.miaohu.domain.User;
-import com.nbsaw.miaohu.repository.*;
+import com.nbsaw.miaohu.dao.*;
 import com.nbsaw.miaohu.type.SexType;
-import com.nbsaw.miaohu.util.JwtUtil;
+import com.nbsaw.miaohu.utils.JwtUtils;
 import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.ResultVo;
@@ -13,6 +13,8 @@ import com.nbsaw.miaohu.vo.UserInfoVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import java.util.*;
 
@@ -20,34 +22,14 @@ import java.util.*;
 @RequestMapping("/user")
 // 主要防止注入。
 public class UserInfoController {
-    private final UserRepository        userRepository;
-    private final QuestionRepository    questionRepository;
-    private final TagRepository         tagRepository;
-    private final TagMapRepository      tagMapRepository;
-    private final JwtUtil               jwtUtil;
-    private final EducationRepository   educationRepository;
-    private final EmploymentsRepository employmentsRepository;
-    private final DomicileRepository    domicileRepository;
-
-    @Autowired
-    public UserInfoController(UserRepository userRepository,
-                              QuestionRepository questionRepository,
-                              TagRepository tagRepository,
-                              TagMapRepository tagMapRepository,
-                              JwtUtil jwtUtil,
-                              EducationRepository educationRepository,
-                              EmploymentsRepository employmentsRepository,
-                              DomicileRepository domicileRepository) {
-        this.userRepository = userRepository;
-        this.questionRepository = questionRepository;
-        this.tagRepository = tagRepository;
-        this.tagMapRepository = tagMapRepository;
-        this.jwtUtil = jwtUtil;
-        this.educationRepository = educationRepository;
-        this.employmentsRepository = employmentsRepository;
-        this.domicileRepository = domicileRepository;
-
-    }
+    @Autowired private UserRepository        userRepository;
+    @Autowired private QuestionRepository    questionRepository;
+    @Autowired private TagRepository         tagRepository;
+    @Autowired private TagMapRepository      tagMapRepository;
+    @Autowired private JwtUtils jwtUtils;
+    @Autowired private EducationRepository   educationRepository;
+    @Autowired private EmploymentsRepository employmentsRepository;
+    @Autowired private DomicileRepository    domicileRepository;
 
     // 获取用户信息
     @GetMapping("/info")
@@ -55,7 +37,7 @@ public class UserInfoController {
         // TODO 从Redis获取id，再从数据库查信息 -> 主要是判断用户是否注销了
         try {
             // 获取uid
-            String uid = jwtUtil.getUid(token);
+            String uid = jwtUtils.getUid(token);
             // 查询用户信息
             User user = userRepository.findOne(uid);
             UserInfoVo userInfoVo = new UserInfoVo();
@@ -89,7 +71,7 @@ public class UserInfoController {
     public MessageVo changePassword(@RequestParam String password,
                                     @RequestHeader("token") String token) {
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
 
         // 返回的数据
         MessageVo messageVo = new MessageVo();
@@ -112,7 +94,7 @@ public class UserInfoController {
     public ResultVo question(@RequestParam(defaultValue = "0") int page,
                              @RequestHeader("token") String token) {
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
 
         List result = new ArrayList();
         // 查找用户发表的问题
@@ -144,20 +126,20 @@ public class UserInfoController {
                                @RequestHeader("token") String token) {
         String sex = obj.get("sex");
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
         User user = userRepository.findOne(uid);
-        if (user == null){
-            messageVo.setCode(400);
+        if (StringUtils.isEmpty(user)){
+            messageVo.setCode(HttpStatus.BAD_REQUEST.value());
             messageVo.setMessage("用户不存在");
         }else{
             if (SexType.fromString(sex) != null){
                 user.setSex(SexType.valueOf(sex));
                 userRepository.save(user);
-                messageVo.setCode(200);
+                messageVo.setCode(HttpStatus.OK.value());
                 messageVo.setMessage("性别更改成功");
             }else{
-                messageVo.setCode(400);
+                messageVo.setCode(HttpStatus.BAD_REQUEST.value());
                 messageVo.setMessage("不存在性别");
             }
         }
@@ -170,21 +152,21 @@ public class UserInfoController {
                                @RequestHeader("token") String token) {
         String bio = obj.get("bio");
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
         User user = userRepository.findOne(uid);
         if (user == null){
-            messageVo.setCode(400);
+            messageVo.setCode(HttpStatus.BAD_REQUEST.value());
             messageVo.setMessage("用户不存在");
         }
         else if (bio.length() > 40){
-            messageVo.setCode(400);
+            messageVo.setCode(HttpStatus.BAD_REQUEST.value());
             messageVo.setMessage("请在40个字以内描述自己");
         }
         else{
             user.setBio(bio);
             userRepository.save(user);
-            messageVo.setCode(200);
+            messageVo.setCode(HttpStatus.OK.value());
             messageVo.setMessage("一句话介绍自己更改成功");
         }
         return messageVo;
@@ -196,16 +178,16 @@ public class UserInfoController {
                                     @RequestHeader("token") String token) {
         String industry = obj.get("industry");
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
         User user = userRepository.findOne(uid);
         if (user == null){
-            messageVo.setCode(400);
+            messageVo.setCode(HttpStatus.BAD_REQUEST.value());
             messageVo.setMessage("用户不存在");
         }else{
             user.setIndustry(industry);
             userRepository.save(user);
-            messageVo.setCode(200);
+            messageVo.setCode(HttpStatus.OK.value());
             messageVo.setMessage("行业更改成功");
         }
         return messageVo;
@@ -217,21 +199,21 @@ public class UserInfoController {
                                   @RequestHeader("token") String token) {
         String resume = obj.get("resume");
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
         User user = userRepository.findOne(uid);
         if (user == null){
-            messageVo.setCode(400);
+            messageVo.setCode(HttpStatus.BAD_REQUEST.value());
             messageVo.setMessage("用户不存在");
         }
         else if(resume.length() > 550){
-            messageVo.setCode(400);
+            messageVo.setCode(HttpStatus.BAD_REQUEST.value());
             messageVo.setMessage("不能超过550字");
         }
         else{
             user.setResume(resume);
             userRepository.save(user);
-            messageVo.setCode(200);
+            messageVo.setCode(HttpStatus.OK.value());
             messageVo.setMessage("简介更改成功");
         }
         return messageVo;
@@ -243,7 +225,7 @@ public class UserInfoController {
     public MessageVo changeDomicile(@RequestParam("domicile") String domicile,
                                     @RequestHeader("token") String token) {
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
         User user = userRepository.findOne(uid);
         if (user == null){
@@ -270,7 +252,7 @@ public class UserInfoController {
     public MessageVo changeEducation(@RequestBody String education,
                                      @RequestHeader("token") String token) {
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
         return messageVo;
     }

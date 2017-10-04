@@ -1,8 +1,8 @@
 package com.nbsaw.miaohu.controller;
 
-import com.nbsaw.miaohu.repository.*;
+import com.nbsaw.miaohu.dao.*;
 import com.nbsaw.miaohu.domain.User;
-import com.nbsaw.miaohu.util.JwtUtil;
+import com.nbsaw.miaohu.utils.JwtUtils;
 import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.ResultVo;
@@ -13,16 +13,8 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/user")
 public class UserController {
 
-    private final UserRepository userRepository;
-    private final JwtUtil        jwtUtil;
-
-    @Autowired
-    public UserController(UserRepository userRepository,
-                          JwtUtil jwtUtil) {
-        this.userRepository = userRepository;
-        this.jwtUtil        = jwtUtil;
-
-    }
+    @Autowired private UserRepository userRepository;
+    @Autowired private JwtUtils jwtUtils;
 
     // TODO 第三方登录
     // 登录验证
@@ -36,7 +28,7 @@ public class UserController {
                 User user = userRepository.login(phone,password);
                 ResultVo resultVo = new ResultVo();
                 resultVo.setCode(200);
-                String token = jwtUtil.createJWT(user.getId(),user.getUserType());
+                String token = jwtUtils.createJWT(user.getId(),user.getUserType());
                 resultVo.setResult(token);
             return resultVo;}
             catch (Exception e){

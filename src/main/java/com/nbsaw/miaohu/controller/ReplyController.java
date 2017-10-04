@@ -3,11 +3,11 @@ package com.nbsaw.miaohu.controller;
 import com.nbsaw.miaohu.domain.Article;
 import com.nbsaw.miaohu.domain.Reply;
 import com.nbsaw.miaohu.domain.ReplyVote;
-import com.nbsaw.miaohu.repository.ArticleRepository;
-import com.nbsaw.miaohu.repository.ReplyRepository;
-import com.nbsaw.miaohu.repository.ReplyVoteRepository;
+import com.nbsaw.miaohu.dao.ArticleRepository;
+import com.nbsaw.miaohu.dao.ReplyRepository;
+import com.nbsaw.miaohu.dao.ReplyVoteRepository;
 import com.nbsaw.miaohu.type.ReplyStatusType;
-import com.nbsaw.miaohu.util.JwtUtil;
+import com.nbsaw.miaohu.utils.JwtUtils;
 import com.nbsaw.miaohu.vo.MessageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,21 +16,10 @@ import org.springframework.web.util.HtmlUtils;
 @RestController
 @RequestMapping("/reply")
 public class ReplyController {
-    private final ReplyRepository     replyRepository;
-    private final ReplyVoteRepository replyVoteRepository;
-    private final ArticleRepository   articleRepository;
-    private final JwtUtil             jwtUtil;
-
-    @Autowired
-    public ReplyController(ReplyRepository replyRepository,
-                           ReplyVoteRepository replyVoteRepository,
-                           ArticleRepository articleRepository,
-                           JwtUtil jwtUtil) {
-        this.replyRepository = replyRepository;
-        this.replyVoteRepository = replyVoteRepository;
-        this.articleRepository = articleRepository;
-        this.jwtUtil = jwtUtil;
-    }
+    @Autowired private ReplyRepository     replyRepository;
+    @Autowired private ReplyVoteRepository replyVoteRepository;
+    @Autowired private ArticleRepository   articleRepository;
+    @Autowired private JwtUtils jwtUtils;
 
     // 回复文章
     // TODO 作者可以直接回复
@@ -40,7 +29,7 @@ public class ReplyController {
                            @RequestParam String content,
                            @RequestHeader("token") String token) {
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
         if (!articleRepository.exists(articleId)){
             messageVo.setCode(404);
@@ -77,7 +66,7 @@ public class ReplyController {
     public MessageVo voteReply(@RequestParam Long replyId,
                                @RequestHeader("token") String token) {
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
         if (!replyRepository.exists(replyId)){
             messageVo.setCode(404);
@@ -106,7 +95,7 @@ public class ReplyController {
     public MessageVo deleteAnswer(@RequestParam Long replyId,
                                   @RequestHeader("token") String token) {
         // 获取uid
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
         if (!replyRepository.exists(replyId)) {
             messageVo.setCode(404);
@@ -130,7 +119,7 @@ public class ReplyController {
     public MessageVo judge(@RequestParam(value = "replyId") Long replyId,
                            @RequestParam(value = "action") String action,
                            @RequestHeader("token") String token) {
-        String uid = jwtUtil.getUid(token);
+        String uid = jwtUtils.getUid(token);
         action = action.toLowerCase();
         Reply reply =  replyRepository.findOne(replyId);
         MessageVo messageVo = new MessageVo();
