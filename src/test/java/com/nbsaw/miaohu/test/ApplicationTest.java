@@ -1,9 +1,6 @@
 package com.nbsaw.miaohu.test;
 
-import com.nbsaw.miaohu.Application;
 import com.nbsaw.miaohu.controller.TagController;
-import com.nbsaw.miaohu.service.PhoneMessageService;
-import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.ResultVo;
 import org.junit.Assert;
 import org.junit.Before;

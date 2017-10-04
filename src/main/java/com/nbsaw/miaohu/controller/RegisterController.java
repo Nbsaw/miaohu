@@ -1,7 +1,7 @@
 package com.nbsaw.miaohu.controller;
 
 import com.nbsaw.miaohu.form.RegisterForm;
-import com.nbsaw.miaohu.utils.RegisterUtils;
+import com.nbsaw.miaohu.service.RegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,15 +13,18 @@ import java.util.Map;
 @RequestMapping("/register")
 public class RegisterController {
 
-    @Autowired RegisterUtils registerUtils;
+    @Autowired RegisterService registerService;
 
-    // 预检测路由
+    // 检测注册参数是否合法
     @PostMapping("/valid")
     public Map valid(RegisterForm registerForm, String sid) {
-        return registerUtils.validate(registerForm, sid);
+        return registerService.validate(registerForm, sid);
     }
 
-    // 正式注册路由
+    // 正式注册用户的路由
     @PostMapping
-    public Map register(RegisterForm registerForm, String sid) { return registerUtils.register(registerForm, sid); }
+    public Map register(RegisterForm registerForm, String sid) {
+        return registerService.register(registerForm, sid);
+    }
+
 }
