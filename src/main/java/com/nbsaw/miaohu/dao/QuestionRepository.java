@@ -1,6 +1,6 @@
 package com.nbsaw.miaohu.dao;
 
-import com.nbsaw.miaohu.domain.Question;
+import com.nbsaw.miaohu.model.Question;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -32,7 +32,7 @@ public interface QuestionRepository extends PagingAndSortingRepository<Question,
 
     // 判断问题是否已经存在
     @Query("select count(q) > 0 from Question q where q.title = :title")
-    boolean existsQuestion(@Param("title") String title);
+    boolean existsByTitle(@Param("title") String title);
 
     // 查询问题是否为匿名
     @Query("select qc.anonymous from Question qc where qc.id = :id")

@@ -1,6 +1,6 @@
 package com.nbsaw.miaohu.dao;
 
-import com.nbsaw.miaohu.domain.Article;
+import com.nbsaw.miaohu.model.Article;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.data.repository.query.Param;

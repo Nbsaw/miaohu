@@ -1,6 +1,6 @@
 package com.nbsaw.miaohu.dao;
 
-import com.nbsaw.miaohu.domain.User;
+import com.nbsaw.miaohu.model.User;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

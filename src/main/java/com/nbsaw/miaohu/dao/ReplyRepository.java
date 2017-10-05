@@ -1,6 +1,6 @@
 package com.nbsaw.miaohu.dao;
 
-import com.nbsaw.miaohu.domain.Reply;
+import com.nbsaw.miaohu.model.Reply;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

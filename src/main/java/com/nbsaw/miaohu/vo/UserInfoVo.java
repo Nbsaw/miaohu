@@ -1,8 +1,8 @@
 package com.nbsaw.miaohu.vo;
 
-import com.nbsaw.miaohu.domain.Domicile;
-import com.nbsaw.miaohu.domain.Education;
-import com.nbsaw.miaohu.domain.Employments;
+import com.nbsaw.miaohu.model.Domicile;
+import com.nbsaw.miaohu.model.Education;
+import com.nbsaw.miaohu.model.Employments;
 import lombok.Data;
 import java.io.Serializable;
 import java.util.List;

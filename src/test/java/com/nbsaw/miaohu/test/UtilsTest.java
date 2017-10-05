@@ -1,8 +1,8 @@
 package com.nbsaw.miaohu.test;
 
 import com.nbsaw.miaohu.type.UserType;
-import com.nbsaw.miaohu.utils.EnumUtils;
-import com.nbsaw.miaohu.utils.HtmlUtils;
+import com.nbsaw.miaohu.common.EnumUtils;
+import com.nbsaw.miaohu.common.HtmlUtils;
 import junit.framework.TestCase;
 
 public class UtilsTest extends TestCase {

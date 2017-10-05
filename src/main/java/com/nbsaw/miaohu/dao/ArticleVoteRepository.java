@@ -1,6 +1,6 @@
 package com.nbsaw.miaohu.dao;
 
-import com.nbsaw.miaohu.domain.ArticleVote;
+import com.nbsaw.miaohu.model.ArticleVote;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;

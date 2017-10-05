@@ -1,6 +1,6 @@
 package com.nbsaw.miaohu.dao;
 
-import com.nbsaw.miaohu.domain.Employments;
+import com.nbsaw.miaohu.model.Employments;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

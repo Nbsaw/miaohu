@@ -1,6 +1,6 @@
 package com.nbsaw.miaohu.interceptor;
 
-import com.nbsaw.miaohu.utils.JwtUtils;
+import com.nbsaw.miaohu.common.JwtUtils;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.context.request.WebRequestInterceptor;

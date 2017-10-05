@@ -1,6 +1,6 @@
 package com.nbsaw.miaohu.dao;
 
-import com.nbsaw.miaohu.domain.Tag;
+import com.nbsaw.miaohu.model.Tag;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -16,8 +16,7 @@ public interface TagRepository extends CrudRepository<Tag,Long> {
      */
 
     // 根据名字判断是否存在
-    @Query("select count(t) > 0 from Tag t where lower(t.name) = lower(:name)")
-    boolean existsName(@Param("name") String name);
+    boolean existsByName(@Param("name") String name);
 
     // 通过id查找
     Tag findById(Long id);

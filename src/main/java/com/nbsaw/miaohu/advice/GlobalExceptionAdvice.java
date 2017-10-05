@@ -47,7 +47,7 @@ class GlobalExceptionAdvice {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String,String> uploadErrorHandler(MultipartException e) throws Exception {
         Map message = new HashMap();
-        if (e.getCause().getMessage().contains("org.apache.tomcat.utils.http.fileupload.FileUploadBase$FileSizeLimitExceededException")){
+        if (e.getCause().getMessage().contains("org.apache.tomcat.common.http.fileupload.FileUploadBase$FileSizeLimitExceededException")){
             message.put("error","文件大小不应该超过" + maxSize);
         }else{
             message.put("error","文件上传错误");

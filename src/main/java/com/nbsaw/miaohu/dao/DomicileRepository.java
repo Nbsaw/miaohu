@@ -1,6 +1,6 @@
 package com.nbsaw.miaohu.dao;
 
-import com.nbsaw.miaohu.domain.Domicile;
+import com.nbsaw.miaohu.model.Domicile;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;

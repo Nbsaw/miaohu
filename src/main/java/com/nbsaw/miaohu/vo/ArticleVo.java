@@ -1,6 +1,6 @@
 package com.nbsaw.miaohu.vo;
 
-import com.nbsaw.miaohu.domain.Tag;
+import com.nbsaw.miaohu.model.Tag;
 import lombok.Data;
 
 import java.util.Date;
