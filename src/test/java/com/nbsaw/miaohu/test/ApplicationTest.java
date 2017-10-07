@@ -33,24 +33,6 @@ public class ApplicationTest {
     }
 
     @Test
-    public void test(){
-        ResultVo vo = context.getBean(TagController.class).findAll();
-        Assert.assertEquals(vo.getCode(),200);
-    }
-
-    @Test
-    public void testNotFound() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/ffff"))
-                .andExpect(MockMvcResultMatchers.status().isNotFound());
-    }
-
-    @Test
-    public void testParamMiss() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/answer/1"))
-                .andExpect(MockMvcResultMatchers.status().isBadRequest())
-                .andExpect(MockMvcResultMatchers.content().string("无效的token"));
-    }
-
-
+    public void test(){}
 
 }

@@ -19,9 +19,4 @@ public class UtilsTest extends TestCase {
         assertEquals(EnumUtils.equalsOf(UserType.class,"USER"),true);
     }
 
-    public void testRegisterValidUtil(){
-        //  中文测试
-//        assertEquals(RegisterValidUtil.isValidName("刘看山"),true);
-//        assertEquals(RegisterValidUtil.isValidName("ほほほ"),false);
-    }
 }
