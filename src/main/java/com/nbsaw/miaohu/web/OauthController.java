@@ -23,4 +23,5 @@ public class OauthController {
         String access_token = (String) map.get("access_token");
 //        response.sendRedirect("http://www.miaohu.moe:9090");
     }
+
 }

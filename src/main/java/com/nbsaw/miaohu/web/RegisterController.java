@@ -4,6 +4,7 @@ import com.nbsaw.miaohu.common.ErrorsMap;
 import com.nbsaw.miaohu.common.JsonResult;
 import com.nbsaw.miaohu.service.RegisterService;
 import com.nbsaw.miaohu.validator.RegisterValidator;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,10 +13,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/register")
+@AllArgsConstructor(onConstructor = @_(@Autowired))
 public class RegisterController {
 
-    @Autowired RegisterService registerService;
-    @Autowired RegisterValidator registerValidator;
+    private final RegisterService service;
+    private final RegisterValidator validator;
 
     // 检测注册参数是否合法
     @PostMapping("/valid")
@@ -24,7 +26,7 @@ public class RegisterController {
                             @RequestParam String phone,
                             @RequestParam String imageCaptcha,
                             @RequestParam String sid) {
-        ErrorsMap errors = registerValidator.validForm(username,password,phone,imageCaptcha,sid);
+        ErrorsMap errors = validator.validForm(username,password,phone,imageCaptcha,sid);
         if (errors.hasError())
             return new JsonResult(400,"注册参数有误",errors.getErrors());
         else
@@ -39,11 +41,11 @@ public class RegisterController {
                         @RequestParam String imageCaptcha,
                         @RequestParam String phoneCaptcha,
                         @RequestParam String sid) {
-        ErrorsMap errors = registerValidator.registerValid(username,password,phone,imageCaptcha,phoneCaptcha,sid);
+        ErrorsMap errors = validator.registerValid(username,password,phone,imageCaptcha,phoneCaptcha,sid);
         if (errors.hasError())
             return new JsonResult(400,"注册参数有误",errors.getErrors());
         else{
-            registerService.register(username,password,phone);
+            service.register(username,password,phone);
             return new JsonResult(0,"注册成功");
         }
     }

@@ -10,6 +10,7 @@ import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.QAResultVo;
 import com.nbsaw.miaohu.vo.ResultVo;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -18,11 +19,12 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/tag")
+@AllArgsConstructor(onConstructor = @_(@Autowired))
 public class TagController {
 
-    @Autowired TagRepository tagRepository;
-    @Autowired TagValidator tagValidator;
-    @Autowired TagService tagService;
+    private final TagRepository tagRepository;
+    private final TagValidator tagValidator;
+    private final TagService tagService;
 
     // 查找所有的标签
     @GetMapping

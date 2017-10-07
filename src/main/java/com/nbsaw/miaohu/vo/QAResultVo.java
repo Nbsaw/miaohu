@@ -5,6 +5,7 @@ import java.io.Serializable;
 
 @Data
 public class QAResultVo implements Serializable{
+
     private String id;
 
     private String title;
@@ -25,4 +26,5 @@ public class QAResultVo implements Serializable{
         this.date = date;
         this.type = type;
     }
+
 }

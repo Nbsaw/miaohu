@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 public class QuestionVo implements Serializable {
+
     private Long id;
 
     private String title;
@@ -32,4 +33,5 @@ public class QuestionVo implements Serializable {
         this.date = date;
         this.tag = tag;
     }
+
 }

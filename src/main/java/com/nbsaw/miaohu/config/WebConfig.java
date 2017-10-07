@@ -1,7 +1,5 @@
 package com.nbsaw.miaohu.config;
 
-import com.nbsaw.miaohu.interceptor.UserInterceptor;
-import com.nbsaw.miaohu.common.GetUrlUtils;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -11,7 +9,6 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodReturnValueHandler;
 import org.springframework.web.servlet.HandlerExceptionResolver;
 import org.springframework.web.servlet.config.annotation.*;
-
 import java.util.List;
 
 @Configuration
@@ -21,8 +18,7 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     // 用户登录过滤
     public void addInterceptors(InterceptorRegistry registry) {
-        registry.addWebRequestInterceptor(new UserInterceptor())
-                .addPathPatterns(GetUrlUtils.getUrl("com.nbsaw.miaohu.web"));
+
     }
 
     @Override

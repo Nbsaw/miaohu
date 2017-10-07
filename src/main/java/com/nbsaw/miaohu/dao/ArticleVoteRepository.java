@@ -8,9 +8,11 @@ import org.springframework.data.repository.query.Param;
 import javax.transaction.Transactional;
 
 public interface ArticleVoteRepository extends CrudRepository<ArticleVote,Long> {
+
     @Query("select count(v) > 0 from ArticleVote v where v.articleId = :articleId and v.uid = :uid")
     boolean isVoted(@Param("articleId") Long articleId,@Param("uid") String uid);
 
     @Transactional
     Integer deleteByArticleIdAndUid(Long articleId,String uid);
+
 }

@@ -9,6 +9,7 @@ import com.qiniu.storage.UploadManager;
 import com.qiniu.storage.model.DefaultPutRet;
 import com.qiniu.util.Auth;
 import com.qiniu.util.StringMap;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,14 +17,14 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/upload")
+@AllArgsConstructor(onConstructor = @_(@Autowired))
 public class UploadController {
 
-    @Autowired private JwtUtils jwtUtils;
+    private final JwtUtils jwtUtils;
 
     @PostMapping(value = "/avatar")
     public String uploadAvatar(@RequestParam MultipartFile avatar,
                                @RequestHeader String token) throws IOException {
-        // 获取uid
         String uid = jwtUtils.getUid(token);
 
         // 凭证生成

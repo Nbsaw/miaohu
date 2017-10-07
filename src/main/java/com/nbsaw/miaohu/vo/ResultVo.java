@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class ResultVo<T> extends GenericVo {
+
     private T result;
 
     public ResultVo(){}
@@ -14,4 +15,5 @@ public class ResultVo<T> extends GenericVo {
         setCode(code);
         setResult(result);
     }
+
 }

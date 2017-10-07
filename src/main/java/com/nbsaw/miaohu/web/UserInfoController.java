@@ -1,15 +1,16 @@
 package com.nbsaw.miaohu.web;
 
+import com.nbsaw.miaohu.common.JwtUtils;
+import com.nbsaw.miaohu.dao.*;
 import com.nbsaw.miaohu.model.Question;
 import com.nbsaw.miaohu.model.TagMap;
 import com.nbsaw.miaohu.model.User;
-import com.nbsaw.miaohu.dao.*;
 import com.nbsaw.miaohu.type.SexType;
-import com.nbsaw.miaohu.common.JwtUtils;
 import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.ResultVo;
 import com.nbsaw.miaohu.vo.UserInfoVo;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -20,23 +21,23 @@ import java.util.*;
 
 @RestController
 @RequestMapping("/user")
-// 主要防止注入。
+@AllArgsConstructor(onConstructor = @_(@Autowired))
 public class UserInfoController {
-    @Autowired private UserRepository        userRepository;
-    @Autowired private QuestionRepository    questionRepository;
-    @Autowired private TagRepository         tagRepository;
-    @Autowired private TagMapRepository      tagMapRepository;
-    @Autowired private JwtUtils jwtUtils;
-    @Autowired private EducationRepository   educationRepository;
-    @Autowired private EmploymentsRepository employmentsRepository;
-    @Autowired private DomicileRepository    domicileRepository;
+
+    UserRepository        userRepository;
+    QuestionRepository    questionRepository;
+    TagRepository         tagRepository;
+    TagMapRepository      tagMapRepository;
+    JwtUtils jwtUtils;
+    EducationRepository   educationRepository;
+    EmploymentsRepository employmentsRepository;
+    DomicileRepository    domicileRepository;
 
     // 获取用户信息
     @GetMapping("/info")
-    public GenericVo information(@RequestHeader("token") String token) {
+    public GenericVo information(@RequestHeader("${jwt.header}") String token) {
         // TODO 从Redis获取id，再从数据库查信息 -> 主要是判断用户是否注销了
         try {
-            // 获取uid
             String uid = jwtUtils.getUid(token);
             // 查询用户信息
             User user = userRepository.findOne(uid);
@@ -69,13 +70,10 @@ public class UserInfoController {
     // 修改用户密码
     @PostMapping("/changePassword")
     public MessageVo changePassword(@RequestParam String password,
-                                    @RequestHeader("token") String token) {
-        // 获取uid
+                                    @RequestHeader("${jwt.header}") String token) {
         String uid = jwtUtils.getUid(token);
-
         // 返回的数据
         MessageVo messageVo = new MessageVo();
-
         // 修改密码
         Boolean status = userRepository.updatePasswordByUid(uid,password) == 1;
         if (status){
@@ -92,10 +90,8 @@ public class UserInfoController {
     // 获取用户发表过的问题
     @GetMapping(value = "/question")
     public ResultVo question(@RequestParam(defaultValue = "0") int page,
-                             @RequestHeader("token") String token) {
-        // 获取uid
+                             @RequestHeader("${jwt.header}") String token) {
         String uid = jwtUtils.getUid(token);
-
         List result = new ArrayList();
         // 查找用户发表的问题
         List<Question> questionEntities =  questionRepository.findAllByUid(uid,new PageRequest(page,15,new Sort(Sort.Direction.DESC,"date")));
@@ -123,7 +119,7 @@ public class UserInfoController {
     // 性别修改
     @PutMapping("/sex")
     public MessageVo changeSex(@RequestBody Map<String,String> obj,
-                               @RequestHeader("token") String token) {
+                               @RequestHeader("${jwt.header}") String token) {
         String sex = obj.get("sex");
         // 获取uid
         String uid = jwtUtils.getUid(token);
@@ -149,9 +145,8 @@ public class UserInfoController {
     // 一句话介绍
     @PutMapping("/bio")
     public MessageVo changeBio(@RequestBody Map<String,String> obj,
-                               @RequestHeader("token") String token) {
+                               @RequestHeader("${jwt.header}") String token) {
         String bio = obj.get("bio");
-        // 获取uid
         String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
         User user = userRepository.findOne(uid);
@@ -175,9 +170,8 @@ public class UserInfoController {
     // 所在行业
     @PutMapping("/industry")
     public MessageVo changeIndustry(@RequestBody Map<String,String> obj,
-                                    @RequestHeader("token") String token) {
+                                    @RequestHeader("${jwt.header}") String token) {
         String industry = obj.get("industry");
-        // 获取uid
         String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
         User user = userRepository.findOne(uid);
@@ -196,9 +190,8 @@ public class UserInfoController {
     // 个人简介
     @PutMapping("/resume")
     public MessageVo changeResume(@RequestBody Map<String,String> obj,
-                                  @RequestHeader("token") String token) {
+                                  @RequestHeader("${jwt.header}") String token) {
         String resume = obj.get("resume");
-        // 获取uid
         String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
         User user = userRepository.findOne(uid);
@@ -223,8 +216,7 @@ public class UserInfoController {
     // TODO 居住地,包含多个
     @PutMapping("/domicile")
     public MessageVo changeDomicile(@RequestParam("domicile") String domicile,
-                                    @RequestHeader("token") String token) {
-        // 获取uid
+                                    @RequestHeader("${jwt.header}") String token) {
         String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
         User user = userRepository.findOne(uid);
@@ -250,8 +242,7 @@ public class UserInfoController {
     // TODO 教育经历,包含多个
     @PutMapping("/education")
     public MessageVo changeEducation(@RequestBody String education,
-                                     @RequestHeader("token") String token) {
-        // 获取uid
+                                     @RequestHeader("${jwt.header}") String token) {
         String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
         return messageVo;

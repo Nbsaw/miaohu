@@ -1,25 +1,28 @@
 package com.nbsaw.miaohu.web;
 
-import com.nbsaw.miaohu.model.Article;
-import com.nbsaw.miaohu.model.Reply;
-import com.nbsaw.miaohu.model.ReplyVote;
+import com.nbsaw.miaohu.common.JwtUtils;
 import com.nbsaw.miaohu.dao.ArticleRepository;
 import com.nbsaw.miaohu.dao.ReplyRepository;
 import com.nbsaw.miaohu.dao.ReplyVoteRepository;
+import com.nbsaw.miaohu.model.Article;
+import com.nbsaw.miaohu.model.Reply;
+import com.nbsaw.miaohu.model.ReplyVote;
 import com.nbsaw.miaohu.type.ReplyStatusType;
-import com.nbsaw.miaohu.common.JwtUtils;
 import com.nbsaw.miaohu.vo.MessageVo;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.HtmlUtils;
 
 @RestController
 @RequestMapping("/reply")
+@AllArgsConstructor(onConstructor = @_(@Autowired))
 public class ReplyController {
-    @Autowired private ReplyRepository     replyRepository;
-    @Autowired private ReplyVoteRepository replyVoteRepository;
-    @Autowired private ArticleRepository   articleRepository;
-    @Autowired private JwtUtils jwtUtils;
+
+    private final ReplyRepository     replyRepository;
+    private final ReplyVoteRepository replyVoteRepository;
+    private final ArticleRepository   articleRepository;
+    private final JwtUtils jwtUtils;
 
     // 回复文章
     // TODO 作者可以直接回复
@@ -27,7 +30,7 @@ public class ReplyController {
     @PostMapping("/add")
     public MessageVo reply(@RequestParam Long articleId,
                            @RequestParam String content,
-                           @RequestHeader("token") String token) {
+                           @RequestHeader("${jwt.header}") String token) {
         // 获取uid
         String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
@@ -64,7 +67,7 @@ public class ReplyController {
     // 回复点赞
     @PostMapping("/vote")
     public MessageVo voteReply(@RequestParam Long replyId,
-                               @RequestHeader("token") String token) {
+                               @RequestHeader("${jwt.header}") String token) {
         // 获取uid
         String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
@@ -93,7 +96,7 @@ public class ReplyController {
     // TODO 关联回复删除
     @DeleteMapping("/delete")
     public MessageVo deleteAnswer(@RequestParam Long replyId,
-                                  @RequestHeader("token") String token) {
+                                  @RequestHeader("${jwt.header}") String token) {
         // 获取uid
         String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
@@ -118,7 +121,7 @@ public class ReplyController {
     @PostMapping("/judge")
     public MessageVo judge(@RequestParam(value = "replyId") Long replyId,
                            @RequestParam(value = "action") String action,
-                           @RequestHeader("token") String token) {
+                           @RequestHeader("${jwt.header}") String token) {
         String uid = jwtUtils.getUid(token);
         action = action.toLowerCase();
         Reply reply =  replyRepository.findOne(replyId);
@@ -154,4 +157,5 @@ public class ReplyController {
         }
         return  messageVo;
     }
+
 }

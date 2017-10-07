@@ -5,5 +5,7 @@ import java.io.Serializable;
 
 @Data
 public class GenericVo implements Serializable {
+
     private int code;
+
 }

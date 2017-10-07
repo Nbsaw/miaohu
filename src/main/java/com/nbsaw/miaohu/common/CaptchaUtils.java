@@ -33,12 +33,12 @@ public class CaptchaUtils {
     }
 
     // 获取图片验证码超时时间
-    public int getImageTimeOut(){
+    private int getImageTimeOut(){
         return imageTimeOut;
     }
 
     // 获取手机验证码超时时间
-    public int getPhoneTimeOut(){
+    private int getPhoneTimeOut(){
         return phoneTimeOut;
     }
 

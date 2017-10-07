@@ -1,13 +1,17 @@
 package com.nbsaw.miaohu.web;
 
+import com.nbsaw.miaohu.common.EnumUtils;
+import com.nbsaw.miaohu.common.JwtUtils;
+import com.nbsaw.miaohu.dao.*;
 import com.nbsaw.miaohu.model.Article;
 import com.nbsaw.miaohu.model.ArticleVote;
 import com.nbsaw.miaohu.model.TagMap;
-import com.nbsaw.miaohu.dao.*;
 import com.nbsaw.miaohu.type.ReplyStatusType;
-import com.nbsaw.miaohu.common.EnumUtils;
-import com.nbsaw.miaohu.common.JwtUtils;
-import com.nbsaw.miaohu.vo.*;
+import com.nbsaw.miaohu.vo.ArticleVo;
+import com.nbsaw.miaohu.vo.GenericVo;
+import com.nbsaw.miaohu.vo.MessageVo;
+import com.nbsaw.miaohu.vo.ResultVo;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -19,13 +23,15 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/article")
+@AllArgsConstructor(onConstructor = @_(@Autowired))
 public class ArticleController {
-    @Autowired private ArticleRepository     articleRepository;
-    @Autowired private JwtUtils jwtUtils;
-    @Autowired private TagRepository         tagRepository;
-    @Autowired private TagMapRepository      tagMapRepository;
-    @Autowired private ArticleVoteRepository articleVoteRepository;
-    @Autowired private ReplyRepository       replyRepository;
+
+    private final ArticleRepository     articleRepository;
+    private final JwtUtils jwtUtils;
+    private final TagRepository         tagRepository;
+    private final TagMapRepository      tagMapRepository;
+    private final ArticleVoteRepository articleVoteRepository;
+    private final ReplyRepository       replyRepository;
 
     // TODO 全部文章查询接口
     @GetMapping
@@ -94,7 +100,7 @@ public class ArticleController {
 
     // 根据传过来的问题id删除对应的问题
     @DeleteMapping("/delete/{id}")
-    public MessageVo delete(@PathVariable Long articleId, @RequestHeader("token") String token) {
+    public MessageVo delete(@PathVariable Long articleId, @RequestHeader("${jwt.header}") String token) {
         // 获取uid
         String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();
@@ -122,7 +128,7 @@ public class ArticleController {
                           @RequestParam String content,
                           @RequestParam String[] tags,
                           @RequestParam String replyStatus,
-                          @RequestHeader("token") String token) {
+                          @RequestHeader("${jwt.header}") String token) {
         // 获取uid
         String uid = jwtUtils.getUid(token);
 
@@ -180,7 +186,7 @@ public class ArticleController {
     // 文章点赞
     @PostMapping("/vote")
     public GenericVo vote(@RequestParam Long articleId,
-                          @RequestHeader("token") String token) {
+                          @RequestHeader("${jwt.header}") String token) {
         // 获取uid
         String uid = jwtUtils.getUid(token);
         MessageVo messageVo = new MessageVo();

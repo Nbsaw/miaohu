@@ -4,8 +4,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class HtmlUtils {
-    private static String filter(String html,String regex , int enums){
-        Pattern p_script = Pattern.compile(regex,enums);
+    private static String filter(String html,String regex){
+        Pattern p_script = Pattern.compile(regex,Pattern.CASE_INSENSITIVE);
         Matcher m_script = p_script.matcher(html);
         return  m_script.replaceAll("");
     }
@@ -16,13 +16,13 @@ public class HtmlUtils {
         String regEx_html="<[^>]+>";
 
         // filter script tag
-        html = filter(html,regEx_script,Pattern.CASE_INSENSITIVE);
+        html = filter(html,regEx_script);
 
         // filter style tag
-        html = filter(html,regEx_style,Pattern.CASE_INSENSITIVE);
+        html = filter(html,regEx_style);
 
         // filter html tag
-        html = filter(html,regEx_html,Pattern.CASE_INSENSITIVE);
+        html = filter(html,regEx_html);
 
         return html.trim();
     }

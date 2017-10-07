@@ -1,8 +1,8 @@
 package com.nbsaw.miaohu.web;
 
+import com.nbsaw.miaohu.common.JsonResult;
 import com.nbsaw.miaohu.dao.AnswerRepository;
 import com.nbsaw.miaohu.dao.AnswerVoteMapRepository;
-import com.nbsaw.miaohu.model.Answer;
 import com.nbsaw.miaohu.model.AnswerVoteMap;
 import com.nbsaw.miaohu.exception.ValidParamException;
 import com.nbsaw.miaohu.service.AnswerService;
@@ -10,34 +10,36 @@ import com.nbsaw.miaohu.common.JwtUtils;
 import com.nbsaw.miaohu.vo.GenericVo;
 import com.nbsaw.miaohu.vo.MessageVo;
 import com.nbsaw.miaohu.vo.ResultVo;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @RestController
 @RequestMapping("/answer")
+@AllArgsConstructor(onConstructor = @_(@Autowired))
 public class AnswerController {
-    @Autowired private AnswerVoteMapRepository answerVoteMapRepository;
-    @Autowired private JwtUtils jwtUtils;
-    @Autowired private AnswerRepository answerRepository;
-    @Autowired private AnswerService answerService;
+
+    private final AnswerVoteMapRepository answerVoteMapRepository;
+    private final JwtUtils jwtUtils;
+    private final AnswerRepository answerRepository;
+    private final AnswerService answerService;
 
     // 查找某个问题下的前5个回答
     @GetMapping("/{questionId}")
-    public ResponseEntity selectAnswerById(@PathVariable Long questionId) {
-        List<Answer> list = answerService.getAnswerList(questionId);
-        return ResponseEntity.ok().body(list);
+    public JsonResult selectAnswerById(@PathVariable Long questionId) {
+        return new JsonResult(0,"",answerService.findAllById(questionId));
     }
 
     // 回答问题
     @PostMapping("/add")
     public ResponseEntity answer(@RequestParam Long questionId,
-                            @RequestParam String content,
-                            @RequestHeader String token) throws ValidParamException {
+                                 @RequestParam String content,
+                                 @RequestHeader String token) throws ValidParamException {
         String uid = jwtUtils.getUid(token);
+
         answerService.save(questionId,content,uid);
         return ResponseEntity.ok().body(uid);
     }

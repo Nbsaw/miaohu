@@ -3,11 +3,13 @@ package com.nbsaw.miaohu.vo;
 import com.nbsaw.miaohu.model.Tag;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
 @Data
-public class ArticleVo {
+public class ArticleVo implements Serializable{
+
     private Long id;
 
     private String title;
@@ -21,4 +23,5 @@ public class ArticleVo {
     private UserInfoVo userInfoVo;
 
     private String type = "article";
+
 }

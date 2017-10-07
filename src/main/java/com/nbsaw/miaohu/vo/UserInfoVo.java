@@ -9,6 +9,7 @@ import java.util.List;
 
 @Data
 public class UserInfoVo implements Serializable {
+
     private String username;
 
     private String avatar;
@@ -26,4 +27,5 @@ public class UserInfoVo implements Serializable {
     private List<Education> education;
 
     private List<Domicile> domicile;
+
 }

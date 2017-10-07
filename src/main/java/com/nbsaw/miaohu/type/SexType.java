@@ -2,6 +2,7 @@ package com.nbsaw.miaohu.type;
 
 
 public enum SexType {
+
     male("男"),
     female("女");
 
@@ -25,4 +26,5 @@ public enum SexType {
         }
         return sexType;
     }
+
 }
