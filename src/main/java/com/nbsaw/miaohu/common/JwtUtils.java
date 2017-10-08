@@ -48,7 +48,7 @@ public class JwtUtils {
     }
 
     // 根据用户的id以及用户的类型生成对应的jwt
-    public String createJWT(String uid,UserType userType){
+    public String createJWT(Long uid,UserType userType){
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS512,key)
                 .setExpiration(getExp())
@@ -58,7 +58,7 @@ public class JwtUtils {
     }
 
     // 获取用户uid
-    public String getUid(String token) {
-        return (String) parse(token).get("uid");
+    public Long getUid(String token) {
+        return Long.valueOf((int) parse(token).get("uid"));
     }
 }

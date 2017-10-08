@@ -4,6 +4,7 @@ import com.nbsaw.miaohu.exception.ExJwtException;
 import com.nbsaw.miaohu.exception.InValidJwtException;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -19,15 +20,14 @@ class GlobalExceptionAdvice {
     private String maxSize;
 
     // 参数缺少错误处理
-//    // TODO 这里要改
-//    @ExceptionHandler(MissingServletRequestParameterException.class)
-//    @ResponseStatus(HttpStatus.BAD_REQUEST)
-//    public Map<String,String> paramMissErrorHandler(MissingServletRequestParameterException e) throws Exception {
-//        Map error = new HashMap();
-//
-//        error.put("error",e.getMessage());
-//        return error;
-//    }
+//    // TODO 这里要改但不知道怎么改
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String,String> paramMissErrorHandler(MissingServletRequestParameterException e) throws Exception {
+        Map error = new HashMap();
+        error.put("error","参数" + e.getParameterName() + "不能为空");
+        return error;
+    }
 
     // 参数错误处理
     // TODO 这里要改

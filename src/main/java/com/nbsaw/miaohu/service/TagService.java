@@ -1,6 +1,6 @@
 package com.nbsaw.miaohu.service;
 
-import com.nbsaw.miaohu.model.Tag;
+import com.nbsaw.miaohu.dao.repository.model.Tag;
 import java.util.List;
 
 public interface TagService {
@@ -11,4 +11,5 @@ public interface TagService {
 
     List<Tag> search(String tagName);
 
+    Tag findByName(String tagName);
 }

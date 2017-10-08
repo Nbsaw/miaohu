@@ -1,4 +1,4 @@
-package com.nbsaw.miaohu.captcha;
+package com.nbsaw.miaohu.common;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
 import com.google.code.kaptcha.util.Config;
@@ -37,7 +37,7 @@ class CaptchaConfig {
         properties.setProperty("kaptcha.textproducer.char.string","0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ");
 
         // 实现
-        properties.setProperty("kaptcha.obscurificator.impl","com.nbsaw.miaohu.captcha.CustomCaptcha");
+        properties.setProperty("kaptcha.obscurificator.impl","com.nbsaw.miaohu.common.CustomCaptcha");
 
         // 将配置导入到 DefaultKaptcha 实例中
         Config config=new Config(properties);

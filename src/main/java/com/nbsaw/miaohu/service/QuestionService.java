@@ -1,9 +1,10 @@
 package com.nbsaw.miaohu.service;
 
-import com.nbsaw.miaohu.vo.QuestionVo;
+import com.nbsaw.miaohu.dto.PageDTO;
+import com.nbsaw.miaohu.dto.QuestionDTO;
+import com.nbsaw.miaohu.dto.QuestionDetailedDTO;
 
 import java.util.List;
-import java.util.Map;
 
 public interface QuestionService {
 
@@ -11,21 +12,21 @@ public interface QuestionService {
 
     boolean existsByTitle(String title);
 
-    void save(String uid,String title,String content,String[] tags);
+    void save(Long uid,String title,String content,String[] tags,boolean anonymous);
 
     // TODO 用户资料
     // TODO 话题只显示一个
     // TODO 查看问题是否匿名
-    List<QuestionVo> findAllQuestion(int page);
+    PageDTO findAllQuestion(int page);
 
-    Map findOne(Long questionId,String uid);
-
-    boolean belong(Long questionId,String uid);
-
-    void delete(Long questionId);
-
-    boolean setAnonymous(Long questionId,String uid);
-
-    void update(Long questionId,String uid,String title,String content,boolean anonymous);
+    QuestionDetailedDTO findOne(Long questionId, Long uid);
+//
+//    boolean belong(Long questionId,Long uid);
+//
+//    void delete(Long questionId);
+//
+//    boolean setAnonymous(Long questionId,Long uid);
+//
+//    void update(Long questionId,Long uid,String title,String content,boolean anonymous);
 
 }

@@ -1,4 +1,4 @@
-package com.nbsaw.miaohu.captcha;
+package com.nbsaw.miaohu.common;
 
 import com.google.code.kaptcha.GimpyEngine;
 import com.google.code.kaptcha.util.Configurable;

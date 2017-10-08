@@ -1,6 +1,7 @@
 package com.nbsaw.miaohu.serviceImpl;
 
 import com.google.code.kaptcha.impl.DefaultKaptcha;
+import com.nbsaw.miaohu.common.StringUtils;
 import com.nbsaw.miaohu.service.CaptchaService;
 import com.nbsaw.miaohu.common.CaptchaUtils;
 import lombok.AllArgsConstructor;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 @Service
 @AllArgsConstructor(onConstructor = @_(@Autowired))
@@ -33,21 +35,21 @@ public class CaptchaServiceImpl implements CaptchaService {
     public Map sendPhoneCaptcha(String phone) {
         Map result = new LinkedHashMap();
         // 检查手机号是否合法
-//        if(isValidPhone(phone)){
-//            result.put("code", 400);
-////            result.put("errors", phoneValidUtils.phoneValid(phone));
-//        }
-//        // 如果在redis练找不到就发送一条到用户手机号上
-//        else if (redisUtils.isSentPhoneCaptcha(phone)){
-//            redisUtils.persistPhoneCaptcha(phone,"123456");
-//            result.put("code", 200);
-//            result.put("msg", "验证码发送成功!");
-//        }
-//        // 如果Redis里面读到了验证码，返回已存在，需要60s后才能重发
-//        else {
-//            result.put("code", 304);
-//            result.put("errors", "已发送过验证码,请过60s后重发");
-//        }
+        if(!isValidPhone(phone)){
+            result.put("code", 400);
+            result.put("phone", "看起来不是一个合法的手机号码:)");
+        }
+        // 如果在redis练找不到就发送一条到用户手机号上
+        else if (captchaUtils.isSentPhoneCaptcha(phone)){
+            captchaUtils.persistPhoneCaptcha(phone,"123456");
+            result.put("code", 200);
+            result.put("msg", "验证码发送成功!");
+        }
+        // 如果Redis里面读到了验证码，返回已存在，需要60s后才能重发
+        else {
+            result.put("code", 304);
+            result.put("errors", "已发送过验证码,请过60s后重发");
+        }
         return result;
     }
 
@@ -67,8 +69,9 @@ public class CaptchaServiceImpl implements CaptchaService {
     }
 
     // 判断手机号码是否合法
-//    private boolean isValidPhone(String phone){
-//        return StringUtils.notEmpty(phoneValidUtils.phoneValid(phone));
-//    }
+    private boolean isValidPhone(String phone){
+        Pattern pattern = Pattern.compile("^((13[0-9])|(15[^4,\\D])|(18[0-1,5-9]))\\d{8}$");
+        return pattern.matcher(phone).matches();
+    }
 
 }

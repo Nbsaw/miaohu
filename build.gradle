@@ -27,7 +27,7 @@ cobertura.coverageFormats = ['html', 'xml']
 
 jar {
     baseName = 'miaohu'
-    version =  '0.1.8'
+    version =  '0.1.9'
 }
 
 repositories {

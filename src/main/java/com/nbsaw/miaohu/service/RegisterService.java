@@ -1,6 +1,6 @@
 package com.nbsaw.miaohu.service;
 
-import com.nbsaw.miaohu.model.User;
+import com.nbsaw.miaohu.dao.repository.model.User;
 
 public interface RegisterService {
 

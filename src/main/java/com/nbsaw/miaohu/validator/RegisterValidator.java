@@ -3,7 +3,7 @@ package com.nbsaw.miaohu.validator;
 import com.nbsaw.miaohu.common.CaptchaUtils;
 import com.nbsaw.miaohu.common.ErrorsMap;
 import com.nbsaw.miaohu.common.StringUtils;
-import com.nbsaw.miaohu.dao.UserRepository;
+import com.nbsaw.miaohu.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 @AllArgsConstructor(onConstructor = @_(@Autowired))
 public class RegisterValidator {
 
-    private final UserRepository userRepository;
+    private final UserService service;
     private final CaptchaUtils captchaUtils;
 
     // ----------暴露方法----------
@@ -80,7 +80,7 @@ public class RegisterValidator {
             errorsMap.put("imageCaptcha","请填写验证码");
         else if (isCaptchaTimeOut(redisCaptcha))
             errorsMap.put("imageCaptcha","验证码以超时,请刷新");
-        else if (imageCaptcha.equals(redisCaptcha))
+        else if (!imageCaptcha.equals(redisCaptcha))
             errorsMap.put("imageCaptcha","验证码错误");
     }
 
@@ -110,7 +110,7 @@ public class RegisterValidator {
 
     // 是否已经有一样的手机号码存在数据库
     private boolean isPhoneExistsInDB(String phone) {
-        return userRepository.isUserExists(phone);
+        return service.existsByPhone(phone);
     }
 
     // 判断是否是一个有效的手机号码

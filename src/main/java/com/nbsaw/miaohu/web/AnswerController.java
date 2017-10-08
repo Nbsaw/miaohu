@@ -1,128 +1,67 @@
 package com.nbsaw.miaohu.web;
 
+import com.nbsaw.miaohu.common.ErrorsMap;
 import com.nbsaw.miaohu.common.JsonResult;
-import com.nbsaw.miaohu.dao.AnswerRepository;
-import com.nbsaw.miaohu.dao.AnswerVoteMapRepository;
-import com.nbsaw.miaohu.model.AnswerVoteMap;
 import com.nbsaw.miaohu.exception.ValidParamException;
 import com.nbsaw.miaohu.service.AnswerService;
 import com.nbsaw.miaohu.common.JwtUtils;
-import com.nbsaw.miaohu.vo.GenericVo;
-import com.nbsaw.miaohu.vo.MessageVo;
-import com.nbsaw.miaohu.vo.ResultVo;
+import com.nbsaw.miaohu.validator.AnswerValidator;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.HashMap;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/answer")
 @AllArgsConstructor(onConstructor = @_(@Autowired))
 public class AnswerController {
 
-    private final AnswerVoteMapRepository answerVoteMapRepository;
     private final JwtUtils jwtUtils;
-    private final AnswerRepository answerRepository;
-    private final AnswerService answerService;
+    private final AnswerService service;
+    private final AnswerValidator validator;
 
     // 查找某个问题下的前5个回答
     @GetMapping("/{questionId}")
-    public JsonResult selectAnswerById(@PathVariable Long questionId) {
-        return new JsonResult(0,"",answerService.findAllById(questionId));
+    public JsonResult selectAnswerById(@PathVariable Long questionId,
+                                       @RequestParam(value = "page",defaultValue = "0") int page) {
+        return new JsonResult(0,"",service.findAllByQuestionId(questionId,page));
     }
 
     // 回答问题
     @PostMapping("/add")
-    public ResponseEntity answer(@RequestParam Long questionId,
-                                 @RequestParam String content,
-                                 @RequestHeader String token) throws ValidParamException {
-        String uid = jwtUtils.getUid(token);
-
-        answerService.save(questionId,content,uid);
-        return ResponseEntity.ok().body(uid);
+    public JsonResult add(@RequestParam Long questionId,
+                          @RequestParam String content,
+                          @RequestHeader("${jwt.header}") String token) throws ValidParamException {
+        Long uid = jwtUtils.getUid(token);
+        ErrorsMap errors = validator.addValid(questionId,uid);
+        if (errors.hasError())
+            return new JsonResult(400,"回答失败",errors);
+        service.save(questionId,uid,content);
+        return new JsonResult(0,"回答成功",errors);
     }
 
-    // 回答删除
+//     回答删除
     @DeleteMapping("/delete")
-    public MessageVo deleteAnswer(@RequestParam Long answerId,
-                                  @RequestHeader String token) {
+    public JsonResult deleteAnswer(@RequestParam Long answerId,
+                                   @RequestHeader String token) {
         // 获取uid
-        String uid = jwtUtils.getUid(token);
-        MessageVo result = new MessageVo();
-
-        return result;
-    }
-
-    // 撤销删除回答
-    @PostMapping("/revoke")
-    public MessageVo revokeAnswer(@RequestParam Long answerId,
-                                  @RequestHeader String token) {
-        // 获取uid
-        String uid = jwtUtils.getUid(token);
-
-        MessageVo result = new MessageVo();
-        boolean isReply = answerRepository.isExists(answerId, uid);
-        if (isReply) {
-            boolean isDeleted = answerRepository.isDeleted(answerId, uid);
-            if (isDeleted) {
-                answerRepository.setDeletedFalse(answerId, uid);
-                result.setCode(200);
-                result.setMessage("撤销成功");
-            } else {
-                result.setCode(400);
-                result.setMessage("已经是撤销状态了!");
-            }
-        }else{
-            result.setCode(400);
-            result.setMessage("没有回答过的问题无法撤销");
-        }
-        return result;
+        Long uid = jwtUtils.getUid(token);
+        ErrorsMap errors = validator.deleteValid(answerId,uid);
+        if (errors.hasError())
+            return new JsonResult(400,"回答删除失败",errors);
+        service.delete(answerId);
+        return new JsonResult(0,"回答删除成功");
     }
 
     // TODO 推送点赞
-    // 回答点赞
-    @PostMapping("/vote")
-    public GenericVo vote(@RequestParam Long answerId,
-                          @RequestHeader String token) {
-        // 获取uid
-        String uid = jwtUtils.getUid(token);
-
-        Map map = new HashMap();
-        // 通过回答的id找到问题的id
-        Long questionId = answerVoteMapRepository.findQuestionId(answerId);
-        // 在通过问题的id和用户id确认问题是不是点赞者自己的回答
-        boolean isSelf = answerRepository.isSelf(questionId,uid);
-        // 如果是自己的回答
-        if (isSelf){
-            MessageVo messageVo = new MessageVo();
-            messageVo.setCode(404);
-            messageVo.setMessage("不能给自己点赞 XD");
-            return messageVo;
-        }
-        else{
-            // 判断是否点赞过了
-            boolean isVote = answerVoteMapRepository.isVote(answerId,uid);
-            if (!isVote){
-                AnswerVoteMap answerVoteMap = new AnswerVoteMap();
-                answerVoteMap.setUid(uid);
-                answerVoteMap.setAnswerId(answerId);
-                answerVoteMap.setQuestionId(questionId);
-                answerVoteMapRepository.save(answerVoteMap);
-                map.put("vote",1);
-            }
-            else{
-                answerVoteMapRepository.deleteByAnswerIdAndUid(answerId,uid);
-                map.put("vote",0);
-            }
-            // 获取总数
-            Long count = answerVoteMapRepository.countAllByQuestionId(questionId);
-            map.put("count",count);
-            ResultVo resultVo = new ResultVo();
-            resultVo.setCode(200);
-            resultVo.setResult(map);
-            return resultVo;
-        }
+    @PutMapping("/{answerId}//vote")
+    public JsonResult vote(@PathVariable Long answerId,
+                           @RequestHeader("${jwt.header}") String token){
+        Long uid = jwtUtils.getUid(token);
+        ErrorsMap errorsMap = validator.voteValid(answerId);
+        if (errorsMap.hasError())
+            return new JsonResult(400,"回答点赞失败",errorsMap);
+        if (service.vote(answerId,uid))
+            return new JsonResult(0,"回答点赞成功");
+        return new JsonResult(0,"回答取消点赞成功");
     }
 }

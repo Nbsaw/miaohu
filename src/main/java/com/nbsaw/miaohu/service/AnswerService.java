@@ -1,25 +1,23 @@
 package com.nbsaw.miaohu.service;
 
-import com.nbsaw.miaohu.model.Answer;
-import com.nbsaw.miaohu.exception.ValidParamException;
+import com.nbsaw.miaohu.dto.AnswerDTO;
+import com.nbsaw.miaohu.dto.PageDTO;
 
 import java.util.List;
 
 public interface AnswerService {
 
-    /**
-     * 根据时倒叙获取对应问题的前五条回答
-     * @param questionId 问题id
-     * @return 倒叙问题列表
-     */
-    List<Answer> findAllById(Long questionId);
+    PageDTO<List<AnswerDTO>> findAllByQuestionId(Long questionId, int page);
 
-    /**
-     * 根据对应问题id回答问题
-     * @param questionId 问题id
-     * @param content 回答内容
-     * @param uid 用户id
-     */
-    void save(Long questionId , String content , String uid) throws ValidParamException;
+    boolean exists(Long answerId);
 
+    boolean isQuestionExists(Long questionId);
+
+    boolean isReplied(Long questionId,Long uid);
+
+    void save(Long questionId,Long uid,String content);
+
+    boolean vote(Long answerId , Long uid);
+
+    void delete(Long answerId);
 }

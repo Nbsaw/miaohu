@@ -1,12 +1,11 @@
 package com.nbsaw.miaohu.serviceImpl;
 
-import com.nbsaw.miaohu.dao.TagRepository;
-import com.nbsaw.miaohu.model.Tag;
+import com.nbsaw.miaohu.dao.repository.TagRepository;
+import com.nbsaw.miaohu.dao.repository.model.Tag;
 import com.nbsaw.miaohu.service.TagService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
@@ -32,5 +31,10 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<Tag> search(String tagName) {
         return tagRepository.findAllByNameContains(tagName);
+    }
+
+    @Override
+    public Tag findByName(String tagName) {
+        return tagRepository.findByName(tagName);
     }
 }

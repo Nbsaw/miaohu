@@ -1,51 +1,82 @@
 package com.nbsaw.miaohu.serviceImpl;
 
-import com.nbsaw.miaohu.dao.AnswerRepository;
-import com.nbsaw.miaohu.dao.AnswerVoteMapRepository;
-import com.nbsaw.miaohu.exception.ValidParamException;
-import com.nbsaw.miaohu.model.Answer;
+import com.nbsaw.miaohu.dao.repository.AnswerRepository;
+import com.nbsaw.miaohu.dao.repository.AnswerVoteRepository;
+import com.nbsaw.miaohu.dao.repository.QuestionRepository;
+import com.nbsaw.miaohu.dao.repository.UserRepository;
+import com.nbsaw.miaohu.dao.repository.model.Answer;
+import com.nbsaw.miaohu.dao.repository.model.AnswerVote;
+import com.nbsaw.miaohu.dto.AnswerDTO;
+import com.nbsaw.miaohu.dto.PageDTO;
 import com.nbsaw.miaohu.service.AnswerService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @AllArgsConstructor(onConstructor = @_(@Autowired))
 public class AnswerServiceImpl implements AnswerService {
 
-    private final AnswerVoteMapRepository answerVoteMapRepository;
     private final AnswerRepository answerRepository;
+    private final UserRepository userRepository;
+    private final QuestionRepository questionRepository;
+    private final AnswerVoteRepository answerVoteRepository;
 
     @Override
-    public List<Answer> findAllById(Long questionId) {
-        PageRequest pageRequest = new PageRequest(0,5,new Sort(Sort.Direction.DESC,"date"));
-        return answerRepository.findAllByQuestionId(questionId,pageRequest);
+    public PageDTO<List<AnswerDTO>> findAllByQuestionId(Long questionId, int page) {
+        Page<Answer> list = answerRepository.findAll(
+                new PageRequest(page,5, new Sort(Sort.Direction.DESC,"creationDate")));
+        List<AnswerDTO> DTOs = new ArrayList<>();
+        list.forEach(answer -> DTOs.add(new AnswerDTO(answer,answerVoteRepository.countAllByAnswer(answer))));
+        return new PageDTO(list,DTOs);
     }
 
     @Override
-    public void save(Long questionId, String content, String uid) throws ValidParamException {
-        // 检测id是否为空
-        if (questionId == null) {
-            throw new ValidParamException("帖子id不应该为空");
-        }
-        // 检测是不是已经回答过的问题
-        else if (answerRepository.isExists(questionId, uid)) {
-            throw new ValidParamException("不可以重复回答问题:(");
-        }
-        // 检验回复是否为空
-        else if (content.trim().length() == 0) {
-            throw new ValidParamException("评论不能为空");
-        }
-        // 条件通过
-        else {
-            Answer answer = new Answer();
-            answer.setQuestionId(questionId);
-            answer.setContent(content);
-            answer.setUid(uid);
-            answerRepository.save(answer);
-        }
+    public boolean exists(Long answerId) {
+        return answerRepository.exists(answerId);
     }
+
+    @Override
+    public boolean isQuestionExists(Long questionId) {
+        return questionRepository.exists(questionId);
+    }
+
+    @Override
+    public boolean isReplied(Long questionId, Long uid) {
+        return answerRepository.existsByQuestion_IdAndUser_Id(questionId,uid);
+    }
+
+    @Override
+    public void save(Long questionId, Long uid, String content) {
+        Answer answer = new Answer();
+        answer.setQuestion(questionRepository.findOne(questionId));
+        answer.setUser(userRepository.findOne(uid));
+        answer.setContent(content);
+        answerRepository.save(answer);
+    }
+
+    @Override
+    public boolean vote(Long answerId, Long uid) {
+        if (answerVoteRepository.existsByAnswer_IdAndUser_Id(answerId,uid)){
+            answerVoteRepository.deleteByAnswer_IdAndUser_Id(answerId,uid);
+            return false;
+        }
+        AnswerVote answerVote = new AnswerVote();
+        answerVote.setAnswer(answerRepository.findOne(answerId));
+        answerVote.setUser(userRepository.findOne(uid));
+        answerVoteRepository.save(answerVote);
+        return true;
+    }
+
+    @Override
+    public void delete(Long answerId) {
+        answerRepository.delete(answerId);
+    }
+
 }

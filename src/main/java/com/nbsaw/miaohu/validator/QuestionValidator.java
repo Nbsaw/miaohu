@@ -26,7 +26,7 @@ public class QuestionValidator {
     public ErrorsMap postValid(String title, String content, String[] tags){
         ErrorsMap errors = new ErrorsMap();
         titleValid(title,errors);
-        // TODO 内容文字过滤
+        // TODO 奇怪内容过滤
         tagsValid(tags,errors);
         return errors;
     }
@@ -38,12 +38,12 @@ public class QuestionValidator {
         return errors;
     }
 
-    public ErrorsMap belongValid(Long questionId,String uid){
-        ErrorsMap errors  = new ErrorsMap();
-        if (!isBelong(questionId,uid))
-            errors.put("belong","无法删除不属于你的问题");
-        return errors;
-    }
+//    public ErrorsMap belongValid(Long questionId,Long uid){
+//        ErrorsMap errors  = new ErrorsMap();
+//        if (!isBelong(questionId,uid))
+//            errors.put("belong","无法删除不属于你的问题");
+//        return errors;
+//    }
 
     // ----------入口方法----------
 
@@ -63,6 +63,10 @@ public class QuestionValidator {
 
     // 标签判断
     private void tagsValid(String[] tags,ErrorsMap errorsMap){
+        if (tags.length > 5){
+            errorsMap.put("tags","一个问题不能超过5个标签");
+            return;
+        }
         for (String tagName : tags){
             if (!tagService.exists(tagName)){
                errorsMap.put("tags","标签不存在");
@@ -102,9 +106,9 @@ public class QuestionValidator {
     // 判断对应id的问题是否存在
     private boolean existsById(Long questionId){ return questionService.existsById(questionId); }
 
-    // 判断问题是否属于用户
-    private boolean isBelong(Long questionId,String uid){
-        return questionService.belong(questionId,uid);
-    }
+//    // 判断问题是否属于用户
+//    private boolean isBelong(Long questionId,Long uid){
+//        return questionService.belong(questionId,uid);
+//    }
 
 }

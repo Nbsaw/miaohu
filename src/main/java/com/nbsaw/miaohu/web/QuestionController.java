@@ -35,13 +35,14 @@ public class QuestionController {
     public JsonResult post(@RequestParam String title,
                            @RequestParam String content,
                            @RequestParam String[] tags,
+                           @RequestParam boolean anonymous,
                            @RequestHeader("${jwt.header}") String token) {
-        String uid = jwtUtils.getUid(token);
+        Long uid = jwtUtils.getUid(token);
         ErrorsMap errors = validator.postValid(title,content,tags);
         if (errors.hasError()){
             return new JsonResult(400,"问题发布失败",errors);
         }else{
-            service.save(uid,title,content,tags);
+            service.save(uid,title,content,tags,anonymous);
             return new JsonResult(0,"问题发布成功");
         }
     }
@@ -62,67 +63,66 @@ public class QuestionController {
             return new JsonResult(0,"",service.findOne(questionId,jwtUtils.getUid(token)));
     }
 
-    // 根据传过来的问题id删除对应的问题
-    @DeleteMapping("/delete/{questionId}")
-    public JsonResult delete(@PathVariable Long questionId, @RequestHeader("${jwt.header}") String token) {
-        ErrorsMap idValid = validator.questionIdValid(questionId);
-        if (idValid.hasError())
-            return new JsonResult(HttpStatus.BAD_REQUEST,"问题删除失败",idValid);
+//    // 根据传过来的问题id删除对应的问题
+//    @DeleteMapping("/delete/{questionId}")
+//    public JsonResult delete(@PathVariable Long questionId, @RequestHeader("${jwt.header}") String token) {
+//        ErrorsMap idValid = validator.questionIdValid(questionId);
+//        if (idValid.hasError())
+//            return new JsonResult(HttpStatus.BAD_REQUEST,"问题删除失败",idValid);
+//
+//        ErrorsMap belongValid = validator.belongValid(questionId,jwtUtils.getUid(token));
+//        if (belongValid.hasError())
+//            return new JsonResult(HttpStatus.FORBIDDEN,"问题删除失败",belongValid);
+//
+//        service.delete(questionId);
+//        return new JsonResult(0,"问题删除成功");
+//    }
 
-        ErrorsMap belongValid = validator.belongValid(questionId,jwtUtils.getUid(token));
-        if (belongValid.hasError())
-            return new JsonResult(HttpStatus.FORBIDDEN,"问题删除失败",belongValid);
+//    // 设置(问题,回答)都为匿名 / 取消匿名
+//    @PostMapping("/anonymous")
+//    public JsonResult setAnonymous(@RequestParam Long questionId, @RequestHeader("${jwt.header}") String token) {
+//
+//        Long uid = jwtUtils.getUid(token);
+//
+//        ErrorsMap idValid = validator.questionIdValid(questionId);
+//        if (idValid.hasError())
+//            return new JsonResult(HttpStatus.BAD_REQUEST,"设置失败",idValid);
+//
+//        ErrorsMap belongValid = validator.belongValid(questionId,uid);
+//        if (belongValid.hasError())
+//            return new JsonResult(HttpStatus.FORBIDDEN,"设置失败",belongValid);
+//
+//        boolean isAnonymous = service.setAnonymous(questionId,uid);
+//
+//        if (isAnonymous)
+//            return new JsonResult(0,"已取消匿名");
+//        else
+//            return new JsonResult(0,"已经设置为匿名!");
+//    }
 
-        service.delete(questionId);
-        return new JsonResult(0,"问题删除成功");
-    }
-
-
-    // 设置(问题,回答)都为匿名 / 取消匿名
-    @PostMapping("/anonymous")
-    public JsonResult setAnonymous(@RequestParam Long questionId, @RequestHeader("${jwt.header}") String token) {
-
-        String uid = jwtUtils.getUid(token);
-
-        ErrorsMap idValid = validator.questionIdValid(questionId);
-        if (idValid.hasError())
-            return new JsonResult(HttpStatus.BAD_REQUEST,"设置失败",idValid);
-
-        ErrorsMap belongValid = validator.belongValid(questionId,uid);
-        if (belongValid.hasError())
-            return new JsonResult(HttpStatus.FORBIDDEN,"设置失败",belongValid);
-
-        boolean isAnonymous = service.setAnonymous(questionId,uid);
-
-        if (isAnonymous)
-            return new JsonResult(0,"已取消匿名");
-        else
-            return new JsonResult(0,"已经设置为匿名!");
-    }
-
-     // TODO 加上标签字段
-     // TODO 问题修改历史
-    // TODO 加个问题修改理由表
-    // 根据id以及传过来的标题,内容修改对应的问题
-    @PostMapping("/modify")
-    public JsonResult modify(@RequestParam Long questionId,
-                             @RequestParam String title,
-                             @RequestParam(defaultValue = "") String content,
-                             @RequestParam boolean anonymous,
-                             @RequestHeader("${jwt.header}") String token) {
-
-        String uid = jwtUtils.getUid(token);
-
-        ErrorsMap idValid = validator.questionIdValid(questionId);
-        if (idValid.hasError())
-            return new JsonResult(HttpStatus.BAD_REQUEST,"问题修改失败",idValid);
-
-        ErrorsMap belongValid = validator.belongValid(questionId,uid);
-        if (belongValid.hasError())
-            return new JsonResult(HttpStatus.FORBIDDEN,"问题修改失败",belongValid);
-
-        service.update(questionId,uid,title,content,anonymous);
-         return new JsonResult(0,"问题修改成功");
-    }
+//     // TODO 加上标签字段
+//     // TODO 问题修改历史
+//    // TODO 加个问题修改理由表
+//    // 根据id以及传过来的标题,内容修改对应的问题
+//    @PostMapping("/modify")
+//    public JsonResult modify(@RequestParam Long questionId,
+//                             @RequestParam String title,
+//                             @RequestParam(defaultValue = "") String content,
+//                             @RequestParam boolean anonymous,
+//                             @RequestHeader("${jwt.header}") String token) {
+//
+//        Long uid = jwtUtils.getUid(token);
+//
+//        ErrorsMap idValid = validator.questionIdValid(questionId);
+//        if (idValid.hasError())
+//            return new JsonResult(HttpStatus.BAD_REQUEST,"问题修改失败",idValid);
+//
+//        ErrorsMap belongValid = validator.belongValid(questionId,uid);
+//        if (belongValid.hasError())
+//            return new JsonResult(HttpStatus.FORBIDDEN,"问题修改失败",belongValid);
+//
+//        service.update(questionId,uid,title,content,anonymous);
+//         return new JsonResult(0,"问题修改成功");
+//    }
 }
 
